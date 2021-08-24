@@ -1,0 +1,12 @@
+{
+    "name": "trunkrs/woocommerce",
+    "type": "wordpress-plugin",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Trunkrs",
+            "email": "tech.support@trunkrs.nl"
+        }
+    ],
+    "require": {}
+}

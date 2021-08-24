@@ -1,0 +1,87 @@
+.tr-wc-detailsPanel {
+  display: flex;
+  flex-direction: column;
+  width: 700px;
+  border: 1px solid rgb(226, 228, 231);
+  border-radius: 3px;
+  box-shadow: 0 1px 1px rgb(0 0 0 / 4%);
+  background-color: #fff;
+  margin-bottom: 32px;
+
+  .tr-wc-panelHeader {
+    display: flex;
+    align-items: center;
+    flex: 1;
+    padding: 16px 24px;
+    border-bottom: 1px solid rgb(226, 228, 231);
+
+    & > p {
+      margin: 0;
+      font-size: 14px;
+    }
+  }
+
+  .tr-wc-panelContent,
+  .tr-wc-panelFooter {
+    padding: 16px 24px;
+  }
+
+  .tr-wc-panelContent {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    flex: 1;
+
+    &.tr-wc-extraPanel {
+      border-top: 1px solid rgb(226, 228, 231);
+    }
+
+    .tr-wc-detailsPanel-connected {
+      display: flex;
+      align-items: center;
+      margin-bottom: 8px;
+
+      span {
+        display: flex;
+        flex-direction: column;
+      }
+
+      .tr-wc-checkVector {
+        width: 32px;
+        margin-right: 16px;
+      }
+
+      h3 {
+        margin: 0;
+      }
+    }
+
+    h4 {
+      &.tr-wc-switchLabel {
+        margin: 0;
+      }
+
+      margin-bottom: 4px;
+    }
+
+    p {
+      margin: 0;
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
+  }
+
+  .tr-wc-panelFooter {
+    display: flex;
+    justify-content: flex-end;
+    border-top: 1px solid rgb(226, 228, 231);
+
+    .tr-wc-buttonVector {
+      width: 16px;
+      margin-right: 8px;
+      margin-top: 1px;
+    }
+  }
+}

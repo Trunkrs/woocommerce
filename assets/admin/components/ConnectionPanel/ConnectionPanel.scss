@@ -1,0 +1,40 @@
+.tr-wc-connectionPanel {
+  display: flex;
+  flex-direction: column;
+  width: 700px;
+  border: 1px solid rgb(226, 228, 231);
+  border-radius: 3px;
+  box-shadow: 0 1px 1px rgb(0 0 0 / 4%);
+  background-color: #fff;
+
+  .tr-wc-panelHeader {
+    display: flex;
+    align-items: center;
+    flex: 1;
+    padding: 16px 24px;
+    border-bottom: 1px solid rgb(226, 228, 231);
+
+    & > p {
+      margin: 0;
+      font-size: 14px;
+    }
+  }
+
+  .tr-wc-panelContent {
+    display: flex;
+    justify-content: space-between;
+    flex: 1;
+    padding: 16px 24px;
+
+    .tr-wc-connectionStatus {
+
+      & > h3, & > p {
+        margin: 0;
+      }
+
+      & > p {
+        margin-top: 8px;
+      }
+    }
+  }
+}

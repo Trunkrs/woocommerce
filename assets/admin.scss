@@ -1,0 +1,99 @@
+.trwc-error {
+  padding: 0 !important;
+
+  .trwc-header {
+    display: flex;
+    align-items: center;
+    padding: 0 12px;
+    border-bottom: 1px solid #c3c4c7;
+
+    & > img {
+      width: 30px;
+      height: 30px;
+      margin-right: 6px;
+    }
+
+    & > h2 {
+      margin: 0;
+      font-size: 14px;
+    }
+  }
+
+  .trwc-content {
+    display: block;
+    padding: 6px 12px;
+  }
+}
+
+#wc_tr_shipment_side_box {
+  .postbox-header {
+    h2 {
+      justify-content: flex-start;
+
+      .tr-wc-admin-small-logo {
+        margin-right: 8px;
+        width: 24px;
+        height: 24px;
+      }
+    }
+  }
+
+  .inside {
+    padding: 0;
+    margin: 0;
+
+    .wc-tr-shipment-details {
+      margin: 0;
+      padding: 12px;
+
+      &.failed {
+        .tr-value {
+          text-decoration: line-through;
+        }
+      }
+
+      p {
+        margin: 0;
+      }
+
+      .tr-canceled {
+        color: #b32d2e;
+      }
+    }
+
+    .wc-tr-shipment-actions {
+      display: flex;
+      justify-content: space-between;
+      margin: 0;
+      padding: 12px;
+      border-top: 1px solid #ddd;
+
+      &.failed {
+        justify-content: flex-end;
+      }
+
+      .action-item {
+        display: inline-flex;
+        margin: 0;
+
+        .cancel-shipment {
+          color: #b32d2e;
+          line-height: 2.15384615;
+        }
+
+        .button {
+          display: flex;
+          align-items: center;
+
+          span {
+            display: block;
+            height: 16px;
+            width: 16px;
+            padding-right: 6px;
+            font-size: 16px;
+          }
+        }
+      }
+    }
+  }
+}
