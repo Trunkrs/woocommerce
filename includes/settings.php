@@ -3,7 +3,7 @@
 if (!class_exists('TR_WC_Settings')) {
   class TR_WC_Settings
   {
-    const BASE_URL = 'https://staging.shipping.trunkrs.app';
+    const BASE_URL = 'https://shipping.trunkrs.app';
     const API_VERSION = 'v1';
 
     const OPTION_KEY = 'wc_tr_plugin-settings';
