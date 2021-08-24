@@ -91,7 +91,7 @@ const ConnectButton: React.FC<ConnectButtonProps> = ({
         <CircularProgress size={32} thickness={2} />
       )}
 
-      <p className="tr-wc-buttonText">{loading ? 'Connecting' : 'Connect'}</p>
+      <p className="tr-wc-buttonText">{loading ? 'Verbinden' : 'Verbind'}</p>
     </Button>
   )
 }

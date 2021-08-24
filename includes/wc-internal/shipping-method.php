@@ -30,7 +30,7 @@ function createShippingMethodClass()
         switch ($type) {
           case 'same';
             $description = sprintf(
-              __('Create your order before <b>%s</b> to receive your shipment today!'),
+              __('Plaats je bestelling voor <b>%s</b> om het vandaag te ontvangen!'),
               date_i18n('H:i', $cutOffTime->getTimestamp() + $cutOffTime->getOffset())
             );
             break;
@@ -41,11 +41,11 @@ function createShippingMethodClass()
             $diffDays = (integer)$diff->format("%R%a");
 
             $deliveryDesc = $diffDays === 1
-              ? __('tomorrow')
-              : __('on') . ' ' . date_i18n('D dS', $deliveryDate->getTimestamp() + $deliveryDate->getOffset());
+              ? __('morgen')
+              : __('op') . ' ' . date_i18n('D dS', $deliveryDate->getTimestamp() + $deliveryDate->getOffset());
 
             $description = sprintf(
-              __('Create your order before <b>%s</b> to receive your shipment %s!'),
+              __('Plaats je bestelling voor <b>%s</b> om het %s te ontvangen!'),
               date_i18n('D dS H:i', $cutOffTime->getTimestamp() + $cutOffTime->getOffset()),
               $deliveryDesc
             );

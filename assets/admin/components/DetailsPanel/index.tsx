@@ -24,22 +24,22 @@ const DetailsPanel: React.FC<DetailsPanelProps> = ({
   return (
     <div className="tr-wc-detailsPanel">
       <span className="tr-wc-panelHeader">
-        <p>Platform connection</p>
+        <p>Platform connectie</p>
       </span>
       <span className="tr-wc-panelContent">
         <span className="tr-wc-detailsPanel-connected">
           <Check className="tr-wc-checkVector" />
           <span>
-            <h3>Your store is connected</h3>
-            <p>You are ready to ship your orders with Trunkrs.</p>
+            <h3>Deze winkel is verbonden</h3>
+            <p>U bent klaar om uw bestellingen met Trunkrs te verzenden.</p>
           </span>
         </span>
         <span>
-          <h4>Integration identifier:</h4>
+          <h4>Integratie nummer:</h4>
           <p>{integrationId}</p>
-          <h4>Organization identifier:</h4>
+          <h4>Organisatie nummer:</h4>
           <p>{organizationId}</p>
-          <h4>Organization name:</h4>
+          <h4>Organisatie naam:</h4>
           <p>{organizationName}</p>
         </span>
       </span>
@@ -47,7 +47,7 @@ const DetailsPanel: React.FC<DetailsPanelProps> = ({
         <span>
           <Button href={manageUrl} color="white">
             <Linkout className="tr-wc-buttonVector" />
-            Manage
+            Beheer
           </Button>
         </span>
       </span>

@@ -13,12 +13,12 @@ const CheckoutPanel: React.FC<CheckoutPanelProps> = ({
   return (
     <div className="tr-wc-detailsPanel">
       <span className="tr-wc-panelHeader">
-        <p>Visual settings</p>
+        <p>Visuele instellingen</p>
       </span>
       <span className="tr-wc-panelContent">
         <Switch checked={darkLogo} onChange={onDarkLogoChanged}>
           <h4 className="tr-wc-switchLabel">
-            Use logo adjusted for darker themes on the check-out page.
+            Gebruik aangepast logo voor donker thema in de winkelwagen.
           </h4>
         </Switch>
       </span>

@@ -15,12 +15,12 @@ const ConnectionPanel: React.FC<ConnectionPanelProps> = ({
 }) => (
   <div className="tr-wc-connectionPanel">
     <span className="tr-wc-panelHeader">
-      <p>Platform connection</p>
+      <p>Platform connectie</p>
     </span>
     <span className="tr-wc-panelContent">
       <span className="tr-wc-connectionStatus">
-        <h3>Not connected to Trunkrs</h3>
-        <p>Connect your store to the Trunkrs platform to start shipping.</p>
+        <h3>Niet verbonden met Trunkrs</h3>
+        <p>Verbind uw winkel met het Trunkrs platform om te beginnen met verzenden.</p>
       </span>
 
       <span>

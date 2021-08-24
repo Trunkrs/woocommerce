@@ -23,7 +23,7 @@ if (!class_exists('WC_TRUNKRS_AdminOrderPage')) {
       if ($trunkrsOrder->isAnnounceFailed && !$trunkrsOrder->isCancelled) {
         add_meta_box(
           'wc_tr_shipment_side_box',
-          $logoImg . __('Shipment details'),
+          $logoImg . __('Zending details'),
           [$this, 'renderFailedSideBarContent'],
           'shop_order',
           'side',
@@ -34,7 +34,7 @@ if (!class_exists('WC_TRUNKRS_AdminOrderPage')) {
 
       add_meta_box(
         'wc_tr_shipment_side_box',
-         $logoImg . __('Shipment details'),
+         $logoImg . __('Zending details'),
         [$this, 'renderSideBarContent'],
         'shop_order',
         'side',
@@ -52,7 +52,7 @@ if (!class_exists('WC_TRUNKRS_AdminOrderPage')) {
       <ul class="wc-tr-shipment-details">
         <li>
           <p>
-            <?php echo __('The announcement for this shipment has failed. Please check whether the address details are correct and that we deliver to this address.') ?>
+            <?php echo __('Het aanmelden van de zending is mislukt. Controleer a.u.b. of de adresgegevens correct zijn en of wij op dit adres bezorgen.') ?>
           </p>
         </li>
       </ul>
@@ -67,8 +67,8 @@ if (!class_exists('WC_TRUNKRS_AdminOrderPage')) {
                     </a>
                  </li>',
           $reannounceUrl,
-          __('Re-try'),
-          __('This will try to announce the shipment again to Trunkrs.')
+          __('Opnieuw'),
+          __('Hiermee wordt geprobeerd de zending opnieuw aan Trunkrs aan te melden.')
         );
         ?>
       </ul>
@@ -88,7 +88,7 @@ if (!class_exists('WC_TRUNKRS_AdminOrderPage')) {
             <?php
               echo sprintf(
                 '<b>%s</b>: <span class="tr-value">%s</span>',
-                __('Trunkrs number'),
+                __('Trunkrs nummer'),
                 $trunkrsOrder->trunkrsNr
               )
             ?>
@@ -100,7 +100,7 @@ if (!class_exists('WC_TRUNKRS_AdminOrderPage')) {
             <?php
             echo sprintf(
               '<b>%s</b>: <span class="tr-value">%s</span>',
-                __('Delivery date'),
+                __('Bezorgdatum'),
                 $trunkrsOrder->getFormattedDate()
               )
             ?>
@@ -111,8 +111,8 @@ if (!class_exists('WC_TRUNKRS_AdminOrderPage')) {
           if ($trunkrsOrder->isCancelled) {
             echo sprintf(
               '<li><p><b>%s</b>: <span class="tr-canceled">%s</span></p></li>',
-              __('Canceled'),
-              __('Yes')
+              __('Geannuleerd'),
+              __('Ja')
             );
           }
         ?>
@@ -138,8 +138,8 @@ if (!class_exists('WC_TRUNKRS_AdminOrderPage')) {
                     </a>
                  </li>',
             $cancelUrl,
-            __('Cancel shipment'),
-            __('Cancels the shipment on the Trunkrs platform.')
+            __('Zending annuleren'),
+            __('Annuleert de zending op het Trunkrs platform.')
           );
 
           echo sprintf(
@@ -151,7 +151,7 @@ if (!class_exists('WC_TRUNKRS_AdminOrderPage')) {
                  </li>',
             $downloadUrl,
             __('Label'),
-            __('Download the shipment label.')
+            __('Download het zending label.')
           );
         } else {
           $reannounceUrl = admin_url(sprintf(
@@ -167,8 +167,8 @@ if (!class_exists('WC_TRUNKRS_AdminOrderPage')) {
                     </a>
                  </li>',
             $reannounceUrl,
-            __('Re-create'),
-            __('This will try to announce the shipment again to Trunkrs.')
+            __('Opnieuw'),
+            __('Hiermee wordt geprobeerd de zending opnieuw aan Trunkrs aan te melden.')
           );
         }
         ?>
