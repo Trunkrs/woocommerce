@@ -121,7 +121,7 @@ if (!class_exists('TR_WC_Settings')) {
       $isSuccess = WC_TRUNKRS_API::cancelShipment($this->trunkrsNr);
 
       if ($isSuccess) {
-        $this->order->add_order_note(__("The Trunkrs shipment '$this->trunkrsNr' has been cancelled."));
+        $this->order->add_order_note(__("De Trunkrs zending '$this->trunkrsNr' is geannuleerd."));
 
         $this->isCancelled = true;
         $this->save();

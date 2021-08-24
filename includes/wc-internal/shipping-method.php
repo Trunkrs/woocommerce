@@ -60,13 +60,13 @@ function createShippingMethodClass()
           '<span class="tr-wc-checkout-container">
                     <span class="tr-wc-checkout-title-container">
                         <img class="tr-wc-checkout-logo" alt="Trunkrs logo" src="%s" />
-                        <p class="tr-wc-checkout-title"><b>Trunkrs</b>: &euro; %s</p>
+                        <p class="tr-wc-checkout-title"><b>Trunkrs</b>: %s</p>
                     </span>
                     <p class="tr-wc-checkout-description">%s</p>
                   </span>
                 ',
           $logoUrl,
-          $method->cost,
+          wc_price($method->cost),
           $description,
         );
       }
