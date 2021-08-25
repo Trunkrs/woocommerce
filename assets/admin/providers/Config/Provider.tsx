@@ -1,11 +1,13 @@
 import React from 'react'
 import { AxiosError } from 'axios'
 
-import ConfigContext from '.'
+import ConfigContext, { Configuration } from '.'
 import {
   doConfigureRequest,
   doShippingReqisterRequest,
   doUpdateUseDarkRequest,
+  doUpdateUseTntLinksRequest,
+  doUpdateUseTntAccountsRequest,
 } from './helpers'
 
 const initialConfigText = document.getElementById('__tr-wc-settings__')
@@ -14,7 +16,7 @@ const initialConfig = initialConfigText ? JSON.parse(initialConfigText) : {}
 
 const ConfigProvider: React.FC = ({ children }) => {
   const [isWorking, setWorking] = React.useState(false)
-  const [config, setConfig] = React.useState(initialConfig)
+  const [config, setConfig] = React.useState<Configuration>(initialConfig)
 
   const prepareConfig = React.useCallback(
     async (accessToken: string, orgId: string): Promise<void> => {
@@ -66,14 +68,53 @@ const ConfigProvider: React.FC = ({ children }) => {
     })
   }, [config])
 
+  const updateTntLinks = React.useCallback(async () => {
+    setConfig({
+      ...config,
+      isEmailLinksEnabled: !config.isEmailLinksEnabled,
+    })
+
+    doUpdateUseTntLinksRequest(!config.isEmailLinksEnabled).catch(() => {
+      setConfig({
+        ...config,
+        isEmailLinksEnabled: !config.isEmailLinksEnabled,
+      })
+    })
+  }, [config])
+
+  const updateTntActions = React.useCallback(async () => {
+    setConfig({
+      ...config,
+      isAccountTrackTraceEnabled: !config.isAccountTrackTraceEnabled,
+    })
+
+    doUpdateUseTntAccountsRequest(!config.isAccountTrackTraceEnabled).catch(
+      () => {
+        setConfig({
+          ...config,
+          isAccountTrackTraceEnabled: !config.isAccountTrackTraceEnabled,
+        })
+      },
+    )
+  }, [config])
+
   const contextValue = React.useMemo(
     () => ({
       isWorking,
       config,
       prepareConfig,
       updateIsDarkLogo,
+      updateTntLinks,
+      updateTntActions,
     }),
-    [config, isWorking, prepareConfig, updateIsDarkLogo],
+    [
+      config,
+      isWorking,
+      prepareConfig,
+      updateIsDarkLogo,
+      updateTntActions,
+      updateTntLinks,
+    ],
   )
 
   return (

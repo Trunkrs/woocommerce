@@ -1,6 +1,6 @@
 <?php
 
-if (!class_exists('TR_WC_Settings')) {
+if (!class_exists('TR_WC_Order')) {
   class TR_WC_Order
   {
     public const DELIVERY_DATE_KEY = 'deliveryDate';
@@ -37,12 +37,14 @@ if (!class_exists('TR_WC_Settings')) {
     var $isAnnounceFailed = true;
 
     /**
-     * @param $orderId int The WooCommerce order instance.
+     * @param $orderOrOrderId int|WC_Order The WooCommerce order instance.
      * @param bool $withMeta bool Flag whether to also parse meta data details.
      */
-    public function __construct($orderId, $withMeta = true)
+    public function __construct($orderOrOrderId, $withMeta = true)
     {
-      $this->order = new WC_Order($orderId);
+      $this->order = $orderOrOrderId instanceof WC_Order
+        ? $orderOrOrderId
+        : new WC_Order($orderOrOrderId);
       $this->init($withMeta);
     }
 
@@ -81,6 +83,23 @@ if (!class_exists('TR_WC_Settings')) {
 
       $date = WC_TRUNKRS_Utils::parse8601($this->deliveryDate);
       return $date->format('Y-m-d');
+    }
+
+    /**
+     * Retrieves whether this order has an available Track&Trace link.
+     * @return bool Flag whether track&trace link is available.
+     */
+    public function isTrackTraceAvailable(): bool {
+      return $this->isTrunkrsOrder && !$this->isAnnounceFailed;
+    }
+
+    /**
+     * Creates a track&trace link for this order's shipment.
+     * @return string The track&trace link.
+     */
+    public function getTrackTraceLink(): string {
+      $postalCode = $this->order->get_shipping_postcode();
+      return TR_WC_Settings::TRACK_TRACE_BASE_URL . $this->trunkrsNr . '/' . $postalCode;
     }
 
     /**

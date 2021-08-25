@@ -96,7 +96,8 @@ if (!class_exists('WC_TRUNKRS_API')) {
       $response = self::makeRequest(
         'POST',
         self::ShipmentResource,
-        ['shipments' => [$singleShipmentBody]]
+        ['shipments' => [$singleShipmentBody]],
+        6000
       );
 
       if (is_wp_error($response) || $response['response']['code'] > 201) {
@@ -142,6 +143,8 @@ if (!class_exists('WC_TRUNKRS_API')) {
       $response = self::makeRequest(
         'GET',
         self::LabelsResource . '/' . $trunkrsNr,
+        null,
+        6000
       );
 
       if (is_wp_error($response) || $response['response']['code'] !== 200) {
@@ -162,6 +165,8 @@ if (!class_exists('WC_TRUNKRS_API')) {
       $response = self::makeRequest(
         'DELETE',
         self::ShipmentResource . '/' . $trunkrNr,
+        null,
+        6000
       );
 
       return !is_wp_error($response)

@@ -69,3 +69,35 @@ export const doUpdateUseDarkRequest = async (
     data: request,
   })
 }
+
+export const doUpdateUseTntLinksRequest = async (
+  isDarkLogo: boolean,
+): Promise<void> => {
+  const request = new FormData()
+  request.append('action', 'tr-wc_update-use-tnt-links')
+  request.append('isEmailLinksEnabled', isDarkLogo.toString())
+
+  await Axios.request({
+    method: 'POST',
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    url: ajaxurl,
+    data: request,
+  })
+}
+
+export const doUpdateUseTntAccountsRequest = async (
+  isDarkLogo: boolean,
+): Promise<void> => {
+  const request = new FormData()
+  request.append('action', 'tr-wc_update-use-tnt-account')
+  request.append('isAccountTrackTraceEnabled', isDarkLogo.toString())
+
+  await Axios.request({
+    method: 'POST',
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    url: ajaxurl,
+    data: request,
+  })
+}

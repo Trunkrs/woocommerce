@@ -1,6 +1,10 @@
 .trwc-error {
   padding: 0 !important;
 
+  &.indigo {
+    border-left-color: #201047;
+  }
+
   .trwc-header {
     display: flex;
     align-items: center;
@@ -8,8 +12,8 @@
     border-bottom: 1px solid #c3c4c7;
 
     & > img {
-      width: 30px;
-      height: 30px;
+      width: 24px;
+      height: 32px;
       margin-right: 6px;
     }
 

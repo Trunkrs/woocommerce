@@ -14,6 +14,9 @@ if (!class_exists('WC_TRUNKRS_Orders')) {
 
     public function untrashOrder(string $wpPostId)
     {
+      if (!TR_WC_Settings::isConfigured())
+        return;
+
       $type = get_post_type($wpPostId);
       if ($type !== 'shop_order') {
         return;
@@ -24,6 +27,8 @@ if (!class_exists('WC_TRUNKRS_Orders')) {
 
     public function createOrder(string $orderId)
     {
+      if (!TR_WC_Settings::isConfigured())
+        return;
       $trunkrsOrder = new TR_WC_Order($orderId);
 
       if (!$trunkrsOrder->isTrunkrsOrder)
@@ -34,6 +39,9 @@ if (!class_exists('WC_TRUNKRS_Orders')) {
 
     public function deleteOrder(string $wpPostId)
     {
+      if (!TR_WC_Settings::isConfigured())
+        return;
+
       $type = get_post_type($wpPostId);
       if ($type !== 'shop_order') {
         return;
@@ -44,6 +52,9 @@ if (!class_exists('WC_TRUNKRS_Orders')) {
 
     public function cancelOrder(string $orderId)
     {
+      if (!TR_WC_Settings::isConfigured())
+        return;
+
       $order = new TR_WC_Order($orderId);
 
       if ($order->isTrunkrsOrder) {

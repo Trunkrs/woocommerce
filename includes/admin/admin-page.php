@@ -34,6 +34,8 @@ if (!class_exists('WC_TRUNKRS_AdminPage')) {
         json_encode([
           'isConfigured' => TR_WC_Settings::isConfigured(),
           'isDarkLogo' => TR_WC_Settings::getUseDark(),
+          'isEmailLinksEnabled' => TR_WC_Settings::getUseTrackTraceLinks(),
+          'isAccountTrackTraceEnabled' => TR_WC_Settings::getUseAccountActions(),
           'details' => TR_WC_Settings::getIntegrationDetails(),
           'metaBag' => [
             'php_version' => phpversion(),

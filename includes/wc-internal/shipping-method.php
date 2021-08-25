@@ -78,7 +78,7 @@ function createShippingMethodClass()
         $this->method_title = __('Trunkrs Same-day', self::DOMAIN);
         $this->method_description = __('Trunkrs same and next day delivery.');
 
-        $this->enabled = $this->settings['enabled'] ?? 'yes';
+        $this->enabled = 'yes';
         $this->title = $this->settings['title'] ?? __('Trunkrs', self::DOMAIN);
 
         $this->init();
@@ -122,7 +122,7 @@ function createShippingMethodClass()
           $deliveryDate = date('Y-m-d', $deliveryTimestamp);
 
           $woocommerceRate = [
-            'id' => $this->id . '_' . self::getRateType($deliveryDate) . '_' . $deliveryDate,
+            'id' => $this->id . '_' . self::getRateType($deliveryDate),
             'label' => $this->title,
             'cost' => $apiRate->price,
             'meta_data' => [
@@ -140,10 +140,10 @@ function createShippingMethodClass()
 
 function addTrunkrsShippingMethod($methods)
 {
-  $methods[] = WC_TRUNKRS_ShippingMethod::class;
+  $methods[] = 'WC_TRUNKRS_ShippingMethod';
   return $methods;
 }
 
-add_filter('woocommerce_cart_shipping_method_full_label', WC_TRUNKRS_ShippingMethod::class . '::renderLabel', 10, 2);
+add_filter('woocommerce_cart_shipping_method_full_label', 'WC_TRUNKRS_ShippingMethod::renderLabel', 10, 2);
 add_action('woocommerce_shipping_init', 'createShippingMethodClass');
 add_filter('woocommerce_shipping_methods', 'addTrunkrsShippingMethod');

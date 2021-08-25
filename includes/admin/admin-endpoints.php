@@ -8,11 +8,15 @@ if (!class_exists('WC_TR_AdminEndpoints')) {
     const RE_ANNOUNCE_ACTION = 'tr-wc_reannounce';
     const REGISTER_ACTION = 'tr-wc_register-plugin';
     const UPDATE_USE_DARK_ACTION = 'tr-wc_update-use-dark';
+    const UPDATE_USE_TNT_LINKS_ACTION = 'tr-wc_update-use-tnt-links';
+    const UPDATE_USE_TNT_ACCOUNT_ACTION = 'tr-wc_update-use-tnt-account';
 
     public function __construct()
     {
       add_action('wp_ajax_' . self::REGISTER_ACTION, [$this, 'executeRegisterEndpoint']);
       add_action('wp_ajax_' . self::UPDATE_USE_DARK_ACTION, [$this, 'executeUpdateUseDarkEndpoint']);
+      add_action('wp_ajax_' . self::UPDATE_USE_TNT_LINKS_ACTION, [$this, 'executeUpdateUseTnTLinksEndpoint']);
+      add_action('wp_ajax_' . self::UPDATE_USE_TNT_ACCOUNT_ACTION, [$this, 'executeUpdateUseTnTAccountEndpoint']);
 
       add_action('wp_ajax_' . self::DOWNLOAD_LABEL_ACTION, [$this, 'executeDownloadLabelEndpoint']);
       add_action('wp_ajax_' . self::CANCEL_ACTION, [$this, 'executeCancelEndpoint']);
@@ -49,6 +53,26 @@ if (!class_exists('WC_TR_AdminEndpoints')) {
       $useDark = $_POST['isDarkLogo'] === 'true';
 
       TR_WC_Settings::setUseDark($useDark);
+
+      status_header(204);
+      wp_die();
+    }
+
+    public function executeUpdateUseTnTLinksEndpoint()
+    {
+      $value = $_POST['isEmailLinksEnabled'] === 'true';
+
+      TR_WC_Settings::setUseEmailLink($value);
+
+      status_header(204);
+      wp_die();
+    }
+
+    public function executeUpdateUseTnTAccountEndpoint()
+    {
+      $value = $_POST['isAccountTrackTraceEnabled'] === 'true';
+
+      TR_WC_Settings::setUseAccountActions($value);
 
       status_header(204);
       wp_die();

@@ -10,6 +10,9 @@ if (!class_exists('WC_TRUNKRS_AdminOrderPage')) {
 
     public function renderTrunkrsBox($post)
     {
+      if (!TR_WC_Settings::isConfigured())
+        return;
+
       $trunkrsOrder = new TR_WC_Order($post->ID);
 
       if (!$trunkrsOrder->isTrunkrsOrder)

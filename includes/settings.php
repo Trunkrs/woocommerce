@@ -3,7 +3,8 @@
 if (!class_exists('TR_WC_Settings')) {
   class TR_WC_Settings
   {
-    const BASE_URL = 'https://shipping.trunkrs.app';
+    const BASE_URL = 'https://staging.shipping.trunkrs.app';
+    const TRACK_TRACE_BASE_URL = 'https://parcel.trunkrs.nl/';
     const API_VERSION = 'v1';
 
     const OPTION_KEY = 'wc_tr_plugin-settings';
@@ -91,6 +92,22 @@ if (!class_exists('TR_WC_Settings')) {
     }
 
     /**
+     * Gets whether to enable track & trace links in order confirmation emails.
+     * @return bool Flag whether to enable track & trace links.
+     */
+    public static function getUseTrackTraceLinks(): bool {
+      return self::getSingleOption('useTrackTraceLinks') ?? false;
+    }
+
+    /**
+     * Gets whether to enable track & trace actions in the my account page.
+     * @return bool Flag whether to enable track & trace account actions.
+     */
+    public static function getUseAccountActions(): bool {
+      return self::getSingleOption('useTrackTraceActions') ?? false;
+    }
+
+    /**
      * Sets the flag whether the plugin has been configured.
      * @param $isConfigured bool Flag showing whether the plugin was configured.
      */
@@ -124,6 +141,22 @@ if (!class_exists('TR_WC_Settings')) {
     public static function setUseDark(bool $isUseDark)
     {
       self::pushOption('useDark', $isUseDark);
+    }
+
+    /**
+     * Sets whether to enable track & trace links in order confirmation emails.
+     * @param bool $isUseEmailLink
+     */
+    public static function setUseEmailLink(bool $isUseEmailLink) {
+      self::pushOption('useTrackTraceLinks', $isUseEmailLink);
+    }
+
+    /**
+     * Sets whether to enable track & trace actions in the my account area.
+     * @param bool $isUseAccountAction
+     */
+    public static function setUseAccountActions(bool $isUseAccountAction) {
+      self::pushOption('useTrackTraceActions', $isUseAccountAction);
     }
   }
 }

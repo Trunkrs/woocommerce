@@ -1,19 +1,18 @@
 === Trunkrs for WooCommerce ===
 Contributors: fean
 Tags: delivery, packages, woocommerce, trunkrs, sameday, delivery
-Requires at least: 3.0+
+Requires at least: 3.6 & WooCommerce 3.0+
 Tested up to: 5.6
 Stable tag: trunk
 Requires PHP: 7.1
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
-Set-up a connection to the Trunkrs platform to add the best customer focused shipper to your store.
-
+Add the excellent consumer focused Trunkrs shipping to your WooCommerce store.
 
 == Description ==
 
-The Trunkrs for WooCommerce plugin will let you integrate the best consumer faced carrier service to your WooCommerce store.
+The Trunkrs for WooCommerce plugin will let you integrate the best consumer focused carrier service to your WooCommerce store.
 
 In less then 10 minutes you can start shipping with our best rated shipping service.
 

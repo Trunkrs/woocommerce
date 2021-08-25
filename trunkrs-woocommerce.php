@@ -1,11 +1,14 @@
 <?php
 
 /**
- * Plugin Name: WooCommerce Trunkrs Shipping
+ * Plugin Name: Trunkrs for WooCommerce
  * Description: Add excellent consumer focused shipping to your WooCommerce store.
  * Author: Trunkrs
  * Author URI: https://trunkrs.nl
- * Version: 0.0.1
+ * Version: 1.0.0
+ * Requires at least: 3.5.1 & WooCommerce 3.0+
+ * Requires PHP: 7.1
+ * License: GPLv3
  *
  * @wordpress-plugin
  */
@@ -84,8 +87,8 @@ if (!class_exists('WC_TRUNKRS_Bootstrapper')) {
                         <p>%s</p>
                     </span>
                </div>',
-        WC_TRUNKRS_Utils::createAssetUrl('icons/trunkrs.png'),
-        __('Trunkrs Shipping', self::DOMAIN),
+        WC_TRUNKRS_Utils::createAssetUrl('icons/trunkrs-small-indigo.svg'),
+        __('Trunkrs', self::DOMAIN),
         $error
       );
 
@@ -109,8 +112,8 @@ if (!class_exists('WC_TRUNKRS_Bootstrapper')) {
                     <p><a href="%s">%s</a></p>
                   </span>
                 </div>',
-        WC_TRUNKRS_Utils::createAssetUrl('icons/trunkrs.png'),
-        __('Trunkrs Shipping', self::DOMAIN),
+        WC_TRUNKRS_Utils::createAssetUrl('icons/trunkrs-small-indigo.svg'),
+        __('Trunkrs', self::DOMAIN),
         $error,
         'http://docs.wpovernight.com/general/how-to-update-your-php-version/',
         __("How to update your PHP version", self::DOMAIN)
@@ -154,14 +157,17 @@ if (!class_exists('WC_TRUNKRS_Bootstrapper')) {
       // Load internal classes
       $includePath = $this->pluginPath . '/includes';
 
+      require_once($includePath . '/settings.php');
+      require_once($includePath . '/api.php');
+
+      require_once($includePath . '/wc-internal/trunkrs-order.php');
       require_once($includePath . '/wc-internal/orders.php');
       require_once($includePath . '/wc-internal/shipping-method.php');
-      require_once($includePath . '/wc-internal/trunkrs-order.php');
+      require_once($includePath . '/wc-internal/notices.php');
+
       require_once($includePath . '/admin/admin-page.php');
       require_once($includePath . '/admin/admin-order-page.php');
       require_once($includePath . '/admin/admin-endpoints.php');
-      require_once($includePath . '/settings.php');
-      require_once($includePath . '/api.php');
     }
 
     private function isWooCommerceActive()

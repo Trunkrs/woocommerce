@@ -13,7 +13,14 @@ import './AppContainer.scss'
 import CheckoutPanel from '../CheckoutPanel'
 
 const AppContainer: React.FC = () => {
-  const { isWorking, config, prepareConfig, updateIsDarkLogo } = useConfig()
+  const {
+    isWorking,
+    config,
+    prepareConfig,
+    updateIsDarkLogo,
+    updateTntLinks,
+    updateTntActions,
+  } = useConfig()
 
   const handleLoginDone = React.useCallback(
     async (result: LoginResult): Promise<void> =>
@@ -37,7 +44,11 @@ const AppContainer: React.FC = () => {
 
           <CheckoutPanel
             darkLogo={config.isDarkLogo}
+            tntEmailLinks={config.isEmailLinksEnabled}
+            tntAccountActions={config.isAccountTrackTraceEnabled}
             onDarkLogoChanged={updateIsDarkLogo}
+            onTntEmailLinksChanged={updateTntLinks}
+            onTntAccountActionsChanged={updateTntActions}
           />
         </>
       )}

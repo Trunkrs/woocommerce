@@ -25,18 +25,9 @@ if (!class_exists('WC_TRUNKRS_AssetLoader')) {
       }
 
       $assetTag = self::DOMAIN . '-checkout';
-
-      $assetPhpPath = '/build/checkout.asset.php';
-      $scriptPath = '/build/checkout.js';
       $stylePath = '/build/checkout.css';
 
       $this->addStylesForTag($assetTag, $stylePath);
-
-      // Only want the styles on order received page
-      if (is_order_received_page()) {
-        return;
-      }
-      $this->addScriptsForTag($assetTag, $assetPhpPath, $scriptPath);
     }
 
     public function addCheckoutInlineVariables()

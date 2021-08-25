@@ -1,0 +1,7 @@
+.tr-wc-settingsList {
+  margin: 0;
+
+  li:not(:first-child) {
+    margin-top: 16px;
+  }
+}
