@@ -164,6 +164,7 @@ if (!class_exists('WC_TRUNKRS_Bootstrapper')) {
       require_once($includePath . '/wc-internal/orders.php');
       require_once($includePath . '/wc-internal/shipping-method.php');
       require_once($includePath . '/wc-internal/notices.php');
+      require_once($includePath . '/wc-internal/track-trace.php');
 
       require_once($includePath . '/admin/admin-page.php');
       require_once($includePath . '/admin/admin-order-page.php');

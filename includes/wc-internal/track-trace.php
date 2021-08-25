@@ -33,8 +33,8 @@ if (!class_exists('WC_TR_Emails')) {
 
       echo apply_filters(
         'trunkrs_email_link_text',
+        $defaultEmailValue,
         $trunkrsOrder,
-        $defaultEmailValue
       );
     }
 
