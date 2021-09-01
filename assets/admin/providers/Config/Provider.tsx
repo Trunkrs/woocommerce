@@ -12,7 +12,9 @@ import {
 
 const initialConfigText = document.getElementById('__tr-wc-settings__')
   ?.innerText as string
-const initialConfig = initialConfigText ? JSON.parse(initialConfigText) : {}
+const initialConfig = initialConfigText
+  ? JSON.parse(initialConfigText)
+  : {}
 
 const ConfigProvider: React.FC = ({ children }) => {
   const [isWorking, setWorking] = React.useState(false)

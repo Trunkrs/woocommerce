@@ -8,6 +8,13 @@ interface IntegrationResponse {
   accessToken: string
 }
 
+export const decodeHtmlString = (htmlEncoded: string): string => {
+  const txt = document.createElement('textarea')
+  txt.innerHTML = htmlEncoded
+
+  return txt.value
+}
+
 export const doShippingReqisterRequest = async (
   userAccessToken: string,
   orgId: string,

@@ -2,11 +2,9 @@
 
 function createShippingMethodClass()
 {
-  if (!class_exists('WC_TRUNKRS_ShippingMethod')) {
-    class WC_TRUNKRS_ShippingMethod extends WC_Shipping_Method
+  if (!class_exists('TRUNKRS_WC_ShippingMethod')) {
+    class TRUNKRS_WC_ShippingMethod extends WC_Shipping_Method
     {
-      public const DOMAIN = 'trunkrs-woocommerce';
-
       public const DELIVERY_DATE_KEY = 'deliveryDate';
       public const CUT_OFF_TIME_KEY = 'cutOffTime';
 
@@ -18,43 +16,43 @@ function createShippingMethodClass()
 
       public static function renderLabel($label, $method)
       {
-        $isTrunkrs = substr($method->id, 0, strlen(self::DOMAIN)) === self::DOMAIN;
+        $isTrunkrs = substr($method->id, 0, strlen(TRUNKRS_WC_Bootstrapper::DOMAIN)) === TRUNKRS_WC_Bootstrapper::DOMAIN;
         if (!$isTrunkrs) {
           return $label;
         }
 
         $type = explode('_', $method->id)[1];
-        $cutOffTime = WC_TRUNKRS_Utils::parse8601($method->meta_data[self::CUT_OFF_TIME_KEY]);
+        $cutOffTime = TRUNKRS_WC_Utils::parse8601($method->meta_data[self::CUT_OFF_TIME_KEY]);
 
         $description = null;
         switch ($type) {
           case 'same';
             $description = sprintf(
-              __('Plaats je bestelling voor <b>%s</b> om het vandaag te ontvangen!'),
-              date_i18n('H:i', $cutOffTime->getTimestamp() + $cutOffTime->getOffset())
+              __('Plaats je bestelling voor <b>%s</b> om het vandaag te ontvangen!', TRUNKRS_WC_Bootstrapper::DOMAIN),
+              esc_html(date_i18n('H:i', $cutOffTime->getTimestamp() + $cutOffTime->getOffset()))
             );
             break;
           case 'next':
-            $deliveryDate = WC_TRUNKRS_Utils::parse8601Date($method->meta_data[self::DELIVERY_DATE_KEY]);
+            $deliveryDate = TRUNKRS_WC_Utils::parse8601Date($method->meta_data[self::DELIVERY_DATE_KEY]);
             $today = new DateTime("today");
             $diff = $today->diff($deliveryDate);
             $diffDays = (integer)$diff->format("%R%a");
 
             $deliveryDesc = $diffDays === 1
-              ? __('morgen')
-              : __('op') . ' ' . date_i18n('D dS', $deliveryDate->getTimestamp() + $deliveryDate->getOffset());
+              ? __('morgen', TRUNKRS_WC_Bootstrapper::DOMAIN)
+              : __('op', TRUNKRS_WC_Bootstrapper::DOMAIN) . ' ' . date_i18n('D dS', $deliveryDate->getTimestamp() + $deliveryDate->getOffset());
 
             $description = sprintf(
-              __('Plaats je bestelling voor <b>%s</b> om het %s te ontvangen!'),
-              date_i18n('D dS H:i', $cutOffTime->getTimestamp() + $cutOffTime->getOffset()),
-              $deliveryDesc
+              __('Plaats je bestelling voor <b>%s</b> om het %s te ontvangen!', TRUNKRS_WC_Bootstrapper::DOMAIN),
+              esc_html(date_i18n('D dS H:i', $cutOffTime->getTimestamp() + $cutOffTime->getOffset())),
+              esc_html($deliveryDesc)
             );
             break;
         }
 
-        $logoUrl = TR_WC_Settings::getUseDark()
-          ? WC_TRUNKRS_Utils::createAssetUrl('icons/trunkrs-small-light.svg')
-          : WC_TRUNKRS_Utils::createAssetUrl('icons/trunkrs-small-indigo.svg');
+        $logoUrl = TRUNKRS_WC_Settings::getUseDark()
+          ? TRUNKRS_WC_Utils::createAssetUrl('icons/trunkrs-small-light.svg')
+          : TRUNKRS_WC_Utils::createAssetUrl('icons/trunkrs-small-indigo.svg');
 
         return sprintf(
           '<span class="tr-wc-checkout-container">
@@ -65,21 +63,21 @@ function createShippingMethodClass()
                     <p class="tr-wc-checkout-description">%s</p>
                   </span>
                 ',
-          $logoUrl,
-          wc_price($method->cost),
-          $description,
+          esc_url($logoUrl),
+          esc_html(wc_price($method->cost)),
+          esc_html($description),
         );
       }
 
       public function __construct()
       {
-        $this->id = self::DOMAIN;
+        $this->id = TRUNKRS_WC_Bootstrapper::DOMAIN;
 
-        $this->method_title = __('Trunkrs Same-day', self::DOMAIN);
-        $this->method_description = __('Trunkrs same and next day delivery.');
+        $this->method_title = __('Trunkrs Same-day', TRUNKRS_WC_Bootstrapper::DOMAIN);
+        $this->method_description = __('Trunkrs same and next day delivery.', TRUNKRS_WC_Bootstrapper::DOMAIN);
 
         $this->enabled = 'yes';
-        $this->title = $this->settings['title'] ?? __('Trunkrs', self::DOMAIN);
+        $this->title = $this->settings['title'] ?? __('Trunkrs', TRUNKRS_WC_Bootstrapper::DOMAIN);
 
         $this->init();
       }
@@ -104,11 +102,11 @@ function createShippingMethodClass()
        */
       public function calculate_shipping($package = [])
       {
-        if (!TR_WC_Settings::isConfigured()) {
+        if (!TRUNKRS_WC_Settings::isConfigured()) {
           return;
         }
 
-        $apiRates = WC_TRUNKRS_API::getShippingRates([
+        $apiRates = TRUNKRS_WC_Api::getShippingRates([
           'orderValue' => $package['contents_cost'],
           'country' => $package['destination']['country'],
         ]);
@@ -118,7 +116,7 @@ function createShippingMethodClass()
         }
 
         foreach ($apiRates as $apiRate) {
-          $deliveryTimestamp = WC_TRUNKRS_Utils::parse8601($apiRate->deliveryDate)->getTimestamp();
+          $deliveryTimestamp = TRUNKRS_WC_Utils::parse8601($apiRate->deliveryDate)->getTimestamp();
           $deliveryDate = date('Y-m-d', $deliveryTimestamp);
 
           $woocommerceRate = [
@@ -140,10 +138,10 @@ function createShippingMethodClass()
 
 function addTrunkrsShippingMethod($methods)
 {
-  $methods[] = 'WC_TRUNKRS_ShippingMethod';
+  $methods[] = 'TRUNKRS_WC_ShippingMethod';
   return $methods;
 }
 
-add_filter('woocommerce_cart_shipping_method_full_label', 'WC_TRUNKRS_ShippingMethod::renderLabel', 10, 2);
+add_filter('woocommerce_cart_shipping_method_full_label', 'TRUNKRS_WC_ShippingMethod::renderLabel', 10, 2);
 add_action('woocommerce_shipping_init', 'createShippingMethodClass');
 add_filter('woocommerce_shipping_methods', 'addTrunkrsShippingMethod');

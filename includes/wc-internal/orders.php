@@ -1,7 +1,7 @@
 <?php
 
-if (!class_exists('WC_TRUNKRS_Orders')) {
-  class WC_TRUNKRS_Orders
+if (!class_exists('TRUNKRS_WC_Orders')) {
+  class TRUNKRS_WC_Orders
   {
     public function __construct()
     {
@@ -9,12 +9,12 @@ if (!class_exists('WC_TRUNKRS_Orders')) {
       add_action('woocommerce_order_refunded', [$this, 'cancelOrder']);
       add_action('woocommerce_order_status_cancelled', [$this, 'cancelOrder']);
       add_action('wp_trash_post', [$this, 'deleteOrder']);
-      add_action('woocommerce_order_status_processing', [$this, 'createOrder']);
+      add_action('woocommerce_checkout_order_processed', [$this, 'createOrder']);
     }
 
     public function untrashOrder(string $wpPostId)
     {
-      if (!TR_WC_Settings::isConfigured())
+      if (!TRUNKRS_WC_Settings::isConfigured())
         return;
 
       $type = get_post_type($wpPostId);
@@ -27,9 +27,9 @@ if (!class_exists('WC_TRUNKRS_Orders')) {
 
     public function createOrder(string $orderId)
     {
-      if (!TR_WC_Settings::isConfigured())
+      if (!TRUNKRS_WC_Settings::isConfigured())
         return;
-      $trunkrsOrder = new TR_WC_Order($orderId);
+      $trunkrsOrder = new TRUNKRS_WC_Order($orderId);
 
       if (!$trunkrsOrder->isTrunkrsOrder)
         return;
@@ -39,7 +39,7 @@ if (!class_exists('WC_TRUNKRS_Orders')) {
 
     public function deleteOrder(string $wpPostId)
     {
-      if (!TR_WC_Settings::isConfigured())
+      if (!TRUNKRS_WC_Settings::isConfigured())
         return;
 
       $type = get_post_type($wpPostId);
@@ -52,10 +52,10 @@ if (!class_exists('WC_TRUNKRS_Orders')) {
 
     public function cancelOrder(string $orderId)
     {
-      if (!TR_WC_Settings::isConfigured())
+      if (!TRUNKRS_WC_Settings::isConfigured())
         return;
 
-      $order = new TR_WC_Order($orderId);
+      $order = new TRUNKRS_WC_Order($orderId);
 
       if ($order->isTrunkrsOrder) {
         $order->cancelShipment();
@@ -64,4 +64,4 @@ if (!class_exists('WC_TRUNKRS_Orders')) {
   }
 }
 
-new WC_TRUNKRS_Orders();
+new TRUNKRS_WC_Orders();

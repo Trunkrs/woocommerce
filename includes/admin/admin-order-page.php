@@ -1,7 +1,7 @@
 <?php
 
-if (!class_exists('WC_TRUNKRS_AdminOrderPage')) {
-  class WC_TRUNKRS_AdminOrderPage
+if (!class_exists('TRUNKRS_WC_AdminOrderPage')) {
+  class TRUNKRS_WC_AdminOrderPage
   {
     public function __construct()
     {
@@ -10,23 +10,23 @@ if (!class_exists('WC_TRUNKRS_AdminOrderPage')) {
 
     public function renderTrunkrsBox($post)
     {
-      if (!TR_WC_Settings::isConfigured())
+      if (!TRUNKRS_WC_Settings::isConfigured())
         return;
 
-      $trunkrsOrder = new TR_WC_Order($post->ID);
+      $trunkrsOrder = new TRUNKRS_WC_Order($post->ID);
 
       if (!$trunkrsOrder->isTrunkrsOrder)
         return;
 
       $logoImg = sprintf(
         '<img class="tr-wc-admin-small-logo" alt="Trunkrs logo" src="%s" />',
-        WC_TRUNKRS_Utils::createAssetUrl('icons/trunkrs-small-indigo.svg')
+        TRUNKRS_WC_Utils::createAssetUrl('icons/trunkrs-small-indigo.svg')
       );
 
       if ($trunkrsOrder->isAnnounceFailed && !$trunkrsOrder->isCancelled) {
         add_meta_box(
           'wc_tr_shipment_side_box',
-          $logoImg . __('Zending details'),
+          $logoImg . __('Zending details', TRUNKRS_WC_Bootstrapper::DOMAIN),
           [$this, 'renderFailedSideBarContent'],
           'shop_order',
           'side',
@@ -37,7 +37,7 @@ if (!class_exists('WC_TRUNKRS_AdminOrderPage')) {
 
       add_meta_box(
         'wc_tr_shipment_side_box',
-         $logoImg . __('Zending details'),
+         $logoImg . __('Zending details', TRUNKRS_WC_Bootstrapper::DOMAIN),
         [$this, 'renderSideBarContent'],
         'shop_order',
         'side',
@@ -55,73 +55,66 @@ if (!class_exists('WC_TRUNKRS_AdminOrderPage')) {
       <ul class="wc-tr-shipment-details">
         <li>
           <p>
-            <?php echo __('Het aanmelden van de zending is mislukt. Controleer a.u.b. of de adresgegevens correct zijn en of wij op dit adres bezorgen.') ?>
+            <?php esc_html_e('Het aanmelden van de zending is mislukt. Controleer a.u.b. of de adresgegevens correct zijn en of wij op dit adres bezorgen.') ?>
           </p>
         </li>
       </ul>
 
       <ul class="wc-tr-shipment-actions failed">
-        <?php
-        echo sprintf(
-          '<li class="action-item">
-                    <a href="%1s" class="button button-primary" title="%3$s">
-                        <span class="dashicons dashicons-update-alt"></span>
-                        %2$s
-                    </a>
-                 </li>',
-          $reannounceUrl,
-          __('Opnieuw'),
-          __('Hiermee wordt geprobeerd de zending opnieuw aan Trunkrs aan te melden.')
-        );
-        ?>
+        <li class="action-item">
+          <a
+            href="<?php esc_url_e($reannounceUrl) ?>"
+            class="button button-primary"
+            title="<?php esc_attr_e('Hiermee wordt geprobeerd de zending opnieuw aan Trunkrs aan te melden.', TRUNKRS_WC_Bootstrapper::DOMAIN) ?>"
+          >
+            <span class="dashicons dashicons-update-alt"></span>
+            <?php esc_html_e('Opnieuw', TRUNKRS_WC_Bootstrapper::DOMAIN) ?>
+          </a>
+        </li>
       </ul>
       <?php
     }
 
     public function renderSideBarContent($post)
     {
-      $trunkrsOrder = new TR_WC_Order($post->ID);
+      $trunkrsOrder = new TRUNKRS_WC_Order($post->ID);
 
       $classes = $trunkrsOrder->isCancelled ? 'failed' : '';
 
       ?>
-      <ul class="wc-tr-shipment-details <?php echo $classes ?>">
+      <ul class="wc-tr-shipment-details <?php esc_attr_e($classes) ?>">
         <li>
           <p>
-            <?php
-              echo sprintf(
-                '<b>%s</b>: <span class="tr-value">%s</span>',
-                __('Trunkrs nummer'),
-                $trunkrsOrder->trunkrsNr
-              )
-            ?>
+            <b>
+              <?php esc_html_e('Trunkrs nummer', TRUNKRS_WC_Bootstrapper::DOMAIN) ?>
+            </b>
+            :&nbsp;
+            <span class="tr-value"><?php esc_html_e($trunkrsOrder->trunkrsNr) ?></span>
           </p>
         </li>
 
         <li>
           <p>
-            <?php
-            echo sprintf(
-              '<b>%s</b>: <span class="tr-value">%s</span>',
-                __('Bezorgdatum'),
-                $trunkrsOrder->getFormattedDate()
-              )
-            ?>
+            <b>
+              <?php esc_html_e('Bezorgdatum', TRUNKRS_WC_Bootstrapper::DOMAIN) ?>
+            </b>
+            :&nbsp;
+            <span class="tr-value"><?php esc_html_e($trunkrsOrder->getFormattedDate()) ?></span>
           </p>
         </li>
 
-        <?php
-          if ($trunkrsOrder->isCancelled) {
-            echo sprintf(
-              '<li><p><b>%s</b>: <span class="tr-canceled">%s</span></p></li>',
-              __('Geannuleerd'),
-              __('Ja')
-            );
-          }
-        ?>
+        <li>
+          <p>
+            <b><?php esc_html_e('Geannuleerd', TRUNKRS_WC_Bootstrapper::DOMAIN) ?></b>
+            :&nbsp;
+            <span class="tr-canceled">
+              <?php esc_html_e('Ja', TRUNKRS_WC_Bootstrapper::DOMAIN) ?>
+            </span>
+          </p>
+        </li>
       </ul>
 
-      <ul class="wc-tr-shipment-actions <?php echo $classes ?>">
+      <ul class="wc-tr-shipment-actions <?php esc_attr_e($classes) ?>">
         <?php
         if (!$trunkrsOrder->isCancelled) {
           $cancelUrl = admin_url(sprintf(
@@ -134,45 +127,44 @@ if (!class_exists('WC_TRUNKRS_AdminOrderPage')) {
             $trunkrsOrder->trunkrsNr
           ));
 
-          echo sprintf(
-            '<li class="action-item">
-                    <a href="%1s" class="cancel-shipment" title="%3$s">
-                        %2$s
-                    </a>
-                 </li>',
-            $cancelUrl,
-            __('Zending annuleren'),
-            __('Annuleert de zending op het Trunkrs platform.')
-          );
+          ?>
+          <li class="action-item">
+            <a
+              href="<?php esc_url_e($cancelUrl) ?>"
+              class="cancel-shipment" title="<?php esc_attr_e('Annuleert de zending op het Trunkrs platform.', TRUNKRS_WC_Bootstrapper::DOMAIN) ?>"
+            >
+              <?php esc_html_e('Zending annuleren', TRUNKRS_WC_Bootstrapper::DOMAIN) ?>
+            </a>
+          </li>
 
-          echo sprintf(
-            '<li class="action-item">
-                    <a href="%1s" target="_blank" class="button button-primary" title="%3$s">
-                        <span class="dashicons dashicons-printer"></span>
-                        %2$s
-                    </a>
-                 </li>',
-            $downloadUrl,
-            __('Label'),
-            __('Download het zending label.')
-          );
+          <li class="action-item">
+            <a
+              href="<?php esc_url_e($downloadUrl) ?>"
+              class="cancel-shipment"
+              title="<?php esc_attr_e('Download het zending label.', TRUNKRS_WC_Bootstrapper::DOMAIN) ?>"
+            >
+              <?php esc_html_e('Label', TRUNKRS_WC_Bootstrapper::DOMAIN) ?>
+            </a>
+          </li>
+          <?php
         } else {
           $reannounceUrl = admin_url(sprintf(
             'admin-ajax.php?action=tr-wc_reannounce&orderId=%s',
             $post->ID
           ));
 
-          echo sprintf(
-            '<li class="action-item">
-                    <a href="%1s" class="button button-primary" title="%3$s">
-                        <span class="dashicons dashicons-update-alt"></span>
-                        %2$s
-                    </a>
-                 </li>',
-            $reannounceUrl,
-            __('Opnieuw'),
-            __('Hiermee wordt geprobeerd de zending opnieuw aan Trunkrs aan te melden.')
-          );
+          ?>
+          <li class="action-item">
+            <a
+              href="<?php esc_url_e($reannounceUrl) ?>"
+              class="button button-primary"
+              title="<?php esc_attr_e('Hiermee wordt geprobeerd de zending opnieuw aan Trunkrs aan te melden.', TRUNKRS_WC_Bootstrapper::DOMAIN) ?>"
+            >
+              <span class="dashicons dashicons-update-alt"></span>
+              <?php esc_html_e('Opnieuw') ?>
+            </a>
+          </li>
+          <?php
         }
         ?>
       </ul>
@@ -181,6 +173,6 @@ if (!class_exists('WC_TRUNKRS_AdminOrderPage')) {
   }
 }
 
-new WC_TRUNKRS_AdminOrderPage();
+new TRUNKRS_WC_AdminOrderPage();
 
 

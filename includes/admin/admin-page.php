@@ -1,10 +1,9 @@
 <?php
 
-if (!class_exists('WC_TRUNKRS_AdminPage')) {
-  class WC_TRUNKRS_AdminPage
+if (!class_exists('TRUNKRS_WC_AdminPage')) {
+  class TRUNKRS_WC_AdminPage
   {
     const ADMIN_MENU_SLUG = 'tr-wc-settings';
-    const DOMAIN = 'trunkrs-woocommerce';
 
     public function __construct()
     {
@@ -15,8 +14,8 @@ if (!class_exists('WC_TRUNKRS_AdminPage')) {
     {
       add_submenu_page(
         "woocommerce",
-        __("Trunkrs", self::DOMAIN),
-        __("Trunkrs", self::DOMAIN),
+        __("Trunkrs", TRUNKRS_WC_Bootstrapper::DOMAIN),
+        __("Trunkrs", TRUNKRS_WC_Bootstrapper::DOMAIN),
         "manage_options",
         self::ADMIN_MENU_SLUG,
         [$this, 'renderAdminPageHtml']
@@ -26,34 +25,33 @@ if (!class_exists('WC_TRUNKRS_AdminPage')) {
     public function renderAdminPageHtml()
     {
       global $wp_version;
-
       $theme = wp_get_theme();
-      $appData = sprintf(
-        '<script id="__%s__" type="application/json">%s</script>',
-        self::ADMIN_MENU_SLUG,
-        json_encode([
-          'isConfigured' => TR_WC_Settings::isConfigured(),
-          'isDarkLogo' => TR_WC_Settings::getUseDark(),
-          'isEmailLinksEnabled' => TR_WC_Settings::getUseTrackTraceLinks(),
-          'isAccountTrackTraceEnabled' => TR_WC_Settings::getUseAccountActions(),
-          'details' => TR_WC_Settings::getIntegrationDetails(),
-          'metaBag' => [
-            'php_version' => phpversion(),
-            'php_extensions' => get_loaded_extensions(),
-            'wp_version' => $wp_version,
-            'wc_version' => WC_VERSION,
-            'theme_name' => $theme->get('Name'),
-            'theme_version' => $theme->get('Version'),
-          ]
-        ])
-      );
 
-      $appMountPoint = sprintf('<div id="%s"></div>', self::ADMIN_MENU_SLUG);
-
-      echo $appData . $appMountPoint;
+      ?>
+        <script id="__<?php esc_attr_e(self::ADMIN_MENU_SLUG) ?>__" type="application/json">
+          <?php
+          echo wp_json_encode([
+            'isConfigured' => TRUNKRS_WC_Settings::isConfigured(),
+            'isDarkLogo' => TRUNKRS_WC_Settings::getUseDark(),
+            'isEmailLinksEnabled' => TRUNKRS_WC_Settings::getUseTrackTraceLinks(),
+            'isAccountTrackTraceEnabled' => TRUNKRS_WC_Settings::getUseAccountActions(),
+            'details' => TRUNKRS_WC_Settings::getIntegrationDetails(),
+            'metaBag' => [
+              'php_version' => phpversion(),
+              'php_extensions' => get_loaded_extensions(),
+              'wp_version' => $wp_version,
+              'wc_version' => WC_VERSION,
+              'theme_name' => $theme->get('Name'),
+              'theme_version' => $theme->get('Version'),
+            ]
+          ])
+          ?>
+        </script>
+        <div id="<?php esc_attr_e(self::ADMIN_MENU_SLUG) ?>"></div>
+      <?php
     }
   }
 }
 
-new WC_TRUNKRS_AdminPage();
+new TRUNKRS_WC_AdminPage();
 

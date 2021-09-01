@@ -1,10 +1,8 @@
 <?php
 
-if (!class_exists('WC_TRUNKRS_AssetLoader')) {
-  class WC_TRUNKRS_AssetLoader
+if (!class_exists('TRUNKRS_WC_AssetLoader')) {
+  class TRUNKRS_WC_AssetLoader
   {
-    const DOMAIN = 'trunkrs-woocommerce';
-
     var $pluginRootDir;
 
     public function __construct()
@@ -15,7 +13,6 @@ if (!class_exists('WC_TRUNKRS_AssetLoader')) {
 
       add_action('wp_enqueue_scripts', [$this, 'loadCheckoutAssets']);
       add_action('admin_enqueue_scripts', [$this, 'loadAdminAssets']);
-      add_action('wp_footer', [$this, 'addCheckoutInlineVariables']);
     }
 
     public function loadCheckoutAssets()
@@ -24,31 +21,15 @@ if (!class_exists('WC_TRUNKRS_AssetLoader')) {
         return;
       }
 
-      $assetTag = self::DOMAIN . '-checkout';
+      $assetTag = TRUNKRS_WC_Bootstrapper::DOMAIN . '-checkout';
       $stylePath = '/build/checkout.css';
 
       $this->addStylesForTag($assetTag, $stylePath);
     }
 
-    public function addCheckoutInlineVariables()
-    {
-      if (!$this->isCheckout()) {
-        return;
-      }
-
-      echo PHP_EOL . '<script id="tr-wc-checkout-details">' . PHP_EOL;
-
-      $json = json_encode([
-        'assetUrl' => WC_TRUNKRS_Utils::getBaseUrl(),
-      ]);
-      echo sprintf('var wc_tr_details = %s', $json);
-
-      echo PHP_EOL . '</script>' . PHP_EOL;
-    }
-
     public function loadAdminAssets()
     {
-      $assetTag = self::DOMAIN . '-admin';
+      $assetTag = TRUNKRS_WC_Bootstrapper::DOMAIN . '-admin';
 
       $assetPhpPath = '/build/admin.asset.php';
       $scriptPath = '/build/admin.js';
@@ -104,4 +85,4 @@ if (!class_exists('WC_TRUNKRS_AssetLoader')) {
   }
 }
 
-new WC_TRUNKRS_AssetLoader();
+new TRUNKRS_WC_AssetLoader();

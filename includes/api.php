@@ -1,11 +1,11 @@
 <?php
 
-if (!class_exists('WC_TRUNKRS_API')) {
+if (!class_exists('TRUNKRS_WC_Api')) {
   if (!class_exists('WP_Http')) {
     include_once(ABSPATH . WPINC . '/class-http.php');
   }
 
-  class WC_TRUNKRS_API
+  class TRUNKRS_WC_Api
   {
     private const RatesBaseResource = 'shipping-rates';
     private const ShipmentResource = 'shipments';
@@ -30,7 +30,7 @@ if (!class_exists('WC_TRUNKRS_API')) {
     private static function makeRequest(string $method, string $resource, array $payload = null, int $timeout = 3500)
     {
 
-      $accessToken = TR_WC_Settings::getAccessToken();
+      $accessToken = TRUNKRS_WC_Settings::getAccessToken();
       $requestArgs = [
         'timeout' => $timeout,
         'method' => $method,
@@ -44,12 +44,12 @@ if (!class_exists('WC_TRUNKRS_API')) {
       $isMethodWithPayload = $method === 'POST' || $method === 'PUT' || $method === 'PATCH';
 
       if (!is_null($payload) && $isMethodWithPayload) {
-        $requestArgs['body'] = json_encode($payload);
+        $requestArgs['body'] = wp_json_encode($payload);
       } elseif (!is_null($payload)) {
         $resource = self::makeQueriedResource($resource, $payload);
       }
 
-      $requestUrl = TR_WC_Settings::getResourceUrl($resource);
+      $requestUrl = TRUNKRS_WC_Settings::getResourceUrl($resource);
       $httpRequest = new WP_Http();
       return $httpRequest->request($requestUrl, $requestArgs);
     }
@@ -104,8 +104,8 @@ if (!class_exists('WC_TRUNKRS_API')) {
         return null;
       }
 
-      $response = json_decode($response['body']);
-      $shipment = WC_TRUNKRS_Utils::findInArray($response->success, function ($shipmentResult) use ($reference) {
+      $response = wp_json_decode($response['body']);
+      $shipment = TRUNKRS_WC_Utils::findInArray($response->success, function ($shipmentResult) use ($reference) {
         return $shipmentResult->overriddenReference === $reference;
       });
 
@@ -151,7 +151,7 @@ if (!class_exists('WC_TRUNKRS_API')) {
         return null;
       }
 
-      $response = json_decode($response['body']);
+      $response = wp_json_decode($response['body']);
       return $response->url;
     }
 

@@ -1,7 +1,7 @@
 <?php
 
-if (!class_exists('WC_TR_AdminEndpoints')) {
-  class TR_WC_AdminEndpoints
+if (!class_exists('TRUNKRS_WC_AdminEndpoints')) {
+  class TRUNKRS_WC_AdminEndpoints
   {
     const DOWNLOAD_LABEL_ACTION = 'tr-wc_download-label';
     const CANCEL_ACTION = 'tr-wc_cancel';
@@ -25,20 +25,20 @@ if (!class_exists('WC_TR_AdminEndpoints')) {
 
     public function executeRegisterEndpoint()
     {
-      if (TR_WC_Settings::isConfigured()) {
+      if (TRUNKRS_WC_Settings::isConfigured()) {
         status_header(409);
         wp_die();
         return;
       }
 
-      $accessToken = $_POST['accessToken'];
-      $integrationId = $_POST['integrationId'];
-      $orgId = $_POST['organizationId'];
-      $orgName = $_POST['organizationName'];
+      $accessToken = sanitize_text_field($_POST['accessToken']);
+      $integrationId = sanitize_text_field($_POST['integrationId']);
+      $orgId = sanitize_text_field($_POST['organizationId']);
+      $orgName = sanitize_text_field($_POST['organizationName']);
 
-      TR_WC_Settings::setConfigured(true);
-      TR_WC_Settings::setAccessToken($accessToken);
-      TR_WC_Settings::setIntegrationDetails([
+      TRUNKRS_WC_Settings::setConfigured(true);
+      TRUNKRS_WC_Settings::setAccessToken($accessToken);
+      TRUNKRS_WC_Settings::setIntegrationDetails([
         'integrationId' => $integrationId,
         'organizationId' => $orgId,
         'organizationName' => $orgName,
@@ -50,9 +50,9 @@ if (!class_exists('WC_TR_AdminEndpoints')) {
 
     public function executeUpdateUseDarkEndpoint()
     {
-      $useDark = $_POST['isDarkLogo'] === 'true';
+      $useDark = sanitize_text_field($_POST['isDarkLogo']) === 'true';
 
-      TR_WC_Settings::setUseDark($useDark);
+      TRUNKRS_WC_Settings::setUseDark($useDark);
 
       status_header(204);
       wp_die();
@@ -60,9 +60,9 @@ if (!class_exists('WC_TR_AdminEndpoints')) {
 
     public function executeUpdateUseTnTLinksEndpoint()
     {
-      $value = $_POST['isEmailLinksEnabled'] === 'true';
+      $value = sanitize_text_field($_POST['isEmailLinksEnabled']) === 'true';
 
-      TR_WC_Settings::setUseEmailLink($value);
+      TRUNKRS_WC_Settings::setUseEmailLink($value);
 
       status_header(204);
       wp_die();
@@ -70,25 +70,25 @@ if (!class_exists('WC_TR_AdminEndpoints')) {
 
     public function executeUpdateUseTnTAccountEndpoint()
     {
-      $value = $_POST['isAccountTrackTraceEnabled'] === 'true';
+      $value = sanitize_text_field($_POST['isAccountTrackTraceEnabled']) === 'true';
 
-      TR_WC_Settings::setUseAccountActions($value);
+      TRUNKRS_WC_Settings::setUseAccountActions($value);
 
       status_header(204);
       wp_die();
     }
 
     public function executeDownloadLabelEndpoint() {
-      $trunkrsNr = $_GET['trunkrsNr'];
-      $labelUrl = WC_TRUNKRS_API::getLabel($trunkrsNr);
+      $trunkrsNr = sanitize_text_field($_GET['trunkrsNr']);
+      $labelUrl = TRUNKRS_WC_Api::getLabel($trunkrsNr);
 
       wp_redirect($labelUrl);
       exit;
     }
 
     public function executeCancelEndpoint() {
-      $orderId = $_GET['orderId'];
-      $order = new TR_WC_Order($orderId);
+      $orderId = sanitize_text_field($_GET['orderId']);
+      $order = new TRUNKRS_WC_Order($orderId);
 
       $order->cancelShipment();
 
@@ -100,8 +100,8 @@ if (!class_exists('WC_TR_AdminEndpoints')) {
     }
 
     public function executeAnnounceEndpoint() {
-      $orderId = $_GET['orderId'];
-      $order = new TR_WC_Order($orderId);
+      $orderId = sanitize_text_field($_GET['orderId']);
+      $order = new TRUNKRS_WC_Order($orderId);
 
       $order->announceShipment();
 
@@ -114,6 +114,6 @@ if (!class_exists('WC_TR_AdminEndpoints')) {
   }
 }
 
-new TR_WC_AdminEndpoints();
+new TRUNKRS_WC_AdminEndpoints();
 
 

@@ -1,12 +1,8 @@
 <?php
 
-if (!class_exists('WC_TRUNKRS_Utils')) {
-  class WC_TRUNKRS_Utils
+if (!class_exists('TRUNKRS_WC_Utils')) {
+  class TRUNKRS_WC_Utils
   {
-    public const DOMAIN = 'trunkrs-woocommerce';
-
-    private const SHIPPING_DETAILS = 'tr-wc_shipping-details';
-
     private static $rootUrl = null;
 
     /**

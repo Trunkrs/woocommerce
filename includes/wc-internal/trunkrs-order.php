@@ -1,7 +1,7 @@
 <?php
 
-if (!class_exists('TR_WC_Order')) {
-  class TR_WC_Order
+if (!class_exists('TRUNKRS_WC_Order')) {
+  class TRUNKRS_WC_Order
   {
     public const DELIVERY_DATE_KEY = 'deliveryDate';
     public const CUT_OFF_TIME_KEY = 'cutOffTime';
@@ -54,7 +54,7 @@ if (!class_exists('TR_WC_Order')) {
 
       foreach ($shippingItem as $item) {
         $shippingMethodId = $item->get_method_id();
-        if ($shippingMethodId !== WC_TRUNKRS_Utils::DOMAIN) {
+        if ($shippingMethodId !== TRUNKRS_WC_Bootstrapper::DOMAIN) {
           continue;
         }
 
@@ -62,7 +62,7 @@ if (!class_exists('TR_WC_Order')) {
         if (!$withMeta)
           return;
 
-        $meta = get_post_meta($this->order->get_id(), WC_TRUNKRS_Utils::DOMAIN, true);
+        $meta = get_post_meta($this->order->get_id(), TRUNKRS_WC_Bootstrapper::DOMAIN, true);
         if (empty($meta) || !is_array($meta))
           return;
 
@@ -81,7 +81,7 @@ if (!class_exists('TR_WC_Order')) {
       if (empty($this->deliveryDate))
         return '';
 
-      $date = WC_TRUNKRS_Utils::parse8601($this->deliveryDate);
+      $date = TRUNKRS_WC_Utils::parse8601($this->deliveryDate);
       return $date->format('Y-m-d');
     }
 
@@ -99,7 +99,7 @@ if (!class_exists('TR_WC_Order')) {
      */
     public function getTrackTraceLink(): string {
       $postalCode = $this->order->get_shipping_postcode();
-      return TR_WC_Settings::TRACK_TRACE_BASE_URL . $this->trunkrsNr . '/' . $postalCode;
+      return TRUNKRS_WC_Settings::TRACK_TRACE_BASE_URL . $this->trunkrsNr . '/' . $postalCode;
     }
 
     /**
@@ -109,10 +109,10 @@ if (!class_exists('TR_WC_Order')) {
       $shippingItems = $this->order->get_items('shipping');
 
       foreach ($shippingItems as $item) {
-        $deliveryDate = WC_TRUNKRS_Utils::getMetaDataValue($item, self::DELIVERY_DATE_KEY);
+        $deliveryDate = TRUNKRS_WC_Utils::getMetaDataValue($item, self::DELIVERY_DATE_KEY);
 
         $reference = sprintf('%s-%s', uniqid(), $this->order->get_id());
-        $shipment = WC_TRUNKRS_API::announceShipment($this->order, $reference, $deliveryDate);
+        $shipment = TRUNKRS_WC_Api::announceShipment($this->order, $reference, $deliveryDate);
 
         $item->delete_meta_data(self::DELIVERY_DATE_KEY);
         $item->delete_meta_data(self::CUT_OFF_TIME_KEY);
@@ -137,10 +137,13 @@ if (!class_exists('TR_WC_Order')) {
      * Cancels the shipment attached to this order.
      */
     public function cancelShipment() {
-      $isSuccess = WC_TRUNKRS_API::cancelShipment($this->trunkrsNr);
+      $isSuccess = TRUNKRS_WC_Api::cancelShipment($this->trunkrsNr);
 
       if ($isSuccess) {
-        $this->order->add_order_note(__("De Trunkrs zending '$this->trunkrsNr' is geannuleerd."));
+        $this->order->add_order_note(sprintf(
+          __("De Trunkrs zending '%s' is geannuleerd.", TRUNKRS_WC_Bootstrapper::DOMAIN),
+          $this->trunkrsNr
+        ));
 
         $this->isCancelled = true;
         $this->save();
@@ -159,11 +162,11 @@ if (!class_exists('TR_WC_Order')) {
         'isAnnounceFailed' => $this->isAnnounceFailed,
       ];
 
-      $currentValue = get_post_meta($this->order->get_id(), WC_TRUNKRS_Utils::DOMAIN, true);
+      $currentValue = get_post_meta($this->order->get_id(), TRUNKRS_WC_Bootstrapper::DOMAIN, true);
       if (empty($currentValue) || !is_array($currentValue))
-        add_post_meta($this->order->get_id(), WC_TRUNKRS_Utils::DOMAIN, $metaValue);
+        add_post_meta($this->order->get_id(), TRUNKRS_WC_Bootstrapper::DOMAIN, $metaValue);
       else
-        update_post_meta($this->order->get_id(), WC_TRUNKRS_Utils::DOMAIN, $metaValue);
+        update_post_meta($this->order->get_id(), TRUNKRS_WC_Bootstrapper::DOMAIN, $metaValue);
     }
   }
 }

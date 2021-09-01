@@ -6,26 +6,27 @@
  * Author: Trunkrs
  * Author URI: https://trunkrs.nl
  * Version: 1.0.0
- * Requires at least: 3.5.1 & WooCommerce 3.0+
+ * Requires at least: 3.6 & WooCommerce 3.0+
  * Requires PHP: 7.1
  * License: GPLv3
+ * Text Domain: trunkrs-for-woocommerce
  *
  * @wordpress-plugin
  */
 
-if (!class_exists('WC_TRUNKRS_Bootstrapper')) {
-  class WC_TRUNKRS_Bootstrapper
+if (!class_exists('TRUNKRS_WC_Bootstrapper')) {
+  class TRUNKRS_WC_Bootstrapper
   {
-    const MIN_PHP_VERSION = '7.0';
-    const DOMAIN = 'trunkrs-woocommerce';
+    private const MIN_PHP_VERSION = '7.0';
+    public const DOMAIN = 'trunkrs-for-woocommerce';
 
     /**
      * @var string The semver version of the plugin.
      */
-    public $version = '0.0.1';
+    public $version = '1.0.0';
 
     /**
-     * @var WC_TRUNKRS_Bootstrapper The shared plugin instance.
+     * @var TRUNKRS_WC_Bootstrapper The shared plugin instance.
      */
     private static $_instance;
 
@@ -45,7 +46,7 @@ if (!class_exists('WC_TRUNKRS_Bootstrapper')) {
     public $pluginUrl;
 
     /**
-     * @return WC_TRUNKRS_Bootstrapper
+     * @return TRUNKRS_WC_Bootstrapper
      */
     public static function instance()
     {
@@ -64,62 +65,55 @@ if (!class_exists('WC_TRUNKRS_Bootstrapper')) {
       $this->pluginPath = rtrim(plugin_dir_path(__FILE__), '/\\');
       $this->pluginUrl = rtrim(plugins_url('/', __FILE__), '/\\');
 
+
+      add_action('plugins_loaded', [$this, 'loadTranslations']);
       add_action('init', [$this, 'loadMain']);
     }
 
     public function notifyWooCommerce()
     {
-      $error = sprintf(
-        __("Trunkrs Shipping for WooCommerce requires you to have %sWooCommerce%s installed & configured!",
-          self::DOMAIN
-        ),
-        '<a href="http://wordpress.org/extend/plugins/woocommerce/">',
-        '</a>'
-      );
-
-      $message = sprintf(
-        '<div class="error trwc-error">
-                    <div class="trwc-header">
-                        <img alt="Trunkrs Logo" src="%s" />
-                        <h2>%s</h2>
-                    </div>
-                    <span class="trwc-content">
-                        <p>%s</p>
-                    </span>
-               </div>',
-        WC_TRUNKRS_Utils::createAssetUrl('icons/trunkrs-small-indigo.svg'),
-        __('Trunkrs', self::DOMAIN),
-        $error
-      );
-
-      echo $message;
+     ?>
+      <div class="error trwc-error">
+        <div class="trwc-header">
+          <img alt="Trunkrs Logo" src="<?php esc_url_e(TRUNKRS_WC_Utils::createAssetUrl('icons/trunkrs-small-indigo.svg')) ?>" />
+          <h2>Trunkrs</h2>
+        </div>
+        <span class="trwc-content">
+          <p>
+            <?php esc_html_e("Voor het gebruik van Trunkrs voor WooCommerce moet je", self::DOMAIN) ?>
+            <a href="http://wordpress.org/extend/plugins/woocommerce/"> WooCommerce </a>
+            <?php esc_html_e("geinstalleerd hebben!", self::DOMAIN) ?>
+          </p>
+        </span>
+      </div>
+      <?php
     }
 
     public function notifyPHPVersion()
     {
-      $error = sprintf(
-        __("Trunkrs shipping for WooCommerce requires PHP %s or higher.", self::DOMAIN),
-        self::MIN_PHP_VERSION
-      );
-      $message = sprintf(
-        '<div class="error trwc-error">
-                  <span class="trwc-header">
-                    <img alt="Trunkrs Logo" src="%s" />
-                    <h2>%s</h2>
-                  </span>
-                  <span class="trwc-content">
-                    <p>%s</p>
-                    <p><a href="%s">%s</a></p>
-                  </span>
-                </div>',
-        WC_TRUNKRS_Utils::createAssetUrl('icons/trunkrs-small-indigo.svg'),
-        __('Trunkrs', self::DOMAIN),
-        $error,
-        'http://docs.wpovernight.com/general/how-to-update-your-php-version/',
-        __("How to update your PHP version", self::DOMAIN)
-      );
-
-      echo $message;
+      ?>
+      <div class="error trwc-error">
+        <span class="trwc-header">
+          <img alt="Trunkrs Logo" src="<?php esc_url_e(TRUNKRS_WC_Utils::createAssetUrl('icons/trunkrs-small-indigo.svg')) ?>"/>
+          <h2>Trunkrs</h2>
+        </span>
+        <span class="trwc-content">
+          <p>
+            <?php
+            esc_html(sprintf(
+              __("Trunkrs voor WooCommerce heeft PHP %s of hoger nodig.", self::DOMAIN),
+              self::MIN_PHP_VERSION
+            ))
+            ?>
+          </p>
+          <p>
+            <a href="http://docs.wpovernight.com/general/how-to-update-your-php-version">
+              <?php esc_html_e("Hoe kan ik mijn PHP versie updaten.", self::DOMAIN) ?>
+            </a>
+          </p>
+        </span>
+      </div>
+      <?php
     }
 
     public function loadMain()
@@ -127,6 +121,9 @@ if (!class_exists('WC_TRUNKRS_Bootstrapper')) {
       // Base resources
       require_once($this->pluginPath . '/includes/utils.php');
       require_once($this->pluginPath . '/includes/asset-loader.php');
+
+      // Load the translations
+      $this->loadTranslations();
 
       if (!$this->isPHPVersionMet(self::MIN_PHP_VERSION)) {
         add_action('admin_notices', [$this, 'notifyPHPVersion']);
@@ -171,6 +168,21 @@ if (!class_exists('WC_TRUNKRS_Bootstrapper')) {
       require_once($includePath . '/admin/admin-endpoints.php');
     }
 
+    public function loadTranslations() {
+      $locale = get_locale();
+      $wpLangDir = trailingslashit(WP_LANG_DIR);
+      $locale = explode('_', $locale)[0];
+
+      $wpMainPluginFile = $wpLangDir . 'trunkrs-for-woocommerce/' . TRUNKRS_WC_Bootstrapper::DOMAIN . '-' . $locale . '.mo';
+      load_textdomain(TRUNKRS_WC_Bootstrapper::DOMAIN, $wpMainPluginFile);
+
+      $wpTextDomainFile = $wpLangDir . 'plugins/' . TRUNKRS_WC_Bootstrapper::DOMAIN . '-' . $locale . '.mo';
+      load_textdomain(TRUNKRS_WC_Bootstrapper::DOMAIN, $wpTextDomainFile);
+
+      $pluginTextDomainFile = dirname(plugin_basename(__FILE__)) . '/languages';
+      load_plugin_textdomain(TRUNKRS_WC_Bootstrapper::DOMAIN, false, $pluginTextDomainFile);
+    }
+
     private function isWooCommerceActive()
     {
       $blog_plugins = get_option('active_plugins', []);
@@ -187,14 +199,14 @@ if (!class_exists('WC_TRUNKRS_Bootstrapper')) {
   }
 }
 
-function WC_TRUNKRS_Bootstrapper()
+function TRUNKRS_WC_Bootstrapper()
 {
-  return WC_TRUNKRS_Bootstrapper::instance();
+  return TRUNKRS_WC_Bootstrapper::instance();
 }
 
 function WooCommerce_Trunkrs()
 {
-  return WC_TRUNKRS_Bootstrapper();
+  return TRUNKRS_WC_Bootstrapper();
 }
 
-WC_TRUNKRS_Bootstrapper();
+TRUNKRS_WC_Bootstrapper();
