@@ -51,7 +51,11 @@ if (!class_exists('TRUNKRS_WC_Api')) {
 
       $requestUrl = TRUNKRS_WC_Settings::getResourceUrl($resource);
       $httpRequest = new WP_Http();
-      return $httpRequest->request($requestUrl, $requestArgs);
+      try {
+        return $httpRequest->request($requestUrl, $requestArgs);
+      } catch (Exception $exception) {
+        return null;
+      }
     }
 
     /**
@@ -100,16 +104,20 @@ if (!class_exists('TRUNKRS_WC_Api')) {
         6000
       );
 
-      if (is_wp_error($response) || $response['response']['code'] > 201) {
+      if (is_null($response) || is_wp_error($response) || $response['response']['code'] > 201) {
         return null;
       }
 
-      $response = wp_json_decode($response['body']);
-      $shipment = TRUNKRS_WC_Utils::findInArray($response->success, function ($shipmentResult) use ($reference) {
-        return $shipmentResult->overriddenReference === $reference;
-      });
+      try {
+        $response = json_decode($response['body']);
+        $shipment = TRUNKRS_WC_Utils::findInArray($response->success, function ($shipmentResult) use ($reference) {
+          return $shipmentResult->overriddenReference === $reference;
+        });
 
-      return $shipment;
+        return $shipment;
+      } catch (Exception $exception) {
+        return null;
+      }
     }
 
     /**
@@ -124,7 +132,7 @@ if (!class_exists('TRUNKRS_WC_Api')) {
         $orderDetails,
       );
 
-      if (is_wp_error($response) || $response['response']['code'] !== 200) {
+      if (is_null($response) || is_wp_error($response) || $response['response']['code'] !== 200) {
         return [];
       }
 
@@ -147,11 +155,11 @@ if (!class_exists('TRUNKRS_WC_Api')) {
         6000
       );
 
-      if (is_wp_error($response) || $response['response']['code'] !== 200) {
+      if (is_null($response) || is_wp_error($response) || $response['response']['code'] !== 200) {
         return null;
       }
 
-      $response = wp_json_decode($response['body']);
+      $response = json_decode($response['body']);
       return $response->url;
     }
 
@@ -169,7 +177,7 @@ if (!class_exists('TRUNKRS_WC_Api')) {
         6000
       );
 
-      return !is_wp_error($response)
+      return !is_null($response) && !is_wp_error($response)
         && $response['response']['code'] < 300;
     }
   }

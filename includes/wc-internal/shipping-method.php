@@ -64,8 +64,8 @@ function createShippingMethodClass()
                   </span>
                 ',
           esc_url($logoUrl),
-          esc_html(wc_price($method->cost)),
-          esc_html($description),
+          wc_price($method->cost),
+          $description,
         );
       }
 

@@ -25,7 +25,7 @@ if (!class_exists('TRUNKRS_WC_Notices')) {
       ?>
       <div class="error trwc-error indigo">
         <span class="trwc-header">
-          <img alt="Trunkrs Logo" src="<?php esc_url_e($logoUrl) ?>"/>
+          <img alt="Trunkrs Logo" src="<?php echo esc_url($logoUrl) ?>"/>
           <h2>Trunkrs</h2>
         </span>
         <span class="trwc-content">
@@ -33,7 +33,7 @@ if (!class_exists('TRUNKRS_WC_Notices')) {
             <?php esc_html_e('Dank je wel voor het installeren van de Trunkrs voor WooCommerce plugin, de plugin is nog niet klaar voor gebruik.', TRUNKRS_WC_Bootstrapper::DOMAIN) ?>
             <br/>
             <?php esc_html_e('Ga naar de', TRUNKRS_WC_Bootstrapper::DOMAIN) ?>
-            <a href="<?php esc_url_e(admin_url('admin.php?page=tr-wc-settings')) ?>">
+            <a href="<?php echo esc_url(admin_url('admin.php?page=tr-wc-settings')) ?>">
               <?php esc_html_e('instellingen pagina', TRUNKRS_WC_Bootstrapper::DOMAIN) ?>
             </a>
             <?php esc_html_e('om de installatie af te ronden.', TRUNKRS_WC_Bootstrapper::DOMAIN) ?>

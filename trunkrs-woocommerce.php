@@ -5,7 +5,7 @@
  * Description: Add excellent consumer focused shipping to your WooCommerce store.
  * Author: Trunkrs
  * Author URI: https://trunkrs.nl
- * Version: 1.0.0
+ * Version: 1.0.1
  * Requires at least: 3.6 & WooCommerce 3.0+
  * Requires PHP: 7.1
  * License: GPLv3
@@ -23,7 +23,7 @@ if (!class_exists('TRUNKRS_WC_Bootstrapper')) {
     /**
      * @var string The semver version of the plugin.
      */
-    public $version = '1.0.0';
+    public $version = '1.0.1';
 
     /**
      * @var TRUNKRS_WC_Bootstrapper The shared plugin instance.
@@ -75,7 +75,7 @@ if (!class_exists('TRUNKRS_WC_Bootstrapper')) {
      ?>
       <div class="error trwc-error">
         <div class="trwc-header">
-          <img alt="Trunkrs Logo" src="<?php esc_url_e(TRUNKRS_WC_Utils::createAssetUrl('icons/trunkrs-small-indigo.svg')) ?>" />
+          <img alt="Trunkrs Logo" src="<?php echo esc_url(TRUNKRS_WC_Utils::createAssetUrl('icons/trunkrs-small-indigo.svg')) ?>" />
           <h2>Trunkrs</h2>
         </div>
         <span class="trwc-content">
@@ -94,7 +94,7 @@ if (!class_exists('TRUNKRS_WC_Bootstrapper')) {
       ?>
       <div class="error trwc-error">
         <span class="trwc-header">
-          <img alt="Trunkrs Logo" src="<?php esc_url_e(TRUNKRS_WC_Utils::createAssetUrl('icons/trunkrs-small-indigo.svg')) ?>"/>
+          <img alt="Trunkrs Logo" src="<?php echo esc_url(TRUNKRS_WC_Utils::createAssetUrl('icons/trunkrs-small-indigo.svg')) ?>"/>
           <h2>Trunkrs</h2>
         </span>
         <span class="trwc-content">

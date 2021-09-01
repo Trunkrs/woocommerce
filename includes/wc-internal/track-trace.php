@@ -26,7 +26,7 @@ if (!class_exists('TRUNKRS_WC_TrackTrace')) {
       $deliveryDate = $trunkrsOrder->getFormattedDate();
 
       ?>
-      <p>
+      <p style="margin-bottom: 8px;">
         <?php
         esc_html_e(sprintf(
           __('Je hebt gekozen voor Trunkrs, Trunkrs bezorgd jouw bestelling op %s tussen 17 en 22 uur.', TRUNKRS_WC_Bootstrapper::DOMAIN),

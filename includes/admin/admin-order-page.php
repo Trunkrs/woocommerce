@@ -63,7 +63,7 @@ if (!class_exists('TRUNKRS_WC_AdminOrderPage')) {
       <ul class="wc-tr-shipment-actions failed">
         <li class="action-item">
           <a
-            href="<?php esc_url_e($reannounceUrl) ?>"
+            href="<?php echo esc_url($reannounceUrl) ?>"
             class="button button-primary"
             title="<?php esc_attr_e('Hiermee wordt geprobeerd de zending opnieuw aan Trunkrs aan te melden.', TRUNKRS_WC_Bootstrapper::DOMAIN) ?>"
           >
@@ -103,6 +103,9 @@ if (!class_exists('TRUNKRS_WC_AdminOrderPage')) {
           </p>
         </li>
 
+        <?php
+        if ($trunkrsOrder->isCancelled) {
+        ?>
         <li>
           <p>
             <b><?php esc_html_e('Geannuleerd', TRUNKRS_WC_Bootstrapper::DOMAIN) ?></b>
@@ -112,6 +115,9 @@ if (!class_exists('TRUNKRS_WC_AdminOrderPage')) {
             </span>
           </p>
         </li>
+      <?php
+      }
+      ?>
       </ul>
 
       <ul class="wc-tr-shipment-actions <?php esc_attr_e($classes) ?>">
@@ -130,7 +136,7 @@ if (!class_exists('TRUNKRS_WC_AdminOrderPage')) {
           ?>
           <li class="action-item">
             <a
-              href="<?php esc_url_e($cancelUrl) ?>"
+              href="<?php echo esc_url($cancelUrl) ?>"
               class="cancel-shipment" title="<?php esc_attr_e('Annuleert de zending op het Trunkrs platform.', TRUNKRS_WC_Bootstrapper::DOMAIN) ?>"
             >
               <?php esc_html_e('Zending annuleren', TRUNKRS_WC_Bootstrapper::DOMAIN) ?>
@@ -139,10 +145,12 @@ if (!class_exists('TRUNKRS_WC_AdminOrderPage')) {
 
           <li class="action-item">
             <a
-              href="<?php esc_url_e($downloadUrl) ?>"
-              class="cancel-shipment"
+              target="_blank"
+              href="<?php echo esc_url($downloadUrl) ?>"
+              class="button button-primary"
               title="<?php esc_attr_e('Download het zending label.', TRUNKRS_WC_Bootstrapper::DOMAIN) ?>"
             >
+              <span class="dashicons dashicons-printer"></span>
               <?php esc_html_e('Label', TRUNKRS_WC_Bootstrapper::DOMAIN) ?>
             </a>
           </li>
@@ -156,7 +164,7 @@ if (!class_exists('TRUNKRS_WC_AdminOrderPage')) {
           ?>
           <li class="action-item">
             <a
-              href="<?php esc_url_e($reannounceUrl) ?>"
+              href="<?php echo esc_url($reannounceUrl) ?>"
               class="button button-primary"
               title="<?php esc_attr_e('Hiermee wordt geprobeerd de zending opnieuw aan Trunkrs aan te melden.', TRUNKRS_WC_Bootstrapper::DOMAIN) ?>"
             >
