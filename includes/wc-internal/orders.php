@@ -32,7 +32,7 @@ if (!class_exists('TRUNKRS_WC_Orders')) {
       $trunkrsOrder = new TRUNKRS_WC_Order($orderId);
 
       if (!$trunkrsOrder->isTrunkrsOrder
-        && !$trunkrsOrder->isAllOrdersForTrunkrs())
+        || !$trunkrsOrder->isAllOrdersForTrunkrs())
         return;
 
       $trunkrsOrder->announceShipment();
