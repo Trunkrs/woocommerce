@@ -108,3 +108,19 @@ export const doUpdateUseTntAccountsRequest = async (
     data: request,
   })
 }
+
+export const doUpdateUseAllOrdersAreTrunkrsRequest = async (
+  isDarkLogo: boolean,
+): Promise<void> => {
+  const request = new FormData()
+  request.append('action', 'tr-wc_update-use-all-orders-are-trunkrs')
+  request.append('isAllOrdersAreTrunkrsEnabled', isDarkLogo.toString())
+
+  await Axios.request({
+    method: 'POST',
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    url: ajaxurl,
+    data: request,
+  })
+}

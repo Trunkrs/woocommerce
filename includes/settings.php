@@ -108,6 +108,14 @@ if (!class_exists('TRUNKRS_WC_Settings')) {
     }
 
     /**
+     * Gets whether to enable all orders are for trunkrs on customer checkout.
+     * @return bool Flag whether to enable all orders are for trunkrs.
+     */
+    public static function getUseAllOrdersAreTrunkrsActions(): bool {
+      return self::getSingleOption('useAllOrdersAreTrunkrs') ?? false;
+    }
+
+    /**
      * Sets the flag whether the plugin has been configured.
      * @param $isConfigured bool Flag showing whether the plugin was configured.
      */
@@ -158,5 +166,15 @@ if (!class_exists('TRUNKRS_WC_Settings')) {
     public static function setUseAccountActions(bool $isUseAccountAction) {
       self::pushOption('useTrackTraceActions', $isUseAccountAction);
     }
+
+    /**
+     * Sets whether to enable all orders are for trunkrs on customer checkout.
+     * @param bool $useAllOrdersAreTrunkrs
+     */
+    public static function setUseAllOrdersAreTrunkrs(bool $useAllOrdersAreTrunkrs) {
+      self::pushOption('useAllOrdersAreTrunkrs', $useAllOrdersAreTrunkrs);
+    }
   }
+
+
 }

@@ -10,6 +10,7 @@ if (!class_exists('TRUNKRS_WC_AdminEndpoints')) {
     const UPDATE_USE_DARK_ACTION = 'tr-wc_update-use-dark';
     const UPDATE_USE_TNT_LINKS_ACTION = 'tr-wc_update-use-tnt-links';
     const UPDATE_USE_TNT_ACCOUNT_ACTION = 'tr-wc_update-use-tnt-account';
+    const UPDATE_USE_ALL_ORDERS_ARE_TRUNKRS = 'tr-wc_update-use-all-orders-are-trunkrs';
 
     public function __construct()
     {
@@ -17,6 +18,7 @@ if (!class_exists('TRUNKRS_WC_AdminEndpoints')) {
       add_action('wp_ajax_' . self::UPDATE_USE_DARK_ACTION, [$this, 'executeUpdateUseDarkEndpoint']);
       add_action('wp_ajax_' . self::UPDATE_USE_TNT_LINKS_ACTION, [$this, 'executeUpdateUseTnTLinksEndpoint']);
       add_action('wp_ajax_' . self::UPDATE_USE_TNT_ACCOUNT_ACTION, [$this, 'executeUpdateUseTnTAccountEndpoint']);
+      add_action('wp_ajax_' . self::UPDATE_USE_ALL_ORDERS_ARE_TRUNKRS, [$this, 'executeUpdateUseAllOrdersAreTrunkrsEndpoint']);
 
       add_action('wp_ajax_' . self::DOWNLOAD_LABEL_ACTION, [$this, 'executeDownloadLabelEndpoint']);
       add_action('wp_ajax_' . self::CANCEL_ACTION, [$this, 'executeCancelEndpoint']);
@@ -73,6 +75,16 @@ if (!class_exists('TRUNKRS_WC_AdminEndpoints')) {
       $value = sanitize_text_field($_POST['isAccountTrackTraceEnabled']) === 'true';
 
       TRUNKRS_WC_Settings::setUseAccountActions($value);
+
+      status_header(204);
+      wp_die();
+    }
+
+    public function executeUpdateUseAllOrdersAreTrunkrsEndpoint()
+    {
+      $value = sanitize_text_field($_POST['isAllOrdersAreTrunkrsEnabled']) === 'true';
+
+      TRUNKRS_WC_Settings::setUseAllOrdersAreTrunkrs($value);
 
       status_header(204);
       wp_die();

@@ -54,7 +54,8 @@ if (!class_exists('TRUNKRS_WC_Order')) {
 
       foreach ($shippingItem as $item) {
         $shippingMethodId = $item->get_method_id();
-        if ($shippingMethodId !== TRUNKRS_WC_Bootstrapper::DOMAIN) {
+        if ($shippingMethodId !== TRUNKRS_WC_Bootstrapper::DOMAIN
+          && !$this->isAllOrdersForTrunkrs()) {
           continue;
         }
 
@@ -100,6 +101,13 @@ if (!class_exists('TRUNKRS_WC_Order')) {
     public function getTrackTraceLink(): string {
       $postalCode = $this->order->get_shipping_postcode();
       return TRUNKRS_WC_Settings::TRACK_TRACE_BASE_URL . $this->trunkrsNr . '/' . $postalCode;
+    }
+
+    /**
+     * @return bool Flag whether all orders are for Trunkrs
+     */
+    public function isAllOrdersForTrunkrs(): bool {
+      return TRUNKRS_WC_Settings::getUseAllOrdersAreTrunkrsActions();
     }
 
     /**

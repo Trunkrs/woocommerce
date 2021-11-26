@@ -31,7 +31,8 @@ if (!class_exists('TRUNKRS_WC_Orders')) {
         return;
       $trunkrsOrder = new TRUNKRS_WC_Order($orderId);
 
-      if (!$trunkrsOrder->isTrunkrsOrder)
+      if (!$trunkrsOrder->isTrunkrsOrder
+        && !$trunkrsOrder->isAllOrdersForTrunkrs())
         return;
 
       $trunkrsOrder->announceShipment();

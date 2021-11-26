@@ -35,6 +35,7 @@ if (!class_exists('TRUNKRS_WC_AdminPage')) {
             'isDarkLogo' => TRUNKRS_WC_Settings::getUseDark(),
             'isEmailLinksEnabled' => TRUNKRS_WC_Settings::getUseTrackTraceLinks(),
             'isAccountTrackTraceEnabled' => TRUNKRS_WC_Settings::getUseAccountActions(),
+            'isAllOrdersAreTrunkrsEnabled' => TRUNKRS_WC_Settings::getUseAllOrdersAreTrunkrsActions(),
             'details' => TRUNKRS_WC_Settings::getIntegrationDetails(),
             'metaBag' => [
               'php_version' => phpversion(),

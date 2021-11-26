@@ -8,13 +8,12 @@ import {
   doUpdateUseDarkRequest,
   doUpdateUseTntLinksRequest,
   doUpdateUseTntAccountsRequest,
+  doUpdateUseAllOrdersAreTrunkrsRequest,
 } from './helpers'
 
 const initialConfigText = document.getElementById('__tr-wc-settings__')
   ?.innerText as string
-const initialConfig = initialConfigText
-  ? JSON.parse(initialConfigText)
-  : {}
+const initialConfig = initialConfigText ? JSON.parse(initialConfigText) : {}
 
 const ConfigProvider: React.FC = ({ children }) => {
   const [isWorking, setWorking] = React.useState(false)
@@ -100,6 +99,22 @@ const ConfigProvider: React.FC = ({ children }) => {
     )
   }, [config])
 
+  const updateAllOrdersAreTrunkrs = React.useCallback(async () => {
+    setConfig({
+      ...config,
+      isAllOrdersAreTrunkrsEnabled: !config.isAllOrdersAreTrunkrsEnabled,
+    })
+
+    doUpdateUseAllOrdersAreTrunkrsRequest(
+      !config.isAllOrdersAreTrunkrsEnabled,
+    ).catch(() => {
+      setConfig({
+        ...config,
+        isAllOrdersAreTrunkrsEnabled: !config.isAllOrdersAreTrunkrsEnabled,
+      })
+    })
+  }, [config])
+
   const contextValue = React.useMemo(
     () => ({
       isWorking,
@@ -108,6 +123,7 @@ const ConfigProvider: React.FC = ({ children }) => {
       updateIsDarkLogo,
       updateTntLinks,
       updateTntActions,
+      updateAllOrdersAreTrunkrs,
     }),
     [
       config,
@@ -116,6 +132,7 @@ const ConfigProvider: React.FC = ({ children }) => {
       updateIsDarkLogo,
       updateTntActions,
       updateTntLinks,
+      updateAllOrdersAreTrunkrs,
     ],
   )
 
