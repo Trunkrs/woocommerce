@@ -5,6 +5,7 @@ export interface Configuration {
   isDarkLogo: boolean
   isEmailLinksEnabled: boolean
   isAccountTrackTraceEnabled: boolean
+  isAllOrdersAreTrunkrsEnabled: boolean
   details: {
     integrationId: string
     organizationId: string
@@ -20,6 +21,7 @@ export type ConfigContext = {
   updateIsDarkLogo: () => Promise<void>
   updateTntLinks: () => Promise<void>
   updateTntActions: () => Promise<void>
+  updateAllOrdersAreTrunkrs: () => Promise<void>
 }
 
 const ConfigContext = React.createContext<ConfigContext>({
@@ -35,6 +37,9 @@ const ConfigContext = React.createContext<ConfigContext>({
     throw new Error('Not implemented!')
   },
   updateTntActions: () => {
+    throw new Error('Not implemented!')
+  },
+  updateAllOrdersAreTrunkrs: () => {
     throw new Error('Not implemented!')
   },
 })

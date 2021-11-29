@@ -11,6 +11,7 @@ import DetailsPanel from '../DetailsPanel'
 
 import './AppContainer.scss'
 import CheckoutPanel from '../CheckoutPanel'
+import AdvancedCheckout from '../AdvancedCheckout'
 
 const AppContainer: React.FC = () => {
   const {
@@ -20,6 +21,7 @@ const AppContainer: React.FC = () => {
     updateIsDarkLogo,
     updateTntLinks,
     updateTntActions,
+    updateAllOrdersAreTrunkrs,
   } = useConfig()
 
   const handleLoginDone = React.useCallback(
@@ -40,6 +42,11 @@ const AppContainer: React.FC = () => {
             integrationId={config.details.integrationId}
             organizationId={config.details.organizationId}
             organizationName={config.details.organizationName}
+          />
+
+          <AdvancedCheckout
+            allOrdersAreTrunkrs={config.isAllOrdersAreTrunkrsEnabled}
+            onAllOrdersAreTrunkrs={updateAllOrdersAreTrunkrs}
           />
 
           <CheckoutPanel
