@@ -54,8 +54,8 @@ if (!class_exists('TRUNKRS_WC_Order')) {
 
       foreach ($shippingItem as $item) {
         $shippingMethodId = $item->get_method_id();
-        if ($shippingMethodId !== TRUNKRS_WC_Bootstrapper::DOMAIN
-          || !$this->isAllOrdersForTrunkrs()) {
+        if (!$this->isAllOrdersForTrunkrs()
+          && $shippingMethodId !== TRUNKRS_WC_Bootstrapper::DOMAIN) {
           continue;
         }
 
