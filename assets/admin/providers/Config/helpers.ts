@@ -124,3 +124,19 @@ export const doUpdateUseAllOrdersAreTrunkrsRequest = async (
     data: request,
   })
 }
+
+export const doUpdateUseBigTextRequest = async (
+  isEnabled: boolean,
+): Promise<void> => {
+  const request = new FormData()
+  request.append('action', 'tr-wc_update-use-big-checkout-text')
+  request.append('isUseBigTextEnabled', isEnabled.toString())
+
+  await Axios.request({
+    method: 'POST',
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    url: ajaxurl,
+    data: request,
+  })
+}

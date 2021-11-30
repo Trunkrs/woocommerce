@@ -83,6 +83,15 @@ if (!class_exists('TRUNKRS_WC_Settings')) {
     }
 
     /**
+     * Retrieves whether to use the big text on the check-out page.
+     * @return bool Flag reflecting whether to use the extended version on the checkout.
+     */
+    public static function isBigCheckoutTextEnabled(): bool
+    {
+      return self::getSingleOption('useBigCheckoutText') ?? true;
+    }
+
+    /**
      * Retrieves whether to use dark adjusted check-out content.
      * @return bool Flag reflecting whether to adjust for dark content.
      */
@@ -144,7 +153,16 @@ if (!class_exists('TRUNKRS_WC_Settings')) {
 
     /**
      * Sets whether to use a dark adjusted logo on check-out
-     * @param bool $isUseDark The flag whether to use dark adjusted content
+     * @param bool $isEnabled The flag whether to use dark adjusted content
+     */
+    public static function setIsBigCheckoutTextEnabled(bool $isEnabled)
+    {
+      self::pushOption('useBigCheckoutText', $isEnabled);
+    }
+
+    /**
+     * Sets whether to use the extended shipping method text on check-out
+     * @param bool $isUseDark The flag whether to use extended checkout text
      */
     public static function setUseDark(bool $isUseDark)
     {

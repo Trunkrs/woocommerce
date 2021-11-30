@@ -4,18 +4,22 @@ import Switch from '../Switch'
 import './CheckoutPanel.scss'
 
 interface CheckoutPanelProps {
+  useBigText: boolean
   darkLogo: boolean
   tntEmailLinks: boolean
   tntAccountActions: boolean
+  onUseBigTextChanged: () => void | Promise<void>
   onDarkLogoChanged: () => void | Promise<void>
   onTntEmailLinksChanged: () => void | Promise<void>
   onTntAccountActionsChanged: () => void | Promise<void>
 }
 
 const CheckoutPanel: React.FC<CheckoutPanelProps> = ({
+  useBigText,
   darkLogo,
   tntEmailLinks,
   tntAccountActions,
+  onUseBigTextChanged,
   onDarkLogoChanged,
   onTntEmailLinksChanged,
   onTntAccountActionsChanged,
@@ -31,6 +35,14 @@ const CheckoutPanel: React.FC<CheckoutPanelProps> = ({
             <Switch checked={darkLogo} onChange={onDarkLogoChanged}>
               <h4 className="tr-wc-switchLabel">
                 Gebruik aangepast logo voor donker thema in de winkelwagen.
+              </h4>
+            </Switch>
+          </li>
+
+          <li>
+            <Switch checked={useBigText} onChange={onUseBigTextChanged}>
+              <h4 className="tr-wc-switchLabel">
+                Laat het verwachte levermoment zien in winkelwagen.
               </h4>
             </Switch>
           </li>

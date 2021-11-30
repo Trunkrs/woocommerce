@@ -21,6 +21,24 @@ function createShippingMethodClass()
           return $label;
         }
 
+        $logoUrl = TRUNKRS_WC_Settings::getUseDark()
+          ? TRUNKRS_WC_Utils::createAssetUrl('icons/trunkrs-small-light.svg')
+          : TRUNKRS_WC_Utils::createAssetUrl('icons/trunkrs-small-indigo.svg');
+
+        if (!TRUNKRS_WC_Settings::isBigCheckoutTextEnabled()) {
+          return sprintf(
+            '<span class="tr-wc-checkout-container">
+                    <span class="tr-wc-checkout-title-container">
+                        <img class="tr-wc-checkout-logo" alt="Trunkrs logo" src="%s" />
+                        <p class="tr-wc-checkout-title"><b>Trunkrs</b>: %s</p>
+                    </span>
+                  </span>
+                ',
+            esc_url($logoUrl),
+            wc_price($method->cost),
+          );
+        }
+
         $type = explode('_', $method->id)[1];
         $cutOffTime = TRUNKRS_WC_Utils::parse8601($method->meta_data[self::CUT_OFF_TIME_KEY]);
 
@@ -49,10 +67,6 @@ function createShippingMethodClass()
             );
             break;
         }
-
-        $logoUrl = TRUNKRS_WC_Settings::getUseDark()
-          ? TRUNKRS_WC_Utils::createAssetUrl('icons/trunkrs-small-light.svg')
-          : TRUNKRS_WC_Utils::createAssetUrl('icons/trunkrs-small-indigo.svg');
 
         return sprintf(
           '<span class="tr-wc-checkout-container">

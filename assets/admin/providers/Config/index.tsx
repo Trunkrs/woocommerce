@@ -3,6 +3,7 @@ import React from 'react'
 export interface Configuration {
   isConfigured: boolean
   isDarkLogo: boolean
+  isBigTextEnabled: boolean
   isEmailLinksEnabled: boolean
   isAccountTrackTraceEnabled: boolean
   isAllOrdersAreTrunkrsEnabled: boolean
@@ -18,6 +19,7 @@ export type ConfigContext = {
   isWorking: boolean
   config: Configuration | null
   prepareConfig: (accessToken: string, orgId: string) => Promise<void>
+  updateUseBigText: () => Promise<void>
   updateIsDarkLogo: () => Promise<void>
   updateTntLinks: () => Promise<void>
   updateTntActions: () => Promise<void>
@@ -29,6 +31,9 @@ const ConfigContext = React.createContext<ConfigContext>({
   config: null,
   prepareConfig: () => {
     throw new Error('Not implemented!')
+  },
+  updateUseBigText: () => {
+    throw new Error('Not implemented')
   },
   updateIsDarkLogo: () => {
     throw new Error('Not implemented!')

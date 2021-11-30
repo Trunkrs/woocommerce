@@ -32,6 +32,7 @@ if (!class_exists('TRUNKRS_WC_AdminPage')) {
           <?php
           echo wp_json_encode([
             'isConfigured' => TRUNKRS_WC_Settings::isConfigured(),
+            'isBigTextEnabled' => TRUNKRS_WC_Settings::isBigCheckoutTextEnabled(),
             'isDarkLogo' => TRUNKRS_WC_Settings::getUseDark(),
             'isEmailLinksEnabled' => TRUNKRS_WC_Settings::getUseTrackTraceLinks(),
             'isAccountTrackTraceEnabled' => TRUNKRS_WC_Settings::getUseAccountActions(),

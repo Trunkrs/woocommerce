@@ -18,6 +18,7 @@ const AppContainer: React.FC = () => {
     isWorking,
     config,
     prepareConfig,
+    updateUseBigText,
     updateIsDarkLogo,
     updateTntLinks,
     updateTntActions,
@@ -50,9 +51,11 @@ const AppContainer: React.FC = () => {
           />
 
           <CheckoutPanel
+            useBigText={config.isBigTextEnabled}
             darkLogo={config.isDarkLogo}
             tntEmailLinks={config.isEmailLinksEnabled}
             tntAccountActions={config.isAccountTrackTraceEnabled}
+            onUseBigTextChanged={updateUseBigText}
             onDarkLogoChanged={updateIsDarkLogo}
             onTntEmailLinksChanged={updateTntLinks}
             onTntAccountActionsChanged={updateTntActions}

@@ -115,6 +115,22 @@ const ConfigProvider: React.FC = ({ children }) => {
     })
   }, [config])
 
+  const updateUseBigText = React.useCallback(async () => {
+    setConfig({
+      ...config,
+      isBigTextEnabled: !config.isBigTextEnabled,
+    })
+
+    doUpdateUseAllOrdersAreTrunkrsRequest(!config.isBigTextEnabled).catch(
+      () => {
+        setConfig({
+          ...config,
+          isBigTextEnabled: !config.isBigTextEnabled,
+        })
+      },
+    )
+  }, [config])
+
   const contextValue = React.useMemo(
     () => ({
       isWorking,
@@ -124,6 +140,7 @@ const ConfigProvider: React.FC = ({ children }) => {
       updateTntLinks,
       updateTntActions,
       updateAllOrdersAreTrunkrs,
+      updateUseBigText,
     }),
     [
       config,
@@ -133,6 +150,7 @@ const ConfigProvider: React.FC = ({ children }) => {
       updateTntActions,
       updateTntLinks,
       updateAllOrdersAreTrunkrs,
+      updateUseBigText,
     ],
   )
 
