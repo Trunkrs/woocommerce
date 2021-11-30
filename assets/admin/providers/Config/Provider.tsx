@@ -9,6 +9,7 @@ import {
   doUpdateUseTntLinksRequest,
   doUpdateUseTntAccountsRequest,
   doUpdateUseAllOrdersAreTrunkrsRequest,
+  doUpdateUseBigTextRequest,
 } from './helpers'
 
 const initialConfigText = document.getElementById('__tr-wc-settings__')
@@ -121,14 +122,12 @@ const ConfigProvider: React.FC = ({ children }) => {
       isBigTextEnabled: !config.isBigTextEnabled,
     })
 
-    doUpdateUseAllOrdersAreTrunkrsRequest(!config.isBigTextEnabled).catch(
-      () => {
-        setConfig({
-          ...config,
-          isBigTextEnabled: !config.isBigTextEnabled,
-        })
-      },
-    )
+    doUpdateUseBigTextRequest(!config.isBigTextEnabled).catch(() => {
+      setConfig({
+        ...config,
+        isBigTextEnabled: !config.isBigTextEnabled,
+      })
+    })
   }, [config])
 
   const contextValue = React.useMemo(

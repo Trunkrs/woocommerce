@@ -3,7 +3,7 @@ Contributors: fean
 Tags: delivery, packages, woocommerce, trunkrs, sameday, delivery
 Requires at least: 3.6 & WooCommerce 3.0+
 Tested up to: 5.8
-Stable tag: 1.0.1
+Stable tag: 1.1.1
 Requires PHP: 7.1
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
@@ -40,6 +40,10 @@ Reach out to your customer success manager or account manager to get started, th
 2. Easy to set-up and understand carrier service management.
 
 == Changelog ==
+
+= 1.1.0 =
+This release contains more settings to adjust the way we show up in your cart and checkout area.
+It's now also possible to redirect all orders to the Trunkrs shipping service.
 
 = 1.0.0 =
 The first release of the plugin. All of the basic functionality has been implemented.

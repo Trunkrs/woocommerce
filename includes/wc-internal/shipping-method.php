@@ -29,7 +29,7 @@ function createShippingMethodClass()
           return sprintf(
             '<span class="tr-wc-checkout-container">
                     <span class="tr-wc-checkout-title-container">
-                        <img class="tr-wc-checkout-logo" alt="Trunkrs logo" src="%s" />
+                        <img class="tr-wc-checkout-logo" style="height: 28px;" alt="Trunkrs logo" src="%s" />
                         <p class="tr-wc-checkout-title"><b>Trunkrs</b>: %s</p>
                     </span>
                   </span>
@@ -71,7 +71,7 @@ function createShippingMethodClass()
         return sprintf(
           '<span class="tr-wc-checkout-container">
                     <span class="tr-wc-checkout-title-container">
-                        <img class="tr-wc-checkout-logo" alt="Trunkrs logo" src="%s" />
+                        <img class="tr-wc-checkout-logo" style="height: 28px;" alt="Trunkrs logo" src="%s" />
                         <p class="tr-wc-checkout-title"><b>Trunkrs</b>: %s</p>
                     </span>
                     <p class="tr-wc-checkout-description">%s</p>
