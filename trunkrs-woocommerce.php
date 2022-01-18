@@ -148,9 +148,6 @@ if (!class_exists('TRUNKRS_WC_Bootstrapper')) {
 
     private function loadClasses()
     {
-      // Autoload the vendor packages
-      require_once($this->pluginPath . '/vendor/autoload.php');
-
       // Load internal classes
       $includePath = $this->pluginPath . '/includes';
 

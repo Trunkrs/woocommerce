@@ -1,12 +1,11 @@
 {
-  "core": "WordPress/WordPress",
   "themes": [
-    "https://downloads.wordpress.org/theme/storefront.3.8.1.zip"
+    "https://downloads.wordpress.org/theme/storefront.3.9.1.zip"
   ],
   "plugins": [
-    ".",
-    "https://downloads.wordpress.org/plugin/woocommerce.5.6.0.zip",
-    "https://downloads.wordpress.org/plugin/woocommerce-gateway-stripe.5.4.0.zip",
-    "https://downloads.wordpress.org/plugin/email-log.2.4.5.zip"
+    "../woocommerce",
+    "https://downloads.wordpress.org/plugin/woocommerce.6.1.0.zip",
+    "https://downloads.wordpress.org/plugin/woocommerce-gateway-stripe.6.0.0.zip",
+    "https://downloads.wordpress.org/plugin/email-log.2.4.8.zip"
   ]
 }

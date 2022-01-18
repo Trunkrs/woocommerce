@@ -3,8 +3,8 @@
 if (!class_exists('TRUNKRS_WC_Settings')) {
   class TRUNKRS_WC_Settings
   {
-    const BASE_URL = 'https://shipping.trunkrs.app';
-    const TRACK_TRACE_BASE_URL = 'https://parcel.trunkrs.nl/';
+    const BASE_URL = 'https://staging.shipping.trunkrs.app';
+    const TRACK_TRACE_BASE_URL = 'https://parcel-v2-staging.trunkrs.app/';
     const API_VERSION = 'v1';
 
     const OPTION_KEY = 'wc_tr_plugin-settings';
