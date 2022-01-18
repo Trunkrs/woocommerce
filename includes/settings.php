@@ -65,6 +65,14 @@ if (!class_exists('TRUNKRS_WC_Settings')) {
     }
 
     /**
+     * Reflects whether the order rule engine is enabled.
+     * @return bool Value reflecting whether rule engine is enabled.
+     */
+    public static function isRuleEngineEnabled(): bool {
+      return self::getSingleOption('isRuleEngineEnabled') ?? false;
+    }
+
+    /**
      * Retrieves the integration details for the current configuration.
      * @return array The integration details.
      */
@@ -131,6 +139,15 @@ if (!class_exists('TRUNKRS_WC_Settings')) {
     public static function setConfigured(bool $isConfigured)
     {
       self::pushOption('isConfigured', $isConfigured);
+    }
+
+    /**
+     * Saves whether the rules engine is enabled.
+     * @param bool $enabled Sets whether the order rule engine is enabled.
+     */
+    public static function setIsRuleEngineEnabled(bool $enabled)
+    {
+      self::pushOption('isRuleEngineEnabled', $enabled);
     }
 
     /**

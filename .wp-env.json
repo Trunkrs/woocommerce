@@ -3,7 +3,7 @@
     "https://downloads.wordpress.org/theme/storefront.3.9.1.zip"
   ],
   "plugins": [
-    "../woocommerce",
+    ".",
     "https://downloads.wordpress.org/plugin/woocommerce.6.1.0.zip",
     "https://downloads.wordpress.org/plugin/woocommerce-gateway-stripe.6.0.0.zip",
     "https://downloads.wordpress.org/plugin/email-log.2.4.8.zip"
