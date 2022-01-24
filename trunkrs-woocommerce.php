@@ -148,21 +148,8 @@ if (!class_exists('TRUNKRS_WC_Bootstrapper')) {
 
     private function loadClasses()
     {
-      // Load internal classes
       $includePath = $this->pluginPath . '/includes';
-
-      require_once($includePath . '/settings.php');
-      require_once($includePath . '/api.php');
-
-      require_once($includePath . '/wc-internal/trunkrs-order.php');
-      require_once($includePath . '/wc-internal/orders.php');
-      require_once($includePath . '/wc-internal/shipping-method.php');
-      require_once($includePath . '/wc-internal/notices.php');
-      require_once($includePath . '/wc-internal/track-trace.php');
-
-      require_once($includePath . '/admin/admin-page.php');
-      require_once($includePath . '/admin/admin-order-page.php');
-      require_once($includePath . '/admin/admin-endpoints.php');
+      require_once($includePath . '/index.php');
     }
 
     public function loadTranslations() {

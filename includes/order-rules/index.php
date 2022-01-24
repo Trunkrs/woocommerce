@@ -1,0 +1,5 @@
+<?php
+
+require_once('operator.php');
+require_once('order-rule.php');
+require_once('rule-set.php');

@@ -37,6 +37,11 @@ if (!class_exists('TRUNKRS_WC_Order')) {
     var $isAnnounceFailed = true;
 
     /**
+     * @var array|string|false The order meta-data related to the Trunkrs integration.
+     */
+    var $orderMeta;
+
+    /**
      * @param $orderOrOrderId int|WC_Order The WooCommerce order instance.
      * @param bool $withMeta bool Flag whether to also parse meta data details.
      */
@@ -45,33 +50,52 @@ if (!class_exists('TRUNKRS_WC_Order')) {
       $this->order = $orderOrOrderId instanceof WC_Order
         ? $orderOrOrderId
         : new WC_Order($orderOrOrderId);
+
       $this->init($withMeta);
+    }
+
+    private function isTrunkrsOrder() {
+      if (!empty($this->orderMeta) && is_array($this->orderMeta)) {
+        return true;
+      }
+
+      if (TRUNKRS_WC_Settings::getUseAllOrdersAreTrunkrsActions()) {
+        return true;
+      }
+
+      if (TRUNKRS_WC_Settings::isRuleEngineEnabled()) {
+        $ruleSet = new TRUNKRS_WC_RuleSet(TRUNKRS_WC_Settings::getOrderRuleSet());
+        return $ruleSet->matchOrder($this);
+      }
+
+      $shippingItem = $this->order->get_items('shipping');
+      foreach ($shippingItem as $item) {
+        $shippingMethodId = $item->get_method_id();
+        if ($shippingMethodId === TRUNKRS_WC_Bootstrapper::DOMAIN) {
+          return true;
+        }
+      }
+
+      return false;
     }
 
     private function init($withMeta)
     {
-      $shippingItem = $this->order->get_items('shipping');
+      $this->orderMeta = get_post_meta($this->order->get_id(), TRUNKRS_WC_Bootstrapper::DOMAIN, true);
+      $this->isTrunkrsOrder = $this->isTrunkrsOrder();
 
-      foreach ($shippingItem as $item) {
-        $shippingMethodId = $item->get_method_id();
-        if (!$this->isAllOrdersForTrunkrs()
-          && $shippingMethodId !== TRUNKRS_WC_Bootstrapper::DOMAIN) {
-          continue;
-        }
-
-        $this->isTrunkrsOrder = true;
-        if (!$withMeta)
-          return;
-
-        $meta = get_post_meta($this->order->get_id(), TRUNKRS_WC_Bootstrapper::DOMAIN, true);
-        if (empty($meta) || !is_array($meta))
-          return;
-
-        $this->trunkrsNr = $meta['trunkrsNr'];
-        $this->deliveryDate = $meta['deliveryDate'];
-        $this->isCancelled = $meta['isCanceled'];
-        $this->isAnnounceFailed = $meta['isAnnounceFailed'];
+      if (!$this->isTrunkrsOrder || !$withMeta) {
+        return;
       }
+
+      // When no meta is available stop processing
+      if (empty($this->orderMeta) || !is_array($this->orderMeta))
+        return;
+
+      $this->trunkrsNr = $this->orderMeta['trunkrsNr'];
+      $this->deliveryDate = $this->orderMeta['deliveryDate'];
+      $this->isCancelled = $this->orderMeta['isCanceled'];
+      $this->isAnnounceFailed = $this->orderMeta['isAnnounceFailed'];
     }
 
     /**
@@ -101,13 +125,6 @@ if (!class_exists('TRUNKRS_WC_Order')) {
     public function getTrackTraceLink(): string {
       $postalCode = $this->order->get_shipping_postcode();
       return TRUNKRS_WC_Settings::TRACK_TRACE_BASE_URL . $this->trunkrsNr . '/' . $postalCode;
-    }
-
-    /**
-     * @return bool Flag whether all orders are for Trunkrs
-     */
-    public function isAllOrdersForTrunkrs(): bool {
-      return TRUNKRS_WC_Settings::getUseAllOrdersAreTrunkrsActions();
     }
 
     /**

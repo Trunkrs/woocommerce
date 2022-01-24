@@ -133,6 +133,14 @@ if (!class_exists('TRUNKRS_WC_Settings')) {
     }
 
     /**
+     * Retrieves the order rule set in string form.
+     * @return string|null The order set serialized into a string.
+     */
+    public static function getOrderRuleSet() {
+      return self::getSingleOption('orderRules') ?? null;
+    }
+
+    /**
      * Sets the flag whether the plugin has been configured.
      * @param $isConfigured bool Flag showing whether the plugin was configured.
      */
@@ -148,6 +156,14 @@ if (!class_exists('TRUNKRS_WC_Settings')) {
     public static function setIsRuleEngineEnabled(bool $enabled)
     {
       self::pushOption('isRuleEngineEnabled', $enabled);
+    }
+
+    /**
+     * Saves the order rule set.
+     * @param string $orderRuleSet The order rule set.
+     */
+    public static function setRules(string $orderRuleSet) {
+      self::pushOption('orderRules', $orderRuleSet);
     }
 
     /**
