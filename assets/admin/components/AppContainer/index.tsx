@@ -23,6 +23,7 @@ const AppContainer: React.FC = () => {
     updateTntLinks,
     updateTntActions,
     updateAllOrdersAreTrunkrs,
+    updateUseOrderRules,
   } = useConfig()
 
   const handleLoginDone = React.useCallback(
@@ -46,8 +47,10 @@ const AppContainer: React.FC = () => {
           />
 
           <AdvancedCheckout
+            isOrderFiltersEnabled={config.isOrderRulesEnabled}
             allOrdersAreTrunkrs={config.isAllOrdersAreTrunkrsEnabled}
             onAllOrdersAreTrunkrs={updateAllOrdersAreTrunkrs}
+            onEnableOrderRules={updateUseOrderRules}
           />
 
           <CheckoutPanel

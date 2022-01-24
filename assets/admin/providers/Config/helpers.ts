@@ -140,3 +140,33 @@ export const doUpdateUseBigTextRequest = async (
     data: request,
   })
 }
+
+export const doUpdateOrderRulesEnabled = async (
+  isEnabled: boolean,
+): Promise<void> => {
+  const request = new FormData()
+  request.append('action', 'tr-wc_update-use-order-rules')
+  request.append('isOrderRulesEnabled', isEnabled.toString())
+
+  await Axios.request({
+    method: 'POST',
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    url: ajaxurl,
+    data: request,
+  })
+}
+
+export const doUpdateOrderRules = async (orderRules: string): Promise<void> => {
+  const request = new FormData()
+  request.append('action', 'tr-wc_update-order-rules')
+  request.append('orderRules', orderRules)
+
+  await Axios.request({
+    method: 'POST',
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    url: ajaxurl,
+    data: request,
+  })
+}

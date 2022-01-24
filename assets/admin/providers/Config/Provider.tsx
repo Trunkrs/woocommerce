@@ -10,6 +10,8 @@ import {
   doUpdateUseTntAccountsRequest,
   doUpdateUseAllOrdersAreTrunkrsRequest,
   doUpdateUseBigTextRequest,
+  doUpdateOrderRulesEnabled,
+  doUpdateOrderRules,
 } from './helpers'
 
 const initialConfigText = document.getElementById('__tr-wc-settings__')
@@ -130,6 +132,31 @@ const ConfigProvider: React.FC = ({ children }) => {
     })
   }, [config])
 
+  const updateUseOrderRules = React.useCallback(async () => {
+    setConfig({
+      ...config,
+      isOrderRulesEnabled: !config.isOrderRulesEnabled,
+    })
+
+    doUpdateOrderRulesEnabled(!config.isOrderRulesEnabled).catch(() => {
+      setConfig({
+        ...config,
+        isOrderRulesEnabled: !config.isOrderRulesEnabled,
+      })
+    })
+  }, [config])
+
+  const updateOrderRules = React.useCallback(
+    async (orderRules: string) => {
+      setConfig({ ...config, orderRules })
+
+      doUpdateOrderRules(orderRules).catch(() => {
+        setConfig({ ...config, orderRules })
+      })
+    },
+    [config],
+  )
+
   const contextValue = React.useMemo(
     () => ({
       isWorking,
@@ -140,6 +167,8 @@ const ConfigProvider: React.FC = ({ children }) => {
       updateTntActions,
       updateAllOrdersAreTrunkrs,
       updateUseBigText,
+      updateUseOrderRules,
+      updateOrderRules,
     }),
     [
       config,
@@ -150,6 +179,8 @@ const ConfigProvider: React.FC = ({ children }) => {
       updateTntLinks,
       updateAllOrdersAreTrunkrs,
       updateUseBigText,
+      updateUseOrderRules,
+      updateOrderRules,
     ],
   )
 

@@ -37,6 +37,8 @@ if (!class_exists('TRUNKRS_WC_AdminPage')) {
             'isEmailLinksEnabled' => TRUNKRS_WC_Settings::getUseTrackTraceLinks(),
             'isAccountTrackTraceEnabled' => TRUNKRS_WC_Settings::getUseAccountActions(),
             'isAllOrdersAreTrunkrsEnabled' => TRUNKRS_WC_Settings::getUseAllOrdersAreTrunkrsActions(),
+            'isOrderRulesEnabled' => TRUNKRS_WC_Settings::isRuleEngineEnabled(),
+            'orderRules' => TRUNKRS_WC_Settings::getOrderRuleSet(),
             'details' => TRUNKRS_WC_Settings::getIntegrationDetails(),
             'metaBag' => [
               'php_version' => phpversion(),

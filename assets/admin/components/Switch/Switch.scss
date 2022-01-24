@@ -19,6 +19,17 @@
       }
     }
 
+    &.tr-wc-switch-disabled {
+      cursor: default;
+      pointer-events: none;
+      background-color: #CCC;
+
+      .tr-wc-switchKnob {
+        border-color: #CCC;
+        background-color: #F5F5F5;
+      }
+    }
+
     .tr-wc-switchKnob {
       position: absolute;
       display: block;

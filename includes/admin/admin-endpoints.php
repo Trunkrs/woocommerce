@@ -12,6 +12,8 @@ if (!class_exists('TRUNKRS_WC_AdminEndpoints')) {
     const UPDATE_USE_TNT_ACCOUNT_ACTION = 'tr-wc_update-use-tnt-account';
     const UPDATE_USE_ALL_ORDERS_ARE_TRUNKRS = 'tr-wc_update-use-all-orders-are-trunkrs';
     const UPDATE_USE_BIG_CHECKOUT_TEXT = 'tr-wc_update-use-big-checkout-text';
+    const UPDATE_USE_ORDER_RULES = 'tr-wc_update-use-order-rules';
+    const UPDATE_ORDER_RULES = 'tr-wc_update-order-rules';
 
     public function __construct()
     {
@@ -21,6 +23,8 @@ if (!class_exists('TRUNKRS_WC_AdminEndpoints')) {
       add_action('wp_ajax_' . self::UPDATE_USE_TNT_ACCOUNT_ACTION, [$this, 'executeUpdateUseTnTAccountEndpoint']);
       add_action('wp_ajax_' . self::UPDATE_USE_ALL_ORDERS_ARE_TRUNKRS, [$this, 'executeUpdateUseAllOrdersAreTrunkrsEndpoint']);
       add_action('wp_ajax_' . self::UPDATE_USE_BIG_CHECKOUT_TEXT, [$this, 'executeUpdateUseBigCheckoutText']);
+      add_action('wp_ajax_' . self::UPDATE_USE_ORDER_RULES, [$this, 'executeUpdateUseOrderRules']);
+      add_action('wp_ajax_' . self::UPDATE_ORDER_RULES, [$this, 'executeUpdateOrderRuleSet']);
 
       add_action('wp_ajax_' . self::DOWNLOAD_LABEL_ACTION, [$this, 'executeDownloadLabelEndpoint']);
       add_action('wp_ajax_' . self::CANCEL_ACTION, [$this, 'executeCancelEndpoint']);
@@ -96,6 +100,24 @@ if (!class_exists('TRUNKRS_WC_AdminEndpoints')) {
       $value = sanitize_text_field($_POST['isUseBigTextEnabled']) === 'true';
 
       TRUNKRS_WC_Settings::setIsBigCheckoutTextEnabled($value);
+
+      status_header(204);
+      wp_die();
+    }
+
+    public function executeUpdateUseOrderRules() {
+      $value = sanitize_text_field($_POST['isOrderRulesEnabled']) === 'true';
+
+      TRUNKRS_WC_Settings::setIsRuleEngineEnabled($value);
+
+      status_header(204);
+      wp_die();
+    }
+
+    public function executeUpdateOrderRuleSet() {
+      $value = sanitize_text_field($_POST['ruleSet']);
+
+      TRUNKRS_WC_Settings::setRules($value);
 
       status_header(204);
       wp_die();
