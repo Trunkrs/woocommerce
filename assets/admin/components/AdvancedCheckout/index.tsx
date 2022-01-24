@@ -1,5 +1,7 @@
 import React from 'react'
+
 import Switch from '../Switch'
+import Panel from '../Panel'
 
 interface AdvancedCheckoutProps {
   allOrdersAreTrunkrs: boolean
@@ -11,25 +13,18 @@ const AdvancedCheckout: React.FC<AdvancedCheckoutProps> = ({
   onAllOrdersAreTrunkrs,
 }) => {
   return (
-    <div className="tr-wc-detailsPanel">
-      <span className="tr-wc-panelHeader">
-        <p>Verzendings instellingen</p>
-      </span>
-      <span className="tr-wc-panelContent">
-        <ul className="tr-wc-settingsList">
-          <li>
-            <Switch
-              checked={allOrdersAreTrunkrs}
-              onChange={onAllOrdersAreTrunkrs}
-            >
-              <h4 className="tr-wc-switchLabel">
-                Alle orders zijn voor Trunkrs
-              </h4>
-            </Switch>
-          </li>
-        </ul>
-      </span>
-    </div>
+    <Panel title="Verzendings instellingen">
+      <ul className="tr-wc-settingsList">
+        <li>
+          <Switch
+            checked={allOrdersAreTrunkrs}
+            onChange={onAllOrdersAreTrunkrs}
+          >
+            <h4 className="tr-wc-switchLabel">Alle orders zijn voor Trunkrs</h4>
+          </Switch>
+        </li>
+      </ul>
+    </Panel>
   )
 }
 
