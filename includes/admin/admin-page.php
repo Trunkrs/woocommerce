@@ -51,7 +51,9 @@ if (!class_exists('TRUNKRS_WC_AdminPage')) {
           ])
           ?>
         </script>
+
         <div id="<?php esc_attr_e(self::ADMIN_MENU_SLUG) ?>"></div>
+        <div id="portal-root"></div>
       <?php
     }
   }

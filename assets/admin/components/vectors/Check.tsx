@@ -9,7 +9,7 @@ const Check: React.FC<CheckProps> = ({ className }) => (
     xmlns="http://www.w3.org/2000/svg"
     className={className}
     viewBox="0 0 14 14"
-    fill="none"
+    fill="currentColor"
   >
     <path
       fillRule="evenodd"

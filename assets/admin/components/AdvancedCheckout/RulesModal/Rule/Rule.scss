@@ -1,0 +1,48 @@
+.tr-wc-Rule-container {
+  display: flex;
+  align-items: center;
+  margin-top: 2px;
+
+  &:not(:last-child) {
+    margin-bottom: 6px;
+  }
+}
+
+.tr-wc-Rule-ruleContainer {
+  display: flex;
+  flex: 1 auto;
+  justify-content: space-evenly;
+  margin-right: 16px;
+
+  & > * {
+    flex: 1;
+
+    &:not(:last-child) {
+      margin-right: 8px;
+    }
+  }
+}
+
+.tr-wc-Rule-select,
+.tr-wc-Rule-input {
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  color: #220C4A;
+  transition: outline 250ms ease-out, border-color 250ms ease-out;
+
+  &:hover {
+    border-color: transparent !important;
+    outline: 2px #AE97FF solid;
+  }
+
+  &:active, &:focus {
+    border-color: transparent !important;
+    outline: 2px #8000FF solid;
+  }
+}
+
+.tr-wc-Rule-input {
+  padding: 0 8px;
+}
+
+

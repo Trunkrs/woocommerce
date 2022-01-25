@@ -4,12 +4,12 @@ interface CheckProps {
   className?: string
 }
 
-const Check: React.FC<CheckProps> = ({ className }) => (
+const Book: React.FC<CheckProps> = ({ className }) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     className={className}
     viewBox="0 0 24 24"
-    fill="none"
+    fill="currentColor"
   >
     <path
       fill="currentColor"
@@ -18,4 +18,4 @@ const Check: React.FC<CheckProps> = ({ className }) => (
   </svg>
 )
 
-export default Check
+export default Book

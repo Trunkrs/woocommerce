@@ -14,7 +14,10 @@ const ConnectionPanel: React.FC<ConnectionPanelProps> = ({
   loading,
   onLoginDone,
 }) => (
-  <Panel title="platform connectie">
+  <Panel
+    title="Platform connectie"
+    classes={{ content: 'tr-wc-connectionPanelContent' }}
+  >
     <span className="tr-wc-connectionStatus">
       <h3>Niet verbonden met Trunkrs</h3>
       <p>
