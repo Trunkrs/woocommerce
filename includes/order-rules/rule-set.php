@@ -14,6 +14,9 @@ if (!class_exists('TRUNKRS_WC_RuleSet')) {
 
     public function __construct(string $ruleSetString)
     {
+      if (empty($ruleSetString))
+        return;
+
       $fieldStrings = explode(self::FIELD_SEPARATOR, $ruleSetString);
 
       $this->fields = array_reduce($fieldStrings, function ($fields, $field) {
@@ -31,6 +34,7 @@ if (!class_exists('TRUNKRS_WC_RuleSet')) {
       }, []);
     }
 
+
     /**
      * Checks whether the order matches all rules in the set.
      * @param TRUNKRS_WC_Order $wrapper The order to check against.
@@ -38,11 +42,19 @@ if (!class_exists('TRUNKRS_WC_RuleSet')) {
      */
     public function matchOrder(TRUNKRS_WC_Order $wrapper): bool
     {
-      $meta = $wrapper->order->get_meta_data();
+      if (!isset($this->fields))
+        return false;
+
+      $shipping = TRUNKRS_WC_Utils::firstInIterable($wrapper->order->get_items('shipping'))->get_data();
       $data = $wrapper->order->get_data();
 
       foreach ($this->fields as $field => $rules) {
-        $value = $data[$field] ?? $meta[$field];
+        $value = $data[$field];
+        if (!isset($value))
+          $value = $shipping[$field];
+        if (!isset($value))
+          $value = $wrapper->order->get_meta($field);
+
         if (!isset($value)) {
           return false;
         }

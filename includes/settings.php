@@ -137,7 +137,7 @@ if (!class_exists('TRUNKRS_WC_Settings')) {
      * @return string|null The order set serialized into a string.
      */
     public static function getOrderRuleSet() {
-      return self::getSingleOption('orderRules') ?? null;
+      return self::getSingleOption('orderRules') ?? '';
     }
 
     /**

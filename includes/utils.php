@@ -21,6 +21,18 @@ if (!class_exists('TRUNKRS_WC_Utils')) {
     }
 
     /**
+     * Find the first value in the iterable.
+     * @param $iterable The iterable to evaluate.
+     * @return mixed|null The first value.
+     */
+    public static function firstInIterable($iterable) {
+      foreach($iterable as $entry)
+        return $entry;
+
+      return null;
+    }
+
+    /**
      * Retrieves the base url for assets.
      * @return string The base url for assets.
      */

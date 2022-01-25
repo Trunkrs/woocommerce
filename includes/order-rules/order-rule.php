@@ -38,6 +38,12 @@ if (!class_exists('TRUNKRS_WC_OrderRule')) {
         case TRUNKRS_WC_RuleOperator::NOT_EQUALS:
           return $value != $this->value;
 
+        case TRUNKRS_WC_RuleOperator::GREATER_THAN:
+          return $value > $this->value;
+
+        case TRUNKRS_WC_RuleOperator::LOWER_THAN:
+          return $value < $this->value;
+
         case TRUNKRS_WC_RuleOperator::CONTAINS:
           return strpos($value, $this->value) !== false;
 

@@ -82,10 +82,6 @@ if (!class_exists('TRUNKRS_WC_AdminOrderPage')) {
       $classes = $trunkrsOrder->isCancelled ? 'failed' : '';
 
       ?>
-      <script type="application/json" id="order_json">
-        <?php json_encode($trunkrsOrder->order) ?>
-      </script>
-
       <ul class="wc-tr-shipment-details <?php esc_attr_e($classes) ?>">
         <li>
           <p>
