@@ -1,0 +1,19 @@
+.tr-wc-logEntry-table {
+  padding: 8px;
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 16px;
+
+  &:first-child {
+    margin-top: 0;
+  }
+
+  td {
+    border: 1px solid #ccc;
+  }
+}
+
+.tr-wc-auditLogModal-dataCell {
+  box-sizing: border-box;
+  padding: 0 4px;
+}

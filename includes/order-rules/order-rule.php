@@ -18,7 +18,7 @@ if (!class_exists('TRUNKRS_WC_OrderRule')) {
 
     public function __construct(string $operatorString)
     {
-      $values = explode('|', self::RULE_SEPARATOR);
+      $values = explode(self::RULE_SEPARATOR, $operatorString);
 
       $this->operator = $values[0];
       $this->value = $values[1];

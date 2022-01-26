@@ -12,6 +12,7 @@ import './RulesModal.scss'
 import Rule from './Rule'
 import EmptyView from './EmptyView'
 import RulesSchema from './schema'
+import CircularProgress from '../../CircularProgress'
 
 export interface RuleModel {
   field: string
@@ -32,6 +33,7 @@ interface RulesModalValues {
 }
 
 const RulesModal: React.FC<RulesModalProps & FormikProps<RulesModalValues>> = ({
+  isLoading,
   isValid,
   submitForm,
   values: { rules },
@@ -64,10 +66,14 @@ const RulesModal: React.FC<RulesModalProps & FormikProps<RulesModalValues>> = ({
           <Button
             color="green"
             size="small"
-            disabled={!isValid}
+            disabled={!isValid || isLoading}
             onClick={submitForm}
           >
-            <Save className="tr-wc-buttonVector" />
+            {isLoading ? (
+              <CircularProgress size={32} thickness={2} />
+            ) : (
+              <Save className="tr-wc-buttonVector" />
+            )}
             Opslaan
           </Button>
         </>

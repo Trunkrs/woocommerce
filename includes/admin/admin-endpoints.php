@@ -14,6 +14,7 @@ if (!class_exists('TRUNKRS_WC_AdminEndpoints')) {
     const UPDATE_USE_BIG_CHECKOUT_TEXT = 'tr-wc_update-use-big-checkout-text';
     const UPDATE_USE_ORDER_RULES = 'tr-wc_update-use-order-rules';
     const UPDATE_ORDER_RULES = 'tr-wc_update-order-rules';
+    const GET_ORDER_LOGS = 'tr-wc_get-order-logs';
 
     public function __construct()
     {
@@ -29,6 +30,7 @@ if (!class_exists('TRUNKRS_WC_AdminEndpoints')) {
       add_action('wp_ajax_' . self::DOWNLOAD_LABEL_ACTION, [$this, 'executeDownloadLabelEndpoint']);
       add_action('wp_ajax_' . self::CANCEL_ACTION, [$this, 'executeCancelEndpoint']);
       add_action('wp_ajax_' . self::RE_ANNOUNCE_ACTION, [$this, 'executeAnnounceEndpoint']);
+      add_action('wp_ajax_' . self::GET_ORDER_LOGS, [$this, 'executeFindAuditLogEntries']);
     }
 
     public function executeRegisterEndpoint()
@@ -115,11 +117,18 @@ if (!class_exists('TRUNKRS_WC_AdminEndpoints')) {
     }
 
     public function executeUpdateOrderRuleSet() {
-      $value = sanitize_text_field($_POST['ruleSet']);
+      $value = sanitize_text_field($_POST['orderRules']);
 
       TRUNKRS_WC_Settings::setRules($value);
 
       status_header(204);
+      wp_die();
+    }
+
+    public function executeFindAuditLogEntries() {
+      $entries = TRUNKRS_WC_AuditLog::findLatestAuditLogs();
+
+      wp_send_json($entries);
       wp_die();
     }
 

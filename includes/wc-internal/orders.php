@@ -29,7 +29,7 @@ if (!class_exists('TRUNKRS_WC_Orders')) {
     {
       if (!TRUNKRS_WC_Settings::isConfigured())
         return;
-      $trunkrsOrder = new TRUNKRS_WC_Order($orderId);
+      $trunkrsOrder = new TRUNKRS_WC_Order($orderId, true, true);
 
       if (!$trunkrsOrder->isTrunkrsOrder)
         return;

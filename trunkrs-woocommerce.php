@@ -68,6 +68,7 @@ if (!class_exists('TRUNKRS_WC_Bootstrapper')) {
 
       add_action('plugins_loaded', [$this, 'loadTranslations']);
       add_action('init', [$this, 'loadMain']);
+      register_activation_hook(__FILE__, [$this, 'loadTables']);
     }
 
     public function notifyWooCommerce()
@@ -165,6 +166,22 @@ if (!class_exists('TRUNKRS_WC_Bootstrapper')) {
 
       $pluginTextDomainFile = dirname(plugin_basename(__FILE__)) . '/languages';
       load_plugin_textdomain(TRUNKRS_WC_Bootstrapper::DOMAIN, false, $pluginTextDomainFile);
+    }
+
+    public function loadTables() {
+      global $wpdb;
+      $charset_collate = $wpdb->get_charset_collate();
+      $table_name = $wpdb->prefix . 'trunkrs_rule_audit_log';
+
+      $sql = "CREATE TABLE IF NOT EXISTS $table_name (
+		            order_id int NOT NULL,
+		            timestamp datetime DEFAULT CURRENT_TIMESTAMP NOT NULL,
+		            json_data text NOT NULL,
+		            PRIMARY KEY (order_id, timestamp)
+	            ) $charset_collate;";
+
+      require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
+      dbDelta($sql);
     }
 
     private function isWooCommerceActive()

@@ -11,6 +11,7 @@ import Modal from '../Modal'
 import RulesModal, { RuleModel } from './RulesModal'
 
 import './AdvancedCheckout.scss'
+import AuditLogModal from './AuditLogModal'
 
 interface AdvancedCheckoutProps {
   isLoading: boolean
@@ -103,9 +104,7 @@ const AdvancedCheckout: React.FC<AdvancedCheckoutProps> = ({
         onSaveRules={onSaveRules}
       />
 
-      <Modal open={isLogsOpen} onClose={handleToggleLogs}>
-        <p>Some logs content</p>
-      </Modal>
+      <AuditLogModal open={isLogsOpen} onClose={handleToggleLogs} />
     </>
   )
 }

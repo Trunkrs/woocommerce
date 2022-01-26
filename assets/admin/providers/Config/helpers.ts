@@ -8,6 +8,24 @@ interface IntegrationResponse {
   accessToken: string
 }
 
+export interface AuditLogEntry {
+  orderId: string
+  timestamp: string
+  entries: [
+    {
+      fieldName: string
+      fieldValue: string
+      comparisons: [
+        {
+          operator: string
+          compareValue: string
+          result: boolean
+        },
+      ]
+    },
+  ]
+}
+
 export const decodeHtmlString = (htmlEncoded: string): string => {
   const txt = document.createElement('textarea')
   txt.innerHTML = htmlEncoded
@@ -169,4 +187,14 @@ export const doUpdateOrderRules = async (orderRules: string): Promise<void> => {
     url: ajaxurl,
     data: request,
   })
+}
+
+export const findAuditLogs = async (): Promise<AuditLogEntry[]> => {
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
+  const { data } = await Axios.get<AuditLogEntry[]>(`${ajaxurl}`, {
+    params: { action: 'tr-wc_get-order-logs' },
+  })
+
+  return data
 }

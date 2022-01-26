@@ -45,16 +45,16 @@ if (!class_exists('TRUNKRS_WC_Order')) {
      * @param $orderOrOrderId int|WC_Order The WooCommerce order instance.
      * @param bool $withMeta bool Flag whether to also parse meta data details.
      */
-    public function __construct($orderOrOrderId, $withMeta = true)
+    public function __construct($orderOrOrderId, bool $withMeta = true, bool $withLogging = false)
     {
       $this->order = $orderOrOrderId instanceof WC_Order
         ? $orderOrOrderId
         : new WC_Order($orderOrOrderId);
 
-      $this->init($withMeta);
+      $this->init($withMeta, $withLogging);
     }
 
-    private function isTrunkrsOrder() {
+    private function isTrunkrsOrder(bool $withLogging) {
       if (!empty($this->orderMeta) && is_array($this->orderMeta)) {
         return true;
       }
@@ -65,7 +65,7 @@ if (!class_exists('TRUNKRS_WC_Order')) {
 
       if (TRUNKRS_WC_Settings::isRuleEngineEnabled()) {
         $ruleSet = new TRUNKRS_WC_RuleSet(TRUNKRS_WC_Settings::getOrderRuleSet());
-        return $ruleSet->matchOrder($this);
+        return $ruleSet->matchOrder($this, $withLogging);
       }
 
       $shippingItem = $this->order->get_items('shipping');
@@ -79,10 +79,10 @@ if (!class_exists('TRUNKRS_WC_Order')) {
       return false;
     }
 
-    private function init($withMeta)
+    private function init(bool $withMeta, bool $withLogging = false)
     {
       $this->orderMeta = get_post_meta($this->order->get_id(), TRUNKRS_WC_Bootstrapper::DOMAIN, true);
-      $this->isTrunkrsOrder = $this->isTrunkrsOrder();
+      $this->isTrunkrsOrder = $this->isTrunkrsOrder($withLogging);
 
       if (!$this->isTrunkrsOrder || !$withMeta) {
         return;
