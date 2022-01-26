@@ -8,6 +8,8 @@
   flex-direction: column;
   width: 100%;
   min-width: 600px;
+  background-color: #fff;
+  border-radius: 5px;
 }
 
 .tr-wc-modal-header,
@@ -19,8 +21,6 @@
 .tr-wc-modal-contentContainer,
 .tr-wc-modal-footer {
   width: 100%;
-  background-color: #fff;
-  border-radius: 5px;
 }
 
 .tr-wc-modal-contentContainer {
@@ -46,6 +46,5 @@
 }
 
 .tr-wc-modal-footer {
-  margin-top: 16px;
   padding: 16px;
 }

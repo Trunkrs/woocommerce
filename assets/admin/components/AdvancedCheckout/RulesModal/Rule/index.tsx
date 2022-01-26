@@ -5,6 +5,7 @@ import IconButton from '../../../IconButton'
 import RemoveFilter from '../../../vectors/RemoveFilter'
 
 import './Rule.scss'
+import FieldInput from '../FieldInput'
 
 interface RuleProps {
   prefix: string
@@ -15,20 +16,7 @@ const Rule: React.FC<RuleProps> = ({ prefix, onRemove }) => {
   return (
     <div className="tr-wc-Rule-container">
       <div className="tr-wc-Rule-ruleContainer">
-        <Field
-          name={`${prefix}.field`}
-          render={({ field }: FieldProps<string>) => (
-            <select className="tr-wc-Rule-select" {...field}>
-              <option value="method_id">Verzendoptie code</option>
-              <option value="method_title">Verzendoptie naam</option>
-              <option value="payment_method">Betaalmethode type</option>
-              <option value="payment_method_title">Betaalmethode naam</option>
-              <option value="total">Order totaal</option>
-              <option value="status">Orderstatus</option>
-              <option value="created_via">Aangemaakt via</option>
-            </select>
-          )}
-        />
+        <FieldInput name={`${prefix}.field`} />
         <Field
           name={`${prefix}.comparator`}
           render={({ field }: FieldProps<string>) => (

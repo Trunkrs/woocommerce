@@ -11,8 +11,9 @@ import Button from '../../Button'
 import './RulesModal.scss'
 import Rule from './Rule'
 import EmptyView from './EmptyView'
+import RulesSchema from './schema'
 
-interface RuleModel {
+export interface RuleModel {
   field: string
   comparator: string
   value: string
@@ -32,6 +33,7 @@ interface RulesModalValues {
 
 const RulesModal: React.FC<RulesModalProps & FormikProps<RulesModalValues>> = ({
   isValid,
+  submitForm,
   values: { rules },
   setFieldValue,
   open,
@@ -59,7 +61,12 @@ const RulesModal: React.FC<RulesModalProps & FormikProps<RulesModalValues>> = ({
             Regel toevoegen
           </Button>
 
-          <Button color="green" size="small" disabled={!isValid}>
+          <Button
+            color="green"
+            size="small"
+            disabled={!isValid}
+            onClick={submitForm}
+          >
             <Save className="tr-wc-buttonVector" />
             Opslaan
           </Button>
@@ -87,6 +94,8 @@ const RulesModal: React.FC<RulesModalProps & FormikProps<RulesModalValues>> = ({
 
 export default withFormik<RulesModalProps, RulesModalValues>({
   displayName: 'RulesModalForm',
+  validationSchema: RulesSchema,
+  validateOnMount: true,
   mapPropsToValues({ rules }): RulesModalValues {
     return {
       rules: rules ?? [],

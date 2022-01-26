@@ -8,22 +8,28 @@ import Panel from '../Panel'
 import Button from '../Button'
 import Modal from '../Modal'
 
-import RulesModal from './RulesModal'
+import RulesModal, { RuleModel } from './RulesModal'
 
 import './AdvancedCheckout.scss'
 
 interface AdvancedCheckoutProps {
+  isLoading: boolean
+  rules: RuleModel[]
   allOrdersAreTrunkrs: boolean
   isOrderFiltersEnabled: boolean
   onAllOrdersAreTrunkrs: () => void | Promise<void>
+  onSaveRules: (rules: RuleModel[]) => void | Promise<void>
   onEnableOrderRules: () => void | Promise<void>
 }
 
 const AdvancedCheckout: React.FC<AdvancedCheckoutProps> = ({
+  isLoading,
+  rules,
   allOrdersAreTrunkrs,
   isOrderFiltersEnabled,
   onAllOrdersAreTrunkrs,
   onEnableOrderRules,
+  onSaveRules,
 }) => {
   const [isRulesOpen, setRulesOpen] = React.useState(false)
   const [isLogsOpen, setLogsOpen] = React.useState(false)
@@ -89,9 +95,13 @@ const AdvancedCheckout: React.FC<AdvancedCheckoutProps> = ({
         </ul>
       </Panel>
 
-      <RulesModal open={isRulesOpen} onClose={handleToggleRules}>
-        <p>Some rule content</p>
-      </RulesModal>
+      <RulesModal
+        isLoading={isLoading}
+        open={isRulesOpen}
+        rules={rules}
+        onClose={handleToggleRules}
+        onSaveRules={onSaveRules}
+      />
 
       <Modal open={isLogsOpen} onClose={handleToggleLogs}>
         <p>Some logs content</p>

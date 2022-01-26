@@ -8,10 +8,12 @@ import CenteredContainer from '../CenteredContainer'
 
 import ConnectionPanel from '../ConnectionPanel'
 import DetailsPanel from '../DetailsPanel'
-
-import './AppContainer.scss'
 import CheckoutPanel from '../CheckoutPanel'
 import AdvancedCheckout from '../AdvancedCheckout'
+import { RuleModel } from '../AdvancedCheckout/RulesModal'
+
+import { fromOrderRuleString, toOrderRuleString } from './helpers'
+import './AppContainer.scss'
 
 const AppContainer: React.FC = () => {
   const {
@@ -24,12 +26,32 @@ const AppContainer: React.FC = () => {
     updateTntActions,
     updateAllOrdersAreTrunkrs,
     updateUseOrderRules,
+    updateOrderRules,
   } = useConfig()
+
+  const [isWorkingRules, setWorkingRules] = React.useState(false)
 
   const handleLoginDone = React.useCallback(
     async (result: LoginResult): Promise<void> =>
       prepareConfig(result.accessToken, result.organizationId),
     [prepareConfig],
+  )
+
+  const handleSaveRules = React.useCallback(
+    async (rules: RuleModel[]) => {
+      try {
+        setWorkingRules(true)
+        await updateOrderRules(toOrderRuleString(rules))
+      } finally {
+        setWorkingRules(false)
+      }
+    },
+    [updateOrderRules],
+  )
+
+  const parsedRules = React.useMemo(
+    () => fromOrderRuleString(config?.orderRules),
+    [config?.orderRules],
   )
 
   return (
@@ -47,10 +69,13 @@ const AppContainer: React.FC = () => {
           />
 
           <AdvancedCheckout
+            isLoading={isWorkingRules}
+            rules={parsedRules}
             isOrderFiltersEnabled={config.isOrderRulesEnabled}
             allOrdersAreTrunkrs={config.isAllOrdersAreTrunkrsEnabled}
             onAllOrdersAreTrunkrs={updateAllOrdersAreTrunkrs}
             onEnableOrderRules={updateUseOrderRules}
+            onSaveRules={handleSaveRules}
           />
 
           <CheckoutPanel
