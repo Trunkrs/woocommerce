@@ -169,19 +169,8 @@ if (!class_exists('TRUNKRS_WC_Bootstrapper')) {
     }
 
     public function loadTables() {
-      global $wpdb;
-      $charset_collate = $wpdb->get_charset_collate();
-      $table_name = $wpdb->prefix . 'trunkrs_rule_audit_log';
-
-      $sql = "CREATE TABLE IF NOT EXISTS $table_name (
-		            order_id int NOT NULL,
-		            timestamp datetime DEFAULT CURRENT_TIMESTAMP NOT NULL,
-		            json_data text NOT NULL,
-		            PRIMARY KEY (order_id, timestamp)
-	            ) $charset_collate;";
-
-      require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
-      dbDelta($sql);
+      require_once($this->pluginPath . '/includes/init-db.php');
+      TRUNKRS_WC_InitDB::init();
     }
 
     private function isWooCommerceActive()

@@ -3,6 +3,9 @@
 if (!class_exists('TRUNKRS_WC_AuditLog')) {
   class TRUNKRS_WC_AuditLog
   {
+    /**
+     * @see TRUNKRS_WC_InitDB::LOG_TABLE_NAME
+     */
     private const LOG_TABLE_NAME = 'trunkrs_rule_audit_log';
 
     /**
