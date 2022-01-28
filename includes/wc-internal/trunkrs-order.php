@@ -3,6 +3,8 @@
 if (!class_exists('TRUNKRS_WC_Order')) {
   class TRUNKRS_WC_Order
   {
+    public const TYCHE_DELIVERY_DATE_KEY = 'Delivery Date';
+
     public const DELIVERY_DATE_KEY = 'deliveryDate';
     public const CUT_OFF_TIME_KEY = 'cutOffTime';
 
@@ -98,6 +100,18 @@ if (!class_exists('TRUNKRS_WC_Order')) {
       $this->isAnnounceFailed = $this->orderMeta['isAnnounceFailed'];
     }
 
+    private function getDeliveryDate($item) {
+      $deliveryDatePlugin = $this->order->get_meta(self::TYCHE_DELIVERY_DATE_KEY);
+
+      if (isset($deliveryDatePlugin)) {
+        $parsed = DateTime::createFromFormat('d F, Y', $deliveryDatePlugin);
+        if ($parsed === false) return $item->get_meta(self::DELIVERY_DATE_KEY);
+        return TRUNKRS_WC_Utils::format8601Date($parsed);
+      }
+
+      return $item->get_meta(self::DELIVERY_DATE_KEY);
+    }
+
     /**
      * Formats the delivery date in a human-readable format.
      * @return string The formatted delivery date.
@@ -134,7 +148,7 @@ if (!class_exists('TRUNKRS_WC_Order')) {
       $shippingItems = $this->order->get_items('shipping');
 
       foreach ($shippingItems as $item) {
-        $deliveryDate = TRUNKRS_WC_Utils::getMetaDataValue($item, self::DELIVERY_DATE_KEY);
+        $deliveryDate = $this->getDeliveryDate($item);
 
         $reference = sprintf('%s-%s', uniqid(), $this->order->get_id());
         $shipment = TRUNKRS_WC_Api::announceShipment($this->order, $reference, $deliveryDate);
@@ -154,6 +168,14 @@ if (!class_exists('TRUNKRS_WC_Order')) {
         $this->deliveryDate = $shipment->deliveryWindow->date;
         $this->isCancelled = false;
         $this->isAnnounceFailed = false;
+
+        TRUNKRS_WC_ShipmentTracking::setTrackingInfo(
+          $this->order->get_id(),
+          $this->trunkrsNr,
+          $this->getTrackTraceLink(),
+          $this->deliveryDate
+        );
+
         $this->save();
       }
     }

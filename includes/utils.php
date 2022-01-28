@@ -25,8 +25,9 @@ if (!class_exists('TRUNKRS_WC_Utils')) {
      * @param $iterable The iterable to evaluate.
      * @return mixed|null The first value.
      */
-    public static function firstInIterable($iterable) {
-      foreach($iterable as $entry)
+    public static function firstInIterable($iterable)
+    {
+      foreach ($iterable as $entry)
         return $entry;
 
       return null;
@@ -98,6 +99,11 @@ if (!class_exists('TRUNKRS_WC_Utils')) {
       $result->setTimezone(new DateTimeZone('Europe/Amsterdam'));
 
       return $result;
+    }
+
+    public static function format8601Date($date): string
+    {
+      return $date->format('Y-m-d');
     }
 
     /**
