@@ -104,7 +104,13 @@ if (!class_exists('TRUNKRS_WC_Api')) {
         6000
       );
 
-      if (is_null($response) || is_wp_error($response) || $response['response']['code'] > 201) {
+      if (is_null($response) || is_wp_error($response)) {
+        return null;
+      }
+
+      if ($response['response']['code'] == 404) {
+        return TRUNKRS_WC_Api::announceShipment($order, $reference);
+      } else if ($response['response']['code'] > 201) {
         return null;
       }
 
