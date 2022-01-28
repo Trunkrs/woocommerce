@@ -38,6 +38,7 @@ if (!class_exists('TRUNKRS_WC_AdminPage')) {
             'isAccountTrackTraceEnabled' => TRUNKRS_WC_Settings::getUseAccountActions(),
             'isAllOrdersAreTrunkrsEnabled' => TRUNKRS_WC_Settings::getUseAllOrdersAreTrunkrsActions(),
             'isOrderRulesEnabled' => TRUNKRS_WC_Settings::isRuleEngineEnabled(),
+            'isSubRenewalsEnabled' => TRUNKRS_WC_Settings::getUseSubscriptionRenewals(),
             'orderRules' => TRUNKRS_WC_Settings::getOrderRuleSet(),
             'details' => TRUNKRS_WC_Settings::getIntegrationDetails(),
             'metaBag' => [

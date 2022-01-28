@@ -27,6 +27,7 @@ const AppContainer: React.FC = () => {
     updateAllOrdersAreTrunkrs,
     updateUseOrderRules,
     updateOrderRules,
+    updateIsSubRenewalsEnabled,
   } = useConfig()
 
   const [isWorkingRules, setWorkingRules] = React.useState(false)
@@ -70,12 +71,14 @@ const AppContainer: React.FC = () => {
 
           <AdvancedCheckout
             isLoading={isWorkingRules}
+            isSubRenewalsEnabled={config.isSubRenewalsEnabled}
             rules={parsedRules}
             isOrderFiltersEnabled={config.isOrderRulesEnabled}
             allOrdersAreTrunkrs={config.isAllOrdersAreTrunkrsEnabled}
             onAllOrdersAreTrunkrs={updateAllOrdersAreTrunkrs}
             onEnableOrderRules={updateUseOrderRules}
             onSaveRules={handleSaveRules}
+            onIsSubRenewalsEnabled={updateIsSubRenewalsEnabled}
           />
 
           <CheckoutPanel

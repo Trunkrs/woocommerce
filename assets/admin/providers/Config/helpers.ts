@@ -159,6 +159,22 @@ export const doUpdateUseBigTextRequest = async (
   })
 }
 
+export const doUpdateSubRenewalsEnabled = async (
+  isEnabled: boolean,
+): Promise<void> => {
+  const request = new FormData()
+  request.append('action', 'tr-wc_update-use-sub-renewals')
+  request.append('isSubRenewalsEnabled', isEnabled.toString())
+
+  await Axios.request({
+    method: 'POST',
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    url: ajaxurl,
+    data: request,
+  })
+}
+
 export const doUpdateOrderRulesEnabled = async (
   isEnabled: boolean,
 ): Promise<void> => {

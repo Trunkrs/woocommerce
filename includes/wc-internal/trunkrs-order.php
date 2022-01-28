@@ -56,7 +56,8 @@ if (!class_exists('TRUNKRS_WC_Order')) {
       $this->init($withMeta, $withLogging);
     }
 
-    private function isTrunkrsOrder(bool $withLogging) {
+    private function isTrunkrsOrder(bool $withLogging)
+    {
       if (!empty($this->orderMeta) && is_array($this->orderMeta)) {
         return true;
       }
@@ -100,7 +101,8 @@ if (!class_exists('TRUNKRS_WC_Order')) {
       $this->isAnnounceFailed = $this->orderMeta['isAnnounceFailed'];
     }
 
-    private function getDeliveryDate($item) {
+    private function getDeliveryDate($item)
+    {
       $deliveryDatePlugin = $this->order->get_meta(self::TYCHE_DELIVERY_DATE_KEY);
 
       if (isset($deliveryDatePlugin)) {
@@ -113,10 +115,20 @@ if (!class_exists('TRUNKRS_WC_Order')) {
     }
 
     /**
+     * Checks whether this order can be announced in its current state.
+     * @return bool Value representing whether this order can be announced.
+     */
+    public function isAnnounceable(): bool
+    {
+      return !isset($this->trunkrsNr) || $this->isAnnounceFailed || $this->isCancelled;
+    }
+
+    /**
      * Formats the delivery date in a human-readable format.
      * @return string The formatted delivery date.
      */
-    public function getFormattedDate(): string {
+    public function getFormattedDate(): string
+    {
       if (empty($this->deliveryDate))
         return '';
 
@@ -128,7 +140,8 @@ if (!class_exists('TRUNKRS_WC_Order')) {
      * Retrieves whether this order has an available Track&Trace link.
      * @return bool Flag whether track&trace link is available.
      */
-    public function isTrackTraceAvailable(): bool {
+    public function isTrackTraceAvailable(): bool
+    {
       return $this->isTrunkrsOrder && !$this->isAnnounceFailed;
     }
 
@@ -136,7 +149,8 @@ if (!class_exists('TRUNKRS_WC_Order')) {
      * Creates a track&trace link for this order's shipment.
      * @return string The track&trace link.
      */
-    public function getTrackTraceLink(): string {
+    public function getTrackTraceLink(): string
+    {
       $postalCode = $this->order->get_shipping_postcode();
       return TRUNKRS_WC_Settings::TRACK_TRACE_BASE_URL . $this->trunkrsNr . '/' . $postalCode;
     }
@@ -144,7 +158,10 @@ if (!class_exists('TRUNKRS_WC_Order')) {
     /**
      * Announces the order as a new shipment to the Trunkrs API.
      */
-    public function announceShipment() {
+    public function announceShipment()
+    {
+      if (!$this->isAnnounceable()) return;
+
       $shippingItems = $this->order->get_items('shipping');
 
       foreach ($shippingItems as $item) {
@@ -183,7 +200,8 @@ if (!class_exists('TRUNKRS_WC_Order')) {
     /**
      * Cancels the shipment attached to this order.
      */
-    public function cancelShipment() {
+    public function cancelShipment()
+    {
       $isSuccess = TRUNKRS_WC_Api::cancelShipment($this->trunkrsNr);
 
       if ($isSuccess) {

@@ -16,21 +16,25 @@ import AuditLogModal from './AuditLogModal'
 interface AdvancedCheckoutProps {
   isLoading: boolean
   rules: RuleModel[]
+  isSubRenewalsEnabled: boolean
   allOrdersAreTrunkrs: boolean
   isOrderFiltersEnabled: boolean
   onAllOrdersAreTrunkrs: () => void | Promise<void>
   onSaveRules: (rules: RuleModel[]) => void | Promise<void>
   onEnableOrderRules: () => void | Promise<void>
+  onIsSubRenewalsEnabled: () => void | Promise<void>
 }
 
 const AdvancedCheckout: React.FC<AdvancedCheckoutProps> = ({
   isLoading,
   rules,
+  isSubRenewalsEnabled,
   allOrdersAreTrunkrs,
   isOrderFiltersEnabled,
   onAllOrdersAreTrunkrs,
   onEnableOrderRules,
   onSaveRules,
+  onIsSubRenewalsEnabled,
 }) => {
   const [isRulesOpen, setRulesOpen] = React.useState(false)
   const [isLogsOpen, setLogsOpen] = React.useState(false)
@@ -47,6 +51,17 @@ const AdvancedCheckout: React.FC<AdvancedCheckoutProps> = ({
     <>
       <Panel title="Verzendings instellingen">
         <ul className="tr-wc-settingsList">
+          <li>
+            <Switch
+              checked={isSubRenewalsEnabled}
+              onChange={onIsSubRenewalsEnabled}
+            >
+              <h4 className="tr-wc-switchLabel">
+                Maak een zending aan als abonnement verlenging is betaald.
+              </h4>
+            </Switch>
+          </li>
+
           <li>
             <Switch
               disabled={isOrderFiltersEnabled}

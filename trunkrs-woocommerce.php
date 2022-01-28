@@ -5,7 +5,7 @@
  * Description: Add excellent consumer focused shipping to your WooCommerce store.
  * Author: Trunkrs
  * Author URI: https://trunkrs.nl
- * Version: 1.1.1
+ * Version: 1.2.0
  * Requires at least: 3.6 & WooCommerce 3.0+
  * Requires PHP: 7.1
  * License: GPLv3

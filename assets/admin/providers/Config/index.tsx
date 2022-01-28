@@ -8,6 +8,7 @@ export interface Configuration {
   isAccountTrackTraceEnabled: boolean
   isAllOrdersAreTrunkrsEnabled: boolean
   isOrderRulesEnabled: boolean
+  isSubRenewalsEnabled: boolean
   orderRules: string
   details: {
     integrationId: string
@@ -27,6 +28,7 @@ export type ConfigContext = {
   updateTntActions: () => Promise<void>
   updateAllOrdersAreTrunkrs: () => Promise<void>
   updateUseOrderRules: () => Promise<void>
+  updateIsSubRenewalsEnabled: () => Promise<void>
   updateOrderRules: (orderRules: string) => Promise<void>
 }
 
@@ -55,6 +57,9 @@ const ConfigContext = React.createContext<ConfigContext>({
     throw new Error('Not implemented!')
   },
   updateOrderRules: () => {
+    throw new Error('Not implemented!')
+  },
+  updateIsSubRenewalsEnabled: () => {
     throw new Error('Not implemented!')
   },
 })

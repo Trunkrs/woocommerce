@@ -41,6 +41,14 @@ Reach out to your customer success manager or account manager to get started, th
 
 == Changelog ==
 
+= 1.2.0 =
+This is a big release with lots of new and cool features you will love!
+We added the following features:
+- Support for order filter rules that let you choose which orders should go to Trunkrs.
+- Support for Tyche Delivery Date plugin for custom delivery dates.
+- Support for WooCommerce Shipment Tracking extension.
+- Support for WooCommerce Subscriptions extension.
+
 = 1.1.0 =
 This release contains more settings to adjust the way we show up in your cart and checkout area.
 It's now also possible to redirect all orders to the Trunkrs shipping service.
