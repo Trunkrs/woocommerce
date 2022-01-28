@@ -42,7 +42,7 @@ if (!class_exists('TRUNKRS_WC_Utils')) {
       if (is_null(self::$rootUrl)) {
         $pathParts = explode('/', rtrim(dirname(__FILE__), '/'));
         array_pop($pathParts);
-        self::$rootUrl = implode('/', $pathParts);
+        self::$rootUrl = implode('/', $pathParts) . '/something.php';
       }
 
       return plugins_url('/build', self::$rootUrl);
@@ -58,7 +58,7 @@ if (!class_exists('TRUNKRS_WC_Utils')) {
       if (is_null(self::$rootUrl)) {
         $pathParts = explode('/', rtrim(dirname(__FILE__), '/'));
         array_pop($pathParts);
-        self::$rootUrl = implode('/', $pathParts);
+        self::$rootUrl = implode('/', $pathParts) . '/something.php';
       }
 
       return plugins_url(

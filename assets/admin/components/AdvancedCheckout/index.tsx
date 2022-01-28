@@ -6,7 +6,6 @@ import Book from '../vectors/Book'
 import Switch from '../Switch'
 import Panel from '../Panel'
 import Button from '../Button'
-import Modal from '../Modal'
 
 import RulesModal, { RuleModel } from './RulesModal'
 
