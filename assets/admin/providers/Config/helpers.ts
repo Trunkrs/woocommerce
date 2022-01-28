@@ -8,6 +8,24 @@ interface IntegrationResponse {
   accessToken: string
 }
 
+export interface AuditLogEntry {
+  orderId: string
+  timestamp: string
+  entries: [
+    {
+      fieldName: string
+      fieldValue: string
+      comparisons: [
+        {
+          operator: string
+          compareValue: string
+          result: boolean
+        },
+      ]
+    },
+  ]
+}
+
 export const decodeHtmlString = (htmlEncoded: string): string => {
   const txt = document.createElement('textarea')
   txt.innerHTML = htmlEncoded
@@ -139,4 +157,60 @@ export const doUpdateUseBigTextRequest = async (
     url: ajaxurl,
     data: request,
   })
+}
+
+export const doUpdateSubRenewalsEnabled = async (
+  isEnabled: boolean,
+): Promise<void> => {
+  const request = new FormData()
+  request.append('action', 'tr-wc_update-use-sub-renewals')
+  request.append('isSubRenewalsEnabled', isEnabled.toString())
+
+  await Axios.request({
+    method: 'POST',
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    url: ajaxurl,
+    data: request,
+  })
+}
+
+export const doUpdateOrderRulesEnabled = async (
+  isEnabled: boolean,
+): Promise<void> => {
+  const request = new FormData()
+  request.append('action', 'tr-wc_update-use-order-rules')
+  request.append('isOrderRulesEnabled', isEnabled.toString())
+
+  await Axios.request({
+    method: 'POST',
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    url: ajaxurl,
+    data: request,
+  })
+}
+
+export const doUpdateOrderRules = async (orderRules: string): Promise<void> => {
+  const request = new FormData()
+  request.append('action', 'tr-wc_update-order-rules')
+  request.append('orderRules', orderRules)
+
+  await Axios.request({
+    method: 'POST',
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    url: ajaxurl,
+    data: request,
+  })
+}
+
+export const findAuditLogs = async (): Promise<AuditLogEntry[]> => {
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
+  const { data } = await Axios.get<AuditLogEntry[]>(`${ajaxurl}`, {
+    params: { action: 'tr-wc_get-order-logs' },
+  })
+
+  return data
 }

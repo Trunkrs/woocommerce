@@ -10,6 +10,9 @@ import {
   doUpdateUseTntAccountsRequest,
   doUpdateUseAllOrdersAreTrunkrsRequest,
   doUpdateUseBigTextRequest,
+  doUpdateOrderRulesEnabled,
+  doUpdateOrderRules,
+  doUpdateSubRenewalsEnabled,
 } from './helpers'
 
 const initialConfigText = document.getElementById('__tr-wc-settings__')
@@ -65,7 +68,7 @@ const ConfigProvider: React.FC = ({ children }) => {
     doUpdateUseDarkRequest(!config.isDarkLogo).catch(() => {
       setConfig({
         ...config,
-        isDarkLogo: !config.isDarkLogo,
+        isDarkLogo: config.isDarkLogo,
       })
     })
   }, [config])
@@ -79,7 +82,7 @@ const ConfigProvider: React.FC = ({ children }) => {
     doUpdateUseTntLinksRequest(!config.isEmailLinksEnabled).catch(() => {
       setConfig({
         ...config,
-        isEmailLinksEnabled: !config.isEmailLinksEnabled,
+        isEmailLinksEnabled: config.isEmailLinksEnabled,
       })
     })
   }, [config])
@@ -94,7 +97,7 @@ const ConfigProvider: React.FC = ({ children }) => {
       () => {
         setConfig({
           ...config,
-          isAccountTrackTraceEnabled: !config.isAccountTrackTraceEnabled,
+          isAccountTrackTraceEnabled: config.isAccountTrackTraceEnabled,
         })
       },
     )
@@ -111,7 +114,21 @@ const ConfigProvider: React.FC = ({ children }) => {
     ).catch(() => {
       setConfig({
         ...config,
-        isAllOrdersAreTrunkrsEnabled: !config.isAllOrdersAreTrunkrsEnabled,
+        isAllOrdersAreTrunkrsEnabled: config.isAllOrdersAreTrunkrsEnabled,
+      })
+    })
+  }, [config])
+
+  const updateIsSubRenewalsEnabled = React.useCallback(async () => {
+    setConfig({
+      ...config,
+      isSubRenewalsEnabled: !config.isSubRenewalsEnabled,
+    })
+
+    doUpdateSubRenewalsEnabled(!config.isSubRenewalsEnabled).catch(() => {
+      setConfig({
+        ...config,
+        isSubRenewalsEnabled: config.isSubRenewalsEnabled,
       })
     })
   }, [config])
@@ -125,10 +142,35 @@ const ConfigProvider: React.FC = ({ children }) => {
     doUpdateUseBigTextRequest(!config.isBigTextEnabled).catch(() => {
       setConfig({
         ...config,
-        isBigTextEnabled: !config.isBigTextEnabled,
+        isBigTextEnabled: config.isBigTextEnabled,
       })
     })
   }, [config])
+
+  const updateUseOrderRules = React.useCallback(async () => {
+    setConfig({
+      ...config,
+      isOrderRulesEnabled: !config.isOrderRulesEnabled,
+    })
+
+    doUpdateOrderRulesEnabled(!config.isOrderRulesEnabled).catch(() => {
+      setConfig({
+        ...config,
+        isOrderRulesEnabled: config.isOrderRulesEnabled,
+      })
+    })
+  }, [config])
+
+  const updateOrderRules = React.useCallback(
+    async (orderRules: string) => {
+      setConfig({ ...config, orderRules })
+
+      doUpdateOrderRules(orderRules).catch(() => {
+        setConfig({ ...config, orderRules })
+      })
+    },
+    [config],
+  )
 
   const contextValue = React.useMemo(
     () => ({
@@ -140,6 +182,9 @@ const ConfigProvider: React.FC = ({ children }) => {
       updateTntActions,
       updateAllOrdersAreTrunkrs,
       updateUseBigText,
+      updateUseOrderRules,
+      updateOrderRules,
+      updateIsSubRenewalsEnabled,
     }),
     [
       config,
@@ -150,6 +195,9 @@ const ConfigProvider: React.FC = ({ children }) => {
       updateTntLinks,
       updateAllOrdersAreTrunkrs,
       updateUseBigText,
+      updateUseOrderRules,
+      updateOrderRules,
+      updateIsSubRenewalsEnabled,
     ],
   )
 

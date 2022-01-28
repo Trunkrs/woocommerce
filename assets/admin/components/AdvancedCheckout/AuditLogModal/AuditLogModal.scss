@@ -1,0 +1,20 @@
+.tr-wc-auditLogModal-container {
+  width: 50vw;
+  max-width: 800px;
+  min-width: 700px;
+}
+
+.tr-wc-auditLogModal-contentPanel {
+  height: 400px;
+}
+
+.tr-wc-auditLogModal-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+}
+
+.tr-wc-auditLogModal-panel {
+  padding-top: 16px;
+}

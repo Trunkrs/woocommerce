@@ -1,0 +1,50 @@
+.tr-wc-modal-root {
+  position: fixed;
+  z-index: 9999999;
+}
+
+.tr-wc-modal-rootContainer {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  min-width: 600px;
+  background-color: #fff;
+  border-radius: 5px;
+}
+
+.tr-wc-modal-header,
+.tr-wc-modal-content,
+.tr-wc-modal-footer {
+  box-sizing: border-box;
+}
+
+.tr-wc-modal-contentContainer,
+.tr-wc-modal-footer {
+  width: 100%;
+}
+
+.tr-wc-modal-contentContainer {
+  display: flex;
+  flex-direction: column;
+}
+
+.tr-wc-modal-header {
+  display: flex;
+  justify-content: space-between;
+  padding: 16px 16px 0;
+
+  & > h3 {
+    margin: 0;
+  }
+}
+
+.tr-wc-modal-content {
+  flex: 1;
+  padding: 0 16px 16px;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+.tr-wc-modal-footer {
+  padding: 16px;
+}

@@ -2,8 +2,8 @@
 Contributors: fean
 Tags: delivery, packages, woocommerce, trunkrs, sameday, delivery
 Requires at least: 3.6 & WooCommerce 3.0+
-Tested up to: 5.8
-Stable tag: 1.1.1
+Tested up to: 5.9
+Stable tag: 1.2.0
 Requires PHP: 7.1
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
@@ -40,6 +40,14 @@ Reach out to your customer success manager or account manager to get started, th
 2. Easy to set-up and understand carrier service management.
 
 == Changelog ==
+
+= 1.2.0 =
+This is a big release with lots of new and cool features you will love!
+We added the following features:
+- Support for order filter rules that let you choose which orders should go to Trunkrs.
+- Support for Tyche Delivery Date plugin for custom delivery dates.
+- Support for WooCommerce Shipment Tracking extension.
+- Support for WooCommerce Subscriptions extension.
 
 = 1.1.0 =
 This release contains more settings to adjust the way we show up in your cart and checkout area.

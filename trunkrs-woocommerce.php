@@ -5,7 +5,7 @@
  * Description: Add excellent consumer focused shipping to your WooCommerce store.
  * Author: Trunkrs
  * Author URI: https://trunkrs.nl
- * Version: 1.1.1
+ * Version: 1.2.0
  * Requires at least: 3.6 & WooCommerce 3.0+
  * Requires PHP: 7.1
  * License: GPLv3
@@ -68,6 +68,7 @@ if (!class_exists('TRUNKRS_WC_Bootstrapper')) {
 
       add_action('plugins_loaded', [$this, 'loadTranslations']);
       add_action('init', [$this, 'loadMain']);
+      register_activation_hook(__FILE__, [$this, 'loadTables']);
     }
 
     public function notifyWooCommerce()
@@ -148,24 +149,8 @@ if (!class_exists('TRUNKRS_WC_Bootstrapper')) {
 
     private function loadClasses()
     {
-      // Autoload the vendor packages
-      require_once($this->pluginPath . '/vendor/autoload.php');
-
-      // Load internal classes
       $includePath = $this->pluginPath . '/includes';
-
-      require_once($includePath . '/settings.php');
-      require_once($includePath . '/api.php');
-
-      require_once($includePath . '/wc-internal/trunkrs-order.php');
-      require_once($includePath . '/wc-internal/orders.php');
-      require_once($includePath . '/wc-internal/shipping-method.php');
-      require_once($includePath . '/wc-internal/notices.php');
-      require_once($includePath . '/wc-internal/track-trace.php');
-
-      require_once($includePath . '/admin/admin-page.php');
-      require_once($includePath . '/admin/admin-order-page.php');
-      require_once($includePath . '/admin/admin-endpoints.php');
+      require_once($includePath . '/index.php');
     }
 
     public function loadTranslations() {
@@ -181,6 +166,11 @@ if (!class_exists('TRUNKRS_WC_Bootstrapper')) {
 
       $pluginTextDomainFile = dirname(plugin_basename(__FILE__)) . '/languages';
       load_plugin_textdomain(TRUNKRS_WC_Bootstrapper::DOMAIN, false, $pluginTextDomainFile);
+    }
+
+    public function loadTables() {
+      require_once($this->pluginPath . '/includes/init-db.php');
+      TRUNKRS_WC_InitDB::init();
     }
 
     private function isWooCommerceActive()

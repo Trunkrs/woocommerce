@@ -1,6 +1,7 @@
 import React from 'react'
 
 import ConnectButton, { LoginResult } from '../ConnectButton'
+import Panel from '../Panel'
 
 import './ConnectionPanel.scss'
 
@@ -13,21 +14,21 @@ const ConnectionPanel: React.FC<ConnectionPanelProps> = ({
   loading,
   onLoginDone,
 }) => (
-  <div className="tr-wc-connectionPanel">
-    <span className="tr-wc-panelHeader">
-      <p>Platform connectie</p>
+  <Panel
+    title="Platform connectie"
+    classes={{ content: 'tr-wc-connectionPanelContent' }}
+  >
+    <span className="tr-wc-connectionStatus">
+      <h3>Niet verbonden met Trunkrs</h3>
+      <p>
+        Verbind uw winkel met het Trunkrs platform om te beginnen met verzenden.
+      </p>
     </span>
-    <span className="tr-wc-panelContent">
-      <span className="tr-wc-connectionStatus">
-        <h3>Niet verbonden met Trunkrs</h3>
-        <p>Verbind uw winkel met het Trunkrs platform om te beginnen met verzenden.</p>
-      </span>
 
-      <span>
-        <ConnectButton loading={loading} onLoginDone={onLoginDone} />
-      </span>
+    <span>
+      <ConnectButton loading={loading} onLoginDone={onLoginDone} />
     </span>
-  </div>
+  </Panel>
 )
 
 export default ConnectionPanel

@@ -37,6 +37,9 @@ if (!class_exists('TRUNKRS_WC_AdminPage')) {
             'isEmailLinksEnabled' => TRUNKRS_WC_Settings::getUseTrackTraceLinks(),
             'isAccountTrackTraceEnabled' => TRUNKRS_WC_Settings::getUseAccountActions(),
             'isAllOrdersAreTrunkrsEnabled' => TRUNKRS_WC_Settings::getUseAllOrdersAreTrunkrsActions(),
+            'isOrderRulesEnabled' => TRUNKRS_WC_Settings::isRuleEngineEnabled(),
+            'isSubRenewalsEnabled' => TRUNKRS_WC_Settings::getUseSubscriptionRenewals(),
+            'orderRules' => TRUNKRS_WC_Settings::getOrderRuleSet(),
             'details' => TRUNKRS_WC_Settings::getIntegrationDetails(),
             'metaBag' => [
               'php_version' => phpversion(),
@@ -49,7 +52,9 @@ if (!class_exists('TRUNKRS_WC_AdminPage')) {
           ])
           ?>
         </script>
+
         <div id="<?php esc_attr_e(self::ADMIN_MENU_SLUG) ?>"></div>
+        <div id="portal-root"></div>
       <?php
     }
   }

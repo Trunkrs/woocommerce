@@ -3,8 +3,8 @@
 if (!class_exists('TRUNKRS_WC_Settings')) {
   class TRUNKRS_WC_Settings
   {
-    const BASE_URL = 'https://shipping.trunkrs.app';
-    const TRACK_TRACE_BASE_URL = 'https://parcel.trunkrs.nl/';
+    const BASE_URL = 'https://staging.shipping.trunkrs.app';
+    const TRACK_TRACE_BASE_URL = 'https://parcel-v2-staging.trunkrs.app/';
     const API_VERSION = 'v1';
 
     const OPTION_KEY = 'wc_tr_plugin-settings';
@@ -65,6 +65,15 @@ if (!class_exists('TRUNKRS_WC_Settings')) {
     }
 
     /**
+     * Reflects whether the order rule engine is enabled.
+     * @return bool Value reflecting whether rule engine is enabled.
+     */
+    public static function isRuleEngineEnabled(): bool
+    {
+      return self::getSingleOption('isRuleEngineEnabled') ?? false;
+    }
+
+    /**
      * Retrieves the integration details for the current configuration.
      * @return array The integration details.
      */
@@ -104,7 +113,8 @@ if (!class_exists('TRUNKRS_WC_Settings')) {
      * Gets whether to enable track & trace links in order confirmation emails.
      * @return bool Flag whether to enable track & trace links.
      */
-    public static function getUseTrackTraceLinks(): bool {
+    public static function getUseTrackTraceLinks(): bool
+    {
       return self::getSingleOption('useTrackTraceLinks') ?? false;
     }
 
@@ -112,7 +122,8 @@ if (!class_exists('TRUNKRS_WC_Settings')) {
      * Gets whether to enable track & trace actions in the my account page.
      * @return bool Flag whether to enable track & trace account actions.
      */
-    public static function getUseAccountActions(): bool {
+    public static function getUseAccountActions(): bool
+    {
       return self::getSingleOption('useTrackTraceActions') ?? false;
     }
 
@@ -120,8 +131,27 @@ if (!class_exists('TRUNKRS_WC_Settings')) {
      * Gets whether to enable all orders are for trunkrs on customer checkout.
      * @return bool Flag whether to enable all orders are for trunkrs.
      */
-    public static function getUseAllOrdersAreTrunkrsActions(): bool {
+    public static function getUseAllOrdersAreTrunkrsActions(): bool
+    {
       return self::getSingleOption('useAllOrdersAreTrunkrs') ?? false;
+    }
+
+    /**
+     * Retrieves the order rule set in string form.
+     * @return string|null The order set serialized into a string.
+     */
+    public static function getOrderRuleSet()
+    {
+      return self::getSingleOption('orderRules') ?? '';
+    }
+
+    /**
+     * Gets whether to use the Subscription plugin renewals as shipment announcements.
+     * @return bool Flag whether to enable subscription renewal shipments.
+     */
+    public static function getUseSubscriptionRenewals(): bool
+    {
+      return self::getSingleOption('useSubRenewals') ?? false;
     }
 
     /**
@@ -131,6 +161,24 @@ if (!class_exists('TRUNKRS_WC_Settings')) {
     public static function setConfigured(bool $isConfigured)
     {
       self::pushOption('isConfigured', $isConfigured);
+    }
+
+    /**
+     * Saves whether the rules engine is enabled.
+     * @param bool $enabled Sets whether the order rule engine is enabled.
+     */
+    public static function setIsRuleEngineEnabled(bool $enabled)
+    {
+      self::pushOption('isRuleEngineEnabled', $enabled);
+    }
+
+    /**
+     * Saves the order rule set.
+     * @param string $orderRuleSet The order rule set.
+     */
+    public static function setRules(string $orderRuleSet)
+    {
+      self::pushOption('orderRules', $orderRuleSet);
     }
 
     /**
@@ -173,7 +221,8 @@ if (!class_exists('TRUNKRS_WC_Settings')) {
      * Sets whether to enable track & trace links in order confirmation emails.
      * @param bool $isUseEmailLink
      */
-    public static function setUseEmailLink(bool $isUseEmailLink) {
+    public static function setUseEmailLink(bool $isUseEmailLink)
+    {
       self::pushOption('useTrackTraceLinks', $isUseEmailLink);
     }
 
@@ -181,7 +230,8 @@ if (!class_exists('TRUNKRS_WC_Settings')) {
      * Sets whether to enable track & trace actions in the my account area.
      * @param bool $isUseAccountAction
      */
-    public static function setUseAccountActions(bool $isUseAccountAction) {
+    public static function setUseAccountActions(bool $isUseAccountAction)
+    {
       self::pushOption('useTrackTraceActions', $isUseAccountAction);
     }
 
@@ -189,8 +239,19 @@ if (!class_exists('TRUNKRS_WC_Settings')) {
      * Sets whether to enable all orders are for trunkrs on customer checkout.
      * @param bool $useAllOrdersAreTrunkrs
      */
-    public static function setUseAllOrdersAreTrunkrs(bool $useAllOrdersAreTrunkrs) {
+    public static function setUseAllOrdersAreTrunkrs(bool $useAllOrdersAreTrunkrs)
+    {
       self::pushOption('useAllOrdersAreTrunkrs', $useAllOrdersAreTrunkrs);
+    }
+
+    /**
+     * Sets whether to use subscription renewals to announce new shipments.
+     * @param bool $useSubRenewals
+     * @return void
+     */
+    public static function setUseSubscriptionRenewals(bool $useSubRenewals)
+    {
+      self::pushOption('useSubRenewals', $useSubRenewals);
     }
   }
 
