@@ -15,6 +15,14 @@ if (!class_exists('TRUNKRS_WC_AdminOrderPage')) {
 
       $trunkrsOrder = new TRUNKRS_WC_Order($post->ID);
 
+      ?>
+
+      <script id="order_meta">
+        <?php var_dump($trunkrsOrder->order->get_meta_data()); ?>
+      </script>
+
+      <?php
+
       if (!$trunkrsOrder->isTrunkrsOrder)
         return;
 

@@ -91,7 +91,18 @@ if (!class_exists('TRUNKRS_WC_Api')) {
       ];
 
       if (!empty($deliveryDate)) {
-        $singleShipmentBody['intendedDeliveryDate'] = $deliveryDate;
+        $available = TRUNKRS_WC_Api::getShippingRates([
+          'orderValue' => $order->get_total(),
+          'country' => $order->get_shipping_country(),
+        ], true);
+
+        $isAvailable = TRUNKRS_WC_Utils::findInArray($available, function ($rate) use ($deliveryDate) {
+          return TRUNKRS_WC_Utils::parse8601($rate->deliveryDate)->format('Y-m-d') === $deliveryDate;
+        });
+
+        if (!is_null($isAvailable)) {
+          $singleShipmentBody['intendedDeliveryDate'] = $deliveryDate;
+        }
       }
       if (!empty($companyName)) {
         $singleShipmentBody['recipient']['companyName'] = $companyName;
@@ -108,7 +119,7 @@ if (!class_exists('TRUNKRS_WC_Api')) {
         return null;
       }
 
-      if ($response['response']['code'] == 404) {
+      if ($response['response']['code'] === 404) {
         return TRUNKRS_WC_Api::announceShipment($order, $reference);
       } else if ($response['response']['code'] > 201) {
         return null;
@@ -130,7 +141,7 @@ if (!class_exists('TRUNKRS_WC_Api')) {
      * Retrieves the current shipping rates for the integration.
      * @return array The current shipping rates.
      */
-    public static function getShippingRates(array $orderDetails): array
+    public static function getShippingRates(array $orderDetails, bool $includeAll = false): array
     {
       $response = self::makeRequest(
         'GET',
@@ -144,7 +155,7 @@ if (!class_exists('TRUNKRS_WC_Api')) {
 
       $rates = json_decode($response['body']);
       // For now only take the first one
-      return empty($rates) ? $rates : [$rates[0]];
+      return empty($rates) ? $rates : $includeAll ? $rates : [$rates[0]];
     }
 
     /**

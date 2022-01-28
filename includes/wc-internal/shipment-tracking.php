@@ -15,7 +15,7 @@ if (!class_exists('TRUNKRS_WC_ShipmentTracking')) {
      */
     public static function setTrackingInfo($orderId, $trunkrsNr, $trackTraceUrl, $deliveryDate)
     {
-      $date = TRUNKRS_WC_Utils::parse8601Date($deliveryDate);
+      $date = TRUNKRS_WC_Utils::parse8601($deliveryDate);
 
       if (function_exists('wc_st_add_tracking_number')) {
         wc_st_add_tracking_number(

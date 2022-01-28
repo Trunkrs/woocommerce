@@ -4,6 +4,7 @@ if (!class_exists('TRUNKRS_WC_Order')) {
   class TRUNKRS_WC_Order
   {
     public const TYCHE_DELIVERY_DATE_KEY = 'Delivery Date';
+    public const TYCHE_DELIVERY_TIMESTAMP_KEY = '_orddd_lite_timestamp';
 
     public const DELIVERY_DATE_KEY = 'deliveryDate';
     public const CUT_OFF_TIME_KEY = 'cutOffTime';
@@ -103,10 +104,10 @@ if (!class_exists('TRUNKRS_WC_Order')) {
 
     private function getDeliveryDate($item)
     {
-      $deliveryDatePlugin = $this->order->get_meta(self::TYCHE_DELIVERY_DATE_KEY);
+      $deliveryDatePlugin = $this->order->get_meta(self::TYCHE_DELIVERY_TIMESTAMP_KEY);
 
       if (isset($deliveryDatePlugin)) {
-        $parsed = DateTime::createFromFormat('d F, Y', $deliveryDatePlugin);
+        $parsed = DateTime::createFromFormat('U', $deliveryDatePlugin);
         if ($parsed === false) return $item->get_meta(self::DELIVERY_DATE_KEY);
         return TRUNKRS_WC_Utils::format8601Date($parsed);
       }
@@ -162,39 +163,36 @@ if (!class_exists('TRUNKRS_WC_Order')) {
     {
       if (!$this->isAnnounceable()) return;
 
-      $shippingItems = $this->order->get_items('shipping');
+      $shippingItem = TRUNKRS_WC_Utils::firstInIterable($this->order->get_items('shipping'));
+      $deliveryDate = $this->getDeliveryDate($shippingItem);
 
-      foreach ($shippingItems as $item) {
-        $deliveryDate = $this->getDeliveryDate($item);
+      $reference = $this->order->get_order_key();
+      $shipment = TRUNKRS_WC_Api::announceShipment($this->order, $reference, $deliveryDate);
 
-        $reference = sprintf('%s-%s', uniqid(), $this->order->get_id());
-        $shipment = TRUNKRS_WC_Api::announceShipment($this->order, $reference, $deliveryDate);
+      $shippingItem->delete_meta_data(self::DELIVERY_DATE_KEY);
+      $shippingItem->delete_meta_data(self::CUT_OFF_TIME_KEY);
 
-        $item->delete_meta_data(self::DELIVERY_DATE_KEY);
-        $item->delete_meta_data(self::CUT_OFF_TIME_KEY);
+      $shippingItem->save_meta_data();
 
-        $item->save_meta_data();
-
-        if (is_null($shipment)) {
-          $this->isAnnounceFailed = true;
-          $this->save();
-          return;
-        }
-
-        $this->trunkrsNr = $shipment->trunkrsNumber;
-        $this->deliveryDate = $shipment->deliveryWindow->date;
-        $this->isCancelled = false;
-        $this->isAnnounceFailed = false;
-
-        TRUNKRS_WC_ShipmentTracking::setTrackingInfo(
-          $this->order->get_id(),
-          $this->trunkrsNr,
-          $this->getTrackTraceLink(),
-          $this->deliveryDate
-        );
-
+      if (is_null($shipment)) {
+        $this->isAnnounceFailed = true;
         $this->save();
+        return;
       }
+
+      $this->trunkrsNr = $shipment->trunkrsNumber;
+      $this->deliveryDate = $shipment->deliveryWindow->date;
+      $this->isCancelled = false;
+      $this->isAnnounceFailed = false;
+
+      TRUNKRS_WC_ShipmentTracking::setTrackingInfo(
+        $this->order->get_id(),
+        $this->trunkrsNr,
+        $this->getTrackTraceLink(),
+        $this->deliveryDate
+      );
+
+      $this->save();
     }
 
     /**
@@ -226,6 +224,16 @@ if (!class_exists('TRUNKRS_WC_Order')) {
         'isCanceled' => $this->isCancelled,
         'isAnnounceFailed' => $this->isAnnounceFailed,
       ];
+
+      $currentPluginDate = $this->order->get_meta(self::TYCHE_DELIVERY_DATE_KEY);
+      if (!$this->isAnnounceFailed && !empty($currentPluginDate)) {
+        $dateValue = TRUNKRS_WC_Utils::parse8601($this->deliveryDate);
+        $dateString = $dateValue->format('d F, Y');
+        $dateStamp = $dateValue->getTimestamp();
+
+        update_post_meta($this->order->get_id(), self::TYCHE_DELIVERY_DATE_KEY, $dateString);
+        update_post_meta($this->order->get_id(), self::TYCHE_DELIVERY_TIMESTAMP_KEY, $dateStamp);
+      }
 
       $currentValue = get_post_meta($this->order->get_id(), TRUNKRS_WC_Bootstrapper::DOMAIN, true);
       if (empty($currentValue) || !is_array($currentValue))

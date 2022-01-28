@@ -19,7 +19,6 @@ if (!class_exists('TRUNKRS_WC_AdminEndpoints')) {
     const UPDATE_ORDER_RULES = 'tr-wc_update-order-rules';
     const UPDATE_USE_SUB_RENEWALS = 'tr-wc_update-use-sub-renewals';
 
-
     public function __construct()
     {
       add_action('wp_ajax_' . self::REGISTER_ACTION, [$this, 'executeRegisterEndpoint']);
