@@ -2,8 +2,8 @@
 Contributors: fean
 Tags: delivery, packages, woocommerce, trunkrs, sameday, delivery
 Requires at least: 3.6 & WooCommerce 3.0+
-Tested up to: 5.8
-Stable tag: 1.1.1
+Tested up to: 5.9
+Stable tag: 1.2.0
 Requires PHP: 7.1
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
