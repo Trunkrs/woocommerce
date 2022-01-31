@@ -109,14 +109,15 @@ if (!class_exists('TRUNKRS_WC_Order')) {
       $meta = TRUNKRS_WC_Utils::findInArray(
         $this->order->get_meta_data(),
         function ($metaItem) {
-          $startsWithPrefix = substr($metaItem['key'], 0, strlen(self::TYCHE_DELIVERY_DATE_PREFIX)) === self::TYCHE_DELIVERY_DATE_PREFIX;
-          $endsWithPostFix = substr($metaItem['key'], -strlen(self::TYCHE_DELIVERY_DATE_TIMESTAMP_POSTFIX)) === self::TYCHE_DELIVERY_DATE_TIMESTAMP_POSTFIX;
+          $data = $metaItem->get_data();
+          $startsWithPrefix = substr($data['key'], 0, strlen(self::TYCHE_DELIVERY_DATE_PREFIX)) === self::TYCHE_DELIVERY_DATE_PREFIX;
+          $endsWithPostFix = substr($data['key'], -strlen(self::TYCHE_DELIVERY_DATE_TIMESTAMP_POSTFIX)) === self::TYCHE_DELIVERY_DATE_TIMESTAMP_POSTFIX;
 
           return $startsWithPrefix && $endsWithPostFix;
         }
       );
 
-      return $meta;
+      return is_null($meta) ? null : $meta->get_data();
     }
 
     private function getDeliveryDate($item)
@@ -124,7 +125,7 @@ if (!class_exists('TRUNKRS_WC_Order')) {
       $deliveryDatePlugin = $this->getTychePluginMeta();
 
       if (isset($deliveryDatePlugin)) {
-        $parsed = DateTime::createFromFormat('U', $deliveryDatePlugin);
+        $parsed = DateTime::createFromFormat('U', $deliveryDatePlugin['value']);
         if ($parsed === false) return $item->get_meta(self::DELIVERY_DATE_KEY);
         return TRUNKRS_WC_Utils::format8601Date($parsed);
       }

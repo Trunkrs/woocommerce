@@ -155,7 +155,9 @@ if (!class_exists('TRUNKRS_WC_Api')) {
 
       $rates = json_decode($response['body']);
       // For now only take the first one
-      return empty($rates) ? $rates : $includeAll ? $rates : [$rates[0]];
+      return empty($rates)
+        ? $rates
+        : ($includeAll ? $rates : [$rates[0]]);
     }
 
     /**
