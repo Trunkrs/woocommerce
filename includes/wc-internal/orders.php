@@ -23,7 +23,10 @@ if (!class_exists('TRUNKRS_WC_Orders')) {
         return;
       }
 
-      $this->createOrder($wpPostId);
+      $trunkrsOrder = new TRUNKRS_WC_Order($wpPostId, true, true);
+      if (!$trunkrsOrder->isTrunkrsOrder)
+        return;
+      $trunkrsOrder->announceShipment(true);
     }
 
     public function createOrder(string $orderId)
@@ -68,7 +71,7 @@ if (!class_exists('TRUNKRS_WC_Orders')) {
       if (!TRUNKRS_WC_Settings::isConfigured())
         return;
 
-      $order = new TRUNKRS_WC_Order($orderId);
+      $order = new TRUNKRS_WC_Order($orderId, true, true);
       if ($order->isTrunkrsOrder && $order->isAnnounceable()) {
         $order->announceShipment();
       }

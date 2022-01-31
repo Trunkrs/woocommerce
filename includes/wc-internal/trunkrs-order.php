@@ -4,7 +4,9 @@ if (!class_exists('TRUNKRS_WC_Order')) {
   class TRUNKRS_WC_Order
   {
     public const TYCHE_DELIVERY_DATE_KEY = 'Delivery Date';
-    public const TYCHE_DELIVERY_TIMESTAMP_KEY = '_orddd_lite_timestamp';
+
+    public const TYCHE_DELIVERY_DATE_PREFIX = '_orddd';
+    public const TYCHE_DELIVERY_DATE_TIMESTAMP_POSTFIX = 'timestamp';
 
     public const DELIVERY_DATE_KEY = 'deliveryDate';
     public const CUT_OFF_TIME_KEY = 'cutOffTime';
@@ -102,9 +104,24 @@ if (!class_exists('TRUNKRS_WC_Order')) {
       $this->isAnnounceFailed = $this->orderMeta['isAnnounceFailed'];
     }
 
+    private function getTychePluginMeta()
+    {
+      $meta = TRUNKRS_WC_Utils::findInArray(
+        $this->order->get_meta_data(),
+        function ($metaItem) {
+          $startsWithPrefix = substr($metaItem['key'], 0, strlen(self::TYCHE_DELIVERY_DATE_PREFIX)) === self::TYCHE_DELIVERY_DATE_PREFIX;
+          $endsWithPostFix = substr($metaItem['key'], -strlen(self::TYCHE_DELIVERY_DATE_TIMESTAMP_POSTFIX)) === self::TYCHE_DELIVERY_DATE_TIMESTAMP_POSTFIX;
+
+          return $startsWithPrefix && $endsWithPostFix;
+        }
+      );
+
+      return $meta;
+    }
+
     private function getDeliveryDate($item)
     {
-      $deliveryDatePlugin = $this->order->get_meta(self::TYCHE_DELIVERY_TIMESTAMP_KEY);
+      $deliveryDatePlugin = $this->getTychePluginMeta();
 
       if (isset($deliveryDatePlugin)) {
         $parsed = DateTime::createFromFormat('U', $deliveryDatePlugin);
@@ -121,7 +138,7 @@ if (!class_exists('TRUNKRS_WC_Order')) {
      */
     public function isAnnounceable(): bool
     {
-      return !isset($this->trunkrsNr) || $this->isAnnounceFailed || $this->isCancelled;
+      return (!isset($this->trunkrsNr) || $this->isAnnounceFailed) && !$this->isCancelled;
     }
 
     /**
@@ -159,9 +176,9 @@ if (!class_exists('TRUNKRS_WC_Order')) {
     /**
      * Announces the order as a new shipment to the Trunkrs API.
      */
-    public function announceShipment()
+    public function announceShipment(bool $force = false)
     {
-      if (!$this->isAnnounceable()) return;
+      if (!$force && !$this->isAnnounceable()) return;
 
       $shippingItem = TRUNKRS_WC_Utils::firstInIterable($this->order->get_items('shipping'));
       $deliveryDate = $this->getDeliveryDate($shippingItem);
@@ -225,14 +242,14 @@ if (!class_exists('TRUNKRS_WC_Order')) {
         'isAnnounceFailed' => $this->isAnnounceFailed,
       ];
 
-      $currentPluginDate = $this->order->get_meta(self::TYCHE_DELIVERY_DATE_KEY);
-      if (!$this->isAnnounceFailed && !empty($currentPluginDate)) {
+      $currentPluginMeta = $this->getTychePluginMeta();;
+      if (!$this->isAnnounceFailed && !empty($currentPluginMeta)) {
         $dateValue = TRUNKRS_WC_Utils::parse8601($this->deliveryDate);
         $dateString = $dateValue->format('d F, Y');
         $dateStamp = $dateValue->getTimestamp();
 
         update_post_meta($this->order->get_id(), self::TYCHE_DELIVERY_DATE_KEY, $dateString);
-        update_post_meta($this->order->get_id(), self::TYCHE_DELIVERY_TIMESTAMP_KEY, $dateStamp);
+        update_post_meta($this->order->get_id(), $currentPluginMeta['key'], $dateStamp);
       }
 
       $currentValue = get_post_meta($this->order->get_id(), TRUNKRS_WC_Bootstrapper::DOMAIN, true);

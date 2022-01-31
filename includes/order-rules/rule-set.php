@@ -19,25 +19,10 @@ if (!class_exists('TRUNKRS_WC_RuleSet')) {
 
       $fieldStrings = explode(self::FIELD_SEPARATOR, $ruleSetString);
 
-      ?>
-      <script type="application/json" id="field_strings">
-        <?php var_dump($fieldStrings) ?>
-      </script>
-      <?php
-
       $this->fields = array_reduce($fieldStrings, function ($fields, $field) {
         $value = explode(self::VALUE_SEPARATOR, $field);
         $fieldName = $value[0];
         $fieldRule = new TRUNKRS_WC_OrderRule($value[1]);
-
-        ?>
-        <script type="application/json" id="rule_string">
-        <?php var_dump($value[1]) ?>
-      </script>
-        <script type="application/json" id="rule">
-        <?php var_dump($fieldRule) ?>
-      </script>
-        <?php
 
         if (!isset($fields[$fieldName])) {
           $fields[$fieldName] = [$fieldRule];
@@ -77,13 +62,17 @@ if (!class_exists('TRUNKRS_WC_RuleSet')) {
             return false;
           }
 
+          $booleanCounter = 0;
+
           foreach ($rules as $rule) {
             $matches = $rule->matches($value);
             $auditLog->createEntry($field, $value)->setResult($rule, $matches);
 
-            if (!$matches) {
-              return false;
-            }
+            $booleanCounter += $matches;
+          }
+
+          if ($booleanCounter === 0) {
+            return false;
           }
         }
 

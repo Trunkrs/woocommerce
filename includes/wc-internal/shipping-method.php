@@ -120,6 +120,11 @@ function createShippingMethodClass()
           return;
         }
 
+
+        $isDynamicDisabled = TRUNKRS_WC_Settings::isRuleEngineEnabled()
+          || TRUNKRS_WC_Settings::getUseAllOrdersAreTrunkrsActions();
+        if ($isDynamicDisabled) return;
+
         $apiRates = TRUNKRS_WC_Api::getShippingRates([
           'orderValue' => $package['contents_cost'],
           'country' => $package['destination']['country'],

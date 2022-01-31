@@ -170,7 +170,7 @@ if (!class_exists('TRUNKRS_WC_AdminEndpoints')) {
       $orderId = sanitize_text_field($_GET['orderId']);
       $order = new TRUNKRS_WC_Order($orderId);
 
-      $order->announceShipment();
+      $order->announceShipment(true);
 
       wp_redirect(admin_url(sprintf(
         'post.php?post=%s&action=edit',
