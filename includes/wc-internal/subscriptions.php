@@ -13,12 +13,11 @@ if (!class_exists('TRUNKRS_WC_Subscriptions')) {
       if (!TRUNKRS_WC_Settings::getUseSubscriptionRenewals())
         return;
 
-      $initialOrder = new TRUNKRS_WC_Order($subscription);
-
+      $initialOrder = new TRUNKRS_WC_Order($subscription, true, true);
       if (!$initialOrder->isTrunkrsOrder) return;
 
       $newOrder = new TRUNKRS_WC_Order($order);
-      $newOrder->announceShipment();
+      $newOrder->announceShipment(true);
     }
   }
 }

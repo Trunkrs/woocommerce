@@ -126,11 +126,18 @@ if (!class_exists('TRUNKRS_WC_Order')) {
 
       if (isset($deliveryDatePlugin)) {
         $parsed = DateTime::createFromFormat('U', $deliveryDatePlugin['value']);
-        if ($parsed === false) return $item->get_meta(self::DELIVERY_DATE_KEY);
+        if ($parsed === false) {
+          return !isset($item)
+            ? null
+            : $item->get_meta(self::DELIVERY_DATE_KEY);
+        }
+
         return TRUNKRS_WC_Utils::format8601Date($parsed);
       }
 
-      return $item->get_meta(self::DELIVERY_DATE_KEY);
+      return !isset($item)
+        ? null
+        : $item->get_meta(self::DELIVERY_DATE_KEY);
     }
 
     /**
@@ -187,10 +194,12 @@ if (!class_exists('TRUNKRS_WC_Order')) {
       $reference = $this->order->get_order_key();
       $shipment = TRUNKRS_WC_Api::announceShipment($this->order, $reference, $deliveryDate);
 
-      $shippingItem->delete_meta_data(self::DELIVERY_DATE_KEY);
-      $shippingItem->delete_meta_data(self::CUT_OFF_TIME_KEY);
+      if (isset($shippingItem)) {
+        $shippingItem->delete_meta_data(self::DELIVERY_DATE_KEY);
+        $shippingItem->delete_meta_data(self::CUT_OFF_TIME_KEY);
 
-      $shippingItem->save_meta_data();
+        $shippingItem->save_meta_data();
+      }
 
       if (is_null($shipment)) {
         $this->isAnnounceFailed = true;

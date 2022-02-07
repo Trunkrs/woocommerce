@@ -3,7 +3,7 @@ Contributors: fean
 Tags: delivery, packages, woocommerce, trunkrs, sameday, delivery
 Requires at least: 3.6 & WooCommerce 3.0+
 Tested up to: 5.9
-Stable tag: 1.2.0
+Stable tag: 1.2.3
 Requires PHP: 7.1
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
@@ -40,6 +40,12 @@ Reach out to your customer success manager or account manager to get started, th
 2. Easy to set-up and understand carrier service management.
 
 == Changelog ==
+
+= 1.2.3 =
+We fixed an issue with the WooCommerce subscriptions plugin where we didn't pick up the correct shipment details on subscription renewals.
+
+= 1.2.2 =
+Several small fixes to the new plugin features. Support for both the lite and pro versions of the Order Delivery Date plugin.
 
 = 1.2.0 =
 This is a big release with lots of new and cool features you will love!
