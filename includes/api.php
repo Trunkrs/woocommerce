@@ -90,6 +90,11 @@ if (!class_exists('TRUNKRS_WC_Api')) {
         ],
       ];
 
+      $orderNotes = $order->get_customer_order_notes();
+      if (!empty($orderNotes)) {
+        $singleShipmentBody['remark'] = implode(PHP_EOL, $orderNotes);
+      }
+
       if (!empty($deliveryDate)) {
         $available = TRUNKRS_WC_Api::getShippingRates([
           'orderValue' => $order->get_total(),
