@@ -41,6 +41,12 @@ Reach out to your customer success manager or account manager to get started, th
 
 == Changelog ==
 
+= 1.2.5 =
+Fixes for the WooCommerce subscription plugin integration.
+
+= 1.2.4 =
+Added the customer order notes as remarks on shipments.
+
 = 1.2.3 =
 We fixed an issue with the WooCommerce subscriptions plugin where we didn't pick up the correct shipment details on subscription renewals.
 
