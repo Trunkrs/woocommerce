@@ -7,6 +7,9 @@ if (!class_exists('TRUNKRS_WC_Order')) {
 
     public const TYCHE_DELIVERY_DATE_PREFIX = '_orddd';
     public const TYCHE_DELIVERY_DATE_TIMESTAMP_POSTFIX = 'timestamp';
+    public const YITH_DELIVER_DATE_META = 'ywcdd_order_delivery_date';
+    public const YITH_SHIPPING_DATE_META = 'ywcdd_order_shipping_date';
+    public const SELF_DELIVERY_DATE_META = '_tr_delivery_date_ts';
 
     public const DELIVERY_DATE_KEY = 'deliveryDate';
     public const CUT_OFF_TIME_KEY = 'cutOffTime';
@@ -126,18 +129,57 @@ if (!class_exists('TRUNKRS_WC_Order')) {
 
       if (isset($deliveryDatePlugin)) {
         $parsed = DateTime::createFromFormat('U', $deliveryDatePlugin['value']);
-        if ($parsed === false) {
-          return !isset($item)
-            ? null
-            : $item->get_meta(self::DELIVERY_DATE_KEY);
+        if ($parsed !== false) {
+          return TRUNKRS_WC_Utils::format8601Date($parsed);
         }
+      }
 
-        return TRUNKRS_WC_Utils::format8601Date($parsed);
+      $deliveryDatePlugin = $this->order->get_meta(self::YITH_DELIVER_DATE_META);
+      if (isset($deliveryDatePlugin)) {
+        $parsed = DateTime::createFromFormat('Y-m-d', $deliveryDatePlugin);
+        if ($parsed !== false) {
+          return TRUNKRS_WC_Utils::format8601Date($parsed);
+        }
+      }
+
+      $deliveryDateSelf = $this->order->get_meta(self::SELF_DELIVERY_DATE_META);
+      if (isset($deliveryDateSelf)) {
+        $parsed = DateTime::createFromFormat('U', $deliveryDateSelf);
+        if ($parsed !== false) {
+          return TRUNKRS_WC_Utils::format8601Date($parsed);
+        }
       }
 
       return !isset($item)
         ? null
         : $item->get_meta(self::DELIVERY_DATE_KEY);
+    }
+
+    private function setDeliveryDate() {
+      $dateValue = TRUNKRS_WC_Utils::parse8601($this->deliveryDate);
+
+      $tycheMeta = $this->getTychePluginMeta();
+      if (!empty($tycheMeta)) {
+        $dateString = $dateValue->format('d F, Y');
+        $dateStamp = $dateValue->getTimestamp();
+
+        update_post_meta($this->order->get_id(), self::TYCHE_DELIVERY_DATE_KEY, $dateString);
+        update_post_meta($this->order->get_id(), $tycheMeta['key'], $dateStamp);
+      }
+
+      $yithMeta = $this->order->get_meta(self::YITH_DELIVER_DATE_META);
+      if (!empty($yithMeta)) {
+        $dateString = $dateValue->format('Y-m-d');
+
+        update_post_meta($this->order->get_id(), self::YITH_DELIVER_DATE_META, $dateString);
+        update_post_meta($this->order->get_id(), self::YITH_SHIPPING_DATE_META, $dateString);
+      }
+
+      $selfMeta = $this->order->get_meta(self::SELF_DELIVERY_DATE_META);
+      if (!empty($selfMeta)) {
+        $timestamp = $dateValue->getTimestamp();
+        update_post_meta($this->order->get_id(), self::SELF_DELIVERY_DATE_META, $timestamp);
+      }
     }
 
     /**
@@ -252,14 +294,8 @@ if (!class_exists('TRUNKRS_WC_Order')) {
         'isAnnounceFailed' => $this->isAnnounceFailed,
       ];
 
-      $currentPluginMeta = $this->getTychePluginMeta();;
-      if (!$this->isAnnounceFailed && !empty($currentPluginMeta)) {
-        $dateValue = TRUNKRS_WC_Utils::parse8601($this->deliveryDate);
-        $dateString = $dateValue->format('d F, Y');
-        $dateStamp = $dateValue->getTimestamp();
-
-        update_post_meta($this->order->get_id(), self::TYCHE_DELIVERY_DATE_KEY, $dateString);
-        update_post_meta($this->order->get_id(), $currentPluginMeta['key'], $dateStamp);
+      if (!$this->isAnnounceFailed) {
+        $this->setDeliveryDate();
       }
 
       $currentValue = get_post_meta($this->order->get_id(), TRUNKRS_WC_Bootstrapper::DOMAIN, true);
