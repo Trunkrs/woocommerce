@@ -51,35 +51,35 @@ if (!class_exists('TRUNKRS_WC_RuleSet')) {
         $firstShippingItem = TRUNKRS_WC_Utils::firstInIterable($wrapper->order->get_items('shipping'));
 
         if ( !is_null($firstShippingItem) ) {
-            $shipping = $firstShippingItem->get_data();
-            $data = $wrapper->order->get_data();
+          $shipping = $firstShippingItem->get_data();
+          $data = $wrapper->order->get_data();
 
-            foreach ($this->fields as $field => $rules) {
+          foreach ($this->fields as $field => $rules) {
             $value = key_exists($field, $data) ? $data[$field] : null;
             if (!isset($value))
-                $value = key_exists($field, $shipping) ? $shipping[$field] : null;
+              $value = key_exists($field, $shipping) ? $shipping[$field] : null;
             if (!isset($value))
-                $value = $wrapper->order->get_meta($field);
+              $value = $wrapper->order->get_meta($field);
 
             if (!isset($value)) {
-                return false;
+              return false;
             }
 
             $booleanCounter = 0;
 
             foreach ($rules as $rule) {
-                $matches = $rule->matches($value);
-                $auditLog->createEntry($field, $value)->setResult($rule, $matches);
+              $matches = $rule->matches($value);
+              $auditLog->createEntry($field, $value)->setResult($rule, $matches);
 
-                $booleanCounter += $matches;
+              $booleanCounter += $matches;
             }
 
             if ($booleanCounter === 0) {
-                return false;
+              return false;
             }
-            }
+          }
 
-            return true;
+          return true;
         }
         
         return false;
