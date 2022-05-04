@@ -50,39 +50,38 @@ if (!class_exists('TRUNKRS_WC_RuleSet')) {
 
         $firstShippingItem = TRUNKRS_WC_Utils::firstInIterable($wrapper->order->get_items('shipping'));
 
-        if ( !is_null($firstShippingItem) ) {
-          $shipping = $firstShippingItem->get_data();
-          $data = $wrapper->order->get_data();
+        if (is_null($firstShippingItem))
+          return false;
 
-          foreach ($this->fields as $field => $rules) {
-            $value = key_exists($field, $data) ? $data[$field] : null;
-            if (!isset($value))
-              $value = key_exists($field, $shipping) ? $shipping[$field] : null;
-            if (!isset($value))
-              $value = $wrapper->order->get_meta($field);
+        $shipping = $firstShippingItem->get_data();
+        $data = $wrapper->order->get_data();
 
-            if (!isset($value)) {
-              return false;
-            }
+        foreach ($this->fields as $field => $rules) {
+          $value = key_exists($field, $data) ? $data[$field] : null;
+          if (!isset($value))
+            $value = key_exists($field, $shipping) ? $shipping[$field] : null;
+          if (!isset($value))
+            $value = $wrapper->order->get_meta($field);
 
-            $booleanCounter = 0;
-
-            foreach ($rules as $rule) {
-              $matches = $rule->matches($value);
-              $auditLog->createEntry($field, $value)->setResult($rule, $matches);
-
-              $booleanCounter += $matches;
-            }
-
-            if ($booleanCounter === 0) {
-              return false;
-            }
+          if (!isset($value)) {
+            return false;
           }
 
-          return true;
+          $booleanCounter = 0;
+
+          foreach ($rules as $rule) {
+            $matches = $rule->matches($value);
+            $auditLog->createEntry($field, $value)->setResult($rule, $matches);
+
+            $booleanCounter += $matches;
+          }
+
+          if ($booleanCounter === 0) {
+            return false;
+          }
         }
-        
-        return false;
+
+        return true;
       } finally {
         if ($withLog) {
           $auditLog->saveLog();
