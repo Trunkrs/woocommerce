@@ -48,7 +48,12 @@ if (!class_exists('TRUNKRS_WC_RuleSet')) {
         if (!isset($this->fields))
           return false;
 
-        $shipping = TRUNKRS_WC_Utils::firstInIterable($wrapper->order->get_items('shipping'))->get_data();
+        $firstShippingItem = TRUNKRS_WC_Utils::firstInIterable($wrapper->order->get_items('shipping'));
+
+        if (is_null($firstShippingItem))
+          return false;
+
+        $shipping = $firstShippingItem->get_data();
         $data = $wrapper->order->get_data();
 
         foreach ($this->fields as $field => $rules) {
