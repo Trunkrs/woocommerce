@@ -157,6 +157,7 @@ if (!class_exists('TRUNKRS_WC_Order')) {
 
     private function setDeliveryDate() {
       $dateValue = TRUNKRS_WC_Utils::parse8601($this->deliveryDate);
+      $dateValue->setTime(12, 0, 0);
 
       $tycheMeta = $this->getTychePluginMeta();
       if (!empty($tycheMeta)) {
