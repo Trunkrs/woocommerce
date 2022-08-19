@@ -58,6 +58,10 @@ if (!class_exists('TRUNKRS_WC_Api')) {
       }
     }
 
+    private static function handleAnnouncementResponse(array $request) {
+
+    }
+
     /**
      * Announce the shipment to the Trunkrs platform.
      * @param $order WC_Order The WooCommerce order object.
@@ -96,18 +100,7 @@ if (!class_exists('TRUNKRS_WC_Api')) {
       }
 
       if (!empty($deliveryDate)) {
-        $available = TRUNKRS_WC_Api::getShippingRates([
-          'orderValue' => $order->get_total(),
-          'country' => $order->get_shipping_country(),
-        ], true);
-
-        $isAvailable = TRUNKRS_WC_Utils::findInArray($available, function ($rate) use ($deliveryDate) {
-          return TRUNKRS_WC_Utils::parse8601($rate->deliveryDate)->format('Y-m-d') === $deliveryDate;
-        });
-
-        if (!is_null($isAvailable)) {
-          $singleShipmentBody['intendedDeliveryDate'] = $deliveryDate;
-        }
+        $singleShipmentBody['intendedDeliveryDate'] = $deliveryDate;
       }
       if (!empty($companyName)) {
         $singleShipmentBody['recipient']['companyName'] = $companyName;
@@ -132,6 +125,17 @@ if (!class_exists('TRUNKRS_WC_Api')) {
 
       try {
         $response = json_decode($response['body']);
+        if (count($response->failed) > 0) {
+          $error = get_object_vars($response->failedDesc)[$response->failed[0]];
+          if (is_null($error)) {
+            return null;
+          }
+
+          if ($error->name === 'NoTimeslotFound') {
+            return TRUNKRS_WC_Api::announceShipment($order, $reference);
+          }
+        }
+
         $shipment = TRUNKRS_WC_Utils::findInArray($response->success, function ($shipmentResult) use ($reference) {
           return $shipmentResult->overriddenReference === $reference;
         });
