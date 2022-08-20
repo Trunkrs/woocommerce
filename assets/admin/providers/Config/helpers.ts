@@ -8,22 +8,23 @@ interface IntegrationResponse {
   accessToken: string
 }
 
+export interface AuditLogInnerEntry {
+  type: 'ORDER_MATCH' | 'PLAIN_LOG'
+  fieldName: string
+  fieldValue: string
+  comparisons: [
+    {
+      operator: string
+      compareValue: string
+      result: boolean
+    },
+  ]
+}
+
 export interface AuditLogEntry {
   orderId: string
   timestamp: string
-  entries: [
-    {
-      fieldName: string
-      fieldValue: string
-      comparisons: [
-        {
-          operator: string
-          compareValue: string
-          result: boolean
-        },
-      ]
-    },
-  ]
+  entries: AuditLogInnerEntry[]
 }
 
 export const decodeHtmlString = (htmlEncoded: string): string => {

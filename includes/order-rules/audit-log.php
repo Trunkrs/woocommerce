@@ -4,11 +4,6 @@ if (!class_exists('TRUNKRS_WC_AuditLog')) {
   class TRUNKRS_WC_AuditLog
   {
     /**
-     * @see TRUNKRS_WC_InitDB::LOG_TABLE_NAME
-     */
-    private const LOG_TABLE_NAME = 'trunkrs_rule_audit_log';
-
-    /**
      * Retrieve the latest 10 audit logs from the database.
      * @return TRUNKRS_WC_AuditLog[]
      */
@@ -16,8 +11,7 @@ if (!class_exists('TRUNKRS_WC_AuditLog')) {
     {
       global $wpdb;
 
-      $tableName = $wpdb->prefix . self::LOG_TABLE_NAME;
-
+      $tableName = $wpdb->prefix . TRUNKRS_WC_InitDB::LOG_TABLE_NAME;
       $results = $wpdb->get_results(
         "
         SELECT order_id,
@@ -25,7 +19,7 @@ if (!class_exists('TRUNKRS_WC_AuditLog')) {
                json_data
         FROM $tableName
         ORDER BY timestamp DESC
-        LIMIT 10;
+        LIMIT 25;
         "
       );
 
@@ -46,7 +40,7 @@ if (!class_exists('TRUNKRS_WC_AuditLog')) {
 
     /**
      * The audit log entries
-     * @var TRUNKRS_WC_AuditLogRuleEntry[]
+     * @var TRUNKRS_WC_AuditLogEntry[]
      */
     var $entries;
 
@@ -59,9 +53,15 @@ if (!class_exists('TRUNKRS_WC_AuditLog')) {
      * Create a new audit log entry.
      * @return TRUNKRS_WC_AuditLogRuleEntry
      */
-    public function createEntry(string $fieldName, $fieldValue)
+    public function createEntry(string $fieldName, $fieldValue, string $type = TRUNKRS_WC_LogType::ORDER_MATCH): TRUNKRS_WC_AuditLogEntry
     {
-      return $this->entries[] = new TRUNKRS_WC_AuditLogRuleEntry($fieldName, $fieldValue);
+      switch ($type)
+      {
+        case TRUNKRS_WC_LogType::ORDER_MATCH:
+          return $this->entries[] = new TRUNKRS_WC_AuditLogRuleEntry($fieldName, $fieldValue);
+        default:
+          return $this->entries[] = new TRUNKRS_WC_AuditLogPlainEntry($fieldName, $fieldValue);
+      }
     }
 
     /**
@@ -73,7 +73,7 @@ if (!class_exists('TRUNKRS_WC_AuditLog')) {
       global $wpdb;
 
       $wpdb->insert(
-        $wpdb->prefix . self::LOG_TABLE_NAME,
+        $wpdb->prefix . TRUNKRS_WC_InitDB::LOG_TABLE_NAME,
         [
           'order_id' => $this->orderId,
           'json_data' => json_encode($this->asArray()['entries']),
@@ -91,12 +91,8 @@ if (!class_exists('TRUNKRS_WC_AuditLog')) {
       return [
         'orderId' => $this->orderId,
         'entries' => array_map(function ($entry) {
-          return [
-            'fieldName' => $entry->fieldName,
-            'fieldValue' => $entry->fieldValue,
-            'comparisons' => $entry->results,
-          ];
-        }, $this->entries),
+          return $entry->asArray();
+        }, $this->entries ?? []),
       ];
     }
   }

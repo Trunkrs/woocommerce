@@ -5,7 +5,7 @@
  * Description: Add excellent consumer focused shipping to your WooCommerce store.
  * Author: Trunkrs
  * Author URI: https://trunkrs.nl
- * Version: 1.2.9
+ * Version: 1.2.10
  * Requires at least: 3.6 & WooCommerce 3.0+
  * Requires PHP: 7.1
  * License: GPLv3
@@ -23,7 +23,7 @@ if (!class_exists('TRUNKRS_WC_Bootstrapper')) {
     /**
      * @var string The semver version of the plugin.
      */
-    public $version = '1.2.9';
+    public $version = '1.2.10';
 
     /**
      * @var TRUNKRS_WC_Bootstrapper The shared plugin instance.
@@ -68,6 +68,7 @@ if (!class_exists('TRUNKRS_WC_Bootstrapper')) {
 
       add_action('plugins_loaded', [$this, 'loadTranslations']);
       add_action('init', [$this, 'loadMain']);
+      add_action('upgrader_process_complete', [$this, 'loadTables'], 10, 0);
       register_activation_hook(__FILE__, [$this, 'loadTables']);
     }
 
@@ -122,6 +123,7 @@ if (!class_exists('TRUNKRS_WC_Bootstrapper')) {
       // Base resources
       require_once($this->pluginPath . '/includes/utils.php');
       require_once($this->pluginPath . '/includes/asset-loader.php');
+      require_once($this->pluginPath . '/includes/init-db.php');
 
       // Load the translations
       $this->loadTranslations();

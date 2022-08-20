@@ -14,6 +14,8 @@ if (!class_exists('TRUNKRS_WC_Order')) {
     public const DELIVERY_DATE_KEY = 'deliveryDate';
     public const CUT_OFF_TIME_KEY = 'cutOffTime';
 
+    var $auditLog = null;
+
     /**
      * @var WC_Order The order of the order.
      */
@@ -62,30 +64,86 @@ if (!class_exists('TRUNKRS_WC_Order')) {
       $this->init($withMeta, $withLogging);
     }
 
+    public function getAuditLog(): TRUNKRS_WC_AuditLog {
+      if (empty($this->auditLog)) {
+        $this->auditLog = new TRUNKRS_WC_AuditLog($this->order->get_id());
+      }
+      return $this->auditLog;
+    }
+
+    public function makeLogEntry(string $title, string $details) {
+      $auditLog = $this->getAuditLog();
+
+      $auditLog->createEntry($title, $details, TRUNKRS_WC_LogType::PLAIN_LOG);
+      return $auditLog;
+    }
+
+    private function closeLogEntry() {
+      if (empty($this->auditLog)) {
+        return;
+      }
+
+      $this->auditLog->saveLog();
+      $this->auditLog = null;
+    }
+
     private function isTrunkrsOrder(bool $withLogging)
     {
-      if (!empty($this->orderMeta) && is_array($this->orderMeta)) {
-        return true;
-      }
-
-      if (TRUNKRS_WC_Settings::getUseAllOrdersAreTrunkrsActions()) {
-        return true;
-      }
-
-      if (TRUNKRS_WC_Settings::isRuleEngineEnabled()) {
-        $ruleSet = new TRUNKRS_WC_RuleSet(TRUNKRS_WC_Settings::getOrderRuleSet());
-        return $ruleSet->matchOrder($this, $withLogging);
-      }
-
-      $shippingItem = $this->order->get_items('shipping');
-      foreach ($shippingItem as $item) {
-        $shippingMethodId = $item->get_method_id();
-        if ($shippingMethodId === TRUNKRS_WC_Bootstrapper::DOMAIN) {
+      try {
+        if (!empty($this->orderMeta) && is_array($this->orderMeta)) {
           return true;
         }
-      }
 
-      return false;
+        $shippingAddress = $this->order->get_address('shipping');
+        $isMinimumDetailsSet = !empty($shippingAddress['address_1'])
+          && !empty($shippingAddress['postcode'])
+          && !empty($shippingAddress['city'])
+          && !empty($this->order->get_billing_email());
+
+        if (!$isMinimumDetailsSet) {
+          $this->makeLogEntry(
+            'Trunkrs order eligibility check',
+            'Order doesn\'t have the required details to be announced with Trunkrs. Details required: Address & email.'
+          );
+          return false;
+        }
+
+        if (TRUNKRS_WC_Settings::getUseAllOrdersAreTrunkrsActions()) {
+          $this->makeLogEntry(
+            'Trunkrs order eligibility check',
+            'Order is for Trunkrs because all orders are declared to be for Trunkrs.'
+          );
+          return true;
+        }
+
+        if (TRUNKRS_WC_Settings::isRuleEngineEnabled()) {
+          $ruleSet = new TRUNKRS_WC_RuleSet(TRUNKRS_WC_Settings::getOrderRuleSet());
+          return $ruleSet->matchOrder($this, $withLogging);
+        }
+
+        $shippingItem = $this->order->get_items('shipping');
+        foreach ($shippingItem as $item) {
+          $shippingMethodId = $item->get_method_id();
+          if ($shippingMethodId === TRUNKRS_WC_Bootstrapper::DOMAIN) {
+            $this->makeLogEntry(
+              'Trunkrs order eligibility check',
+              'Order is for Trunkrs, because client selected the Trunkrs shipment method.'
+            );
+            return true;
+          }
+
+          $this->makeLogEntry(
+            'Trunkrs order eligibility check',
+            "Order is not for Trunkrs, shipment method [$shippingMethodId] has been selected."
+          );
+        }
+
+        return false;
+      } finally {
+        if ($withLogging) {
+          $this->closeLogEntry();
+        }
+      }
     }
 
     private function init(bool $withMeta, bool $withLogging = false)
@@ -189,7 +247,9 @@ if (!class_exists('TRUNKRS_WC_Order')) {
      */
     public function isAnnounceable(): bool
     {
-      return (!isset($this->trunkrsNr) || $this->isAnnounceFailed) && !$this->isCancelled;
+      return (!isset($this->trunkrsNr) || $this->isAnnounceFailed)
+        && !$this->isCancelled
+        && !empty($this->order->get_address('shipping'));
     }
 
     /**

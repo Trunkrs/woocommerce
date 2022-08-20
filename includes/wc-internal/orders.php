@@ -11,6 +11,7 @@ if (!class_exists('TRUNKRS_WC_Orders')) {
       add_action('woocommerce_order_status_changed', [$this, 'orderStatusChanged']);
       add_action('wp_trash_post', [$this, 'deleteOrder']);
       add_action('woocommerce_checkout_order_processed', [$this, 'createOrder']);
+      add_action('save_post_shop_order', [$this, 'orderStatusChanged']);
     }
 
     public function untrashOrder(string $wpPostId)
@@ -72,6 +73,7 @@ if (!class_exists('TRUNKRS_WC_Orders')) {
         return;
 
       $order = new TRUNKRS_WC_Order($orderId, true, true);
+
       if ($order->isTrunkrsOrder && $order->isAnnounceable()) {
         $order->announceShipment();
       }

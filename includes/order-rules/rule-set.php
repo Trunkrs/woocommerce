@@ -42,51 +42,41 @@ if (!class_exists('TRUNKRS_WC_RuleSet')) {
      */
     public function matchOrder(TRUNKRS_WC_Order $wrapper, bool $withLog = false): bool
     {
-      $auditLog = new TRUNKRS_WC_AuditLog($wrapper->order->get_id());
+      if (!isset($this->fields))
+        return false;
 
-      try {
-        if (!isset($this->fields))
+      $firstShippingItem = TRUNKRS_WC_Utils::firstInIterable($wrapper->order->get_items('shipping'));
+
+      $shipping = is_null($firstShippingItem) ? [] : $firstShippingItem->get_data();
+      $data = $wrapper->order->get_data();
+
+      foreach ($this->fields as $field => $rules) {
+        $value = key_exists($field, $data) ? $data[$field] : null;
+        if (!isset($value))
+          $value = key_exists($field, $shipping) ? $shipping[$field] : null;
+        if (!isset($value))
+          $value = $wrapper->order->get_meta($field);
+
+        if (!isset($value)) {
           return false;
-
-        $firstShippingItem = TRUNKRS_WC_Utils::firstInIterable($wrapper->order->get_items('shipping'));
-
-        if (is_null($firstShippingItem))
-          return false;
-
-        $shipping = $firstShippingItem->get_data();
-        $data = $wrapper->order->get_data();
-
-        foreach ($this->fields as $field => $rules) {
-          $value = key_exists($field, $data) ? $data[$field] : null;
-          if (!isset($value))
-            $value = key_exists($field, $shipping) ? $shipping[$field] : null;
-          if (!isset($value))
-            $value = $wrapper->order->get_meta($field);
-
-          if (!isset($value)) {
-            return false;
-          }
-
-          $booleanCounter = 0;
-
-          foreach ($rules as $rule) {
-            $matches = $rule->matches($value);
-            $auditLog->createEntry($field, $value)->setResult($rule, $matches);
-
-            $booleanCounter += $matches;
-          }
-
-          if ($booleanCounter === 0) {
-            return false;
-          }
         }
 
-        return true;
-      } finally {
-        if ($withLog) {
-          $auditLog->saveLog();
+        $booleanCounter = 0;
+
+        foreach ($rules as $rule) {
+          $matches = $rule->matches($value);
+          $wrapper->getAuditLog()
+            ->createEntry($field, $value)->setResult($rule, $matches);
+
+          $booleanCounter += $matches;
+        }
+
+        if ($booleanCounter === 0) {
+          return false;
         }
       }
+
+      return true;
     }
 
     /**
