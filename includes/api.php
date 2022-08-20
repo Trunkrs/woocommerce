@@ -132,8 +132,8 @@ if (!class_exists('TRUNKRS_WC_Api')) {
           }
 
           if ($error->name === 'NoTimeslotFound') {
-            $order->add_order_note("The requested delivery date of [$deliveryDate] couldn't be met. Next available timeslot is used.");
-            return TRUNKRS_WC_Api::announceShipment($order, $reference);
+            $order->add_order_note("The requested delivery date of '$deliveryDate' couldn't be met. Next available timeslot is used.");
+            return TRUNKRS_WC_Api::announceShipment($order, $reference, null);
           }
         }
 
