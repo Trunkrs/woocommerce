@@ -1,0 +1,37 @@
+version: '3.1'
+
+services:
+  db:
+    image: arm64v8/mysql:8
+    volumes:
+      - db_data:/var/lib/mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: somewordpress
+      MYSQL_DATABASE: wordpress
+      MYSQL_USER: wordpress
+      MYSQL_PASSWORD: wordpress
+
+  wordpress:
+    depends_on:
+      - db
+    build:
+      context: .
+      dockerfile: Dockerfile_compose
+    ports:
+      - '8080:80'
+      - '9005:9003'
+    restart: always
+    environment:
+      WORDPRESS_DB_HOST: db:3306
+      WORDPRESS_DB_USER: wordpress
+      WORDPRESS_DB_PASSWORD: wordpress
+      WORDPRESS_DB_NAME: wordpress
+      WORDPRESS_DEBUG: 1
+      PHP_IDE_CONFIG: serverName=Docker
+    volumes:
+      - ./:/var/www/html/wp-content/plugins/your-plugin
+      - ./php.ini:/usr/local/etc/php/conf.d/php.ini
+
+volumes:
+  db_data: {}

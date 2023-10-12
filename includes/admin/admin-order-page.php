@@ -5,17 +5,13 @@ if (!class_exists('TRUNKRS_WC_AdminOrderPage')) {
   {
     public function __construct()
     {
-      add_action('add_meta_boxes_shop_order', [$this, 'renderTrunkrsBox']);
+      add_action('add_meta_boxes', [$this, 'addMetaboxes']);
     }
 
-    public function renderTrunkrsBox($post)
+    public function addMetaboxes($pageName)
     {
-      if (!TRUNKRS_WC_Settings::isConfigured())
-        return;
-
-      $trunkrsOrder = new TRUNKRS_WC_Order($post->ID);
-
-      if (!$trunkrsOrder->isTrunkrsOrder)
+      $isOrderPage = $pageName === 'shop_order' || $pageName === 'woocommerce_page_wc-orders';
+      if (!TRUNKRS_WC_Settings::isConfigured() || !$isOrderPage)
         return;
 
       $logoImg = sprintf(
@@ -23,32 +19,64 @@ if (!class_exists('TRUNKRS_WC_AdminOrderPage')) {
         TRUNKRS_WC_Utils::createAssetUrl('icons/trunkrs-small-indigo.svg')
       );
 
-      if ($trunkrsOrder->isAnnounceFailed && !$trunkrsOrder->isCancelled) {
-        add_meta_box(
-          'wc_tr_shipment_side_box',
-          $logoImg . __('Zending details', TRUNKRS_WC_Bootstrapper::DOMAIN),
-          [$this, 'renderFailedSideBarContent'],
-          'shop_order',
-          'side',
-          'default'
-        );
-        return;
-      }
-
       add_meta_box(
         'wc_tr_shipment_side_box',
-         $logoImg . __('Zending details', TRUNKRS_WC_Bootstrapper::DOMAIN),
-        [$this, 'renderSideBarContent'],
-        'shop_order',
+        $logoImg . __('Zending details', TRUNKRS_WC_Bootstrapper::DOMAIN),
+        [$this, 'renderBoxContent'],
+        $pageName,
         'side',
-        'default'
+        'high'
       );
+    }
+
+    public function renderBoxContent($post)
+    {
+      $trunkrsOrder = new TRUNKRS_WC_Order($post);
+
+      if (!$trunkrsOrder->isTrunkrsOrder) {
+        $this->renderForNotTrunkrs($post);
+      } else if ($trunkrsOrder->isAnnounceFailed && !$trunkrsOrder->isCancelled) {
+        $this->renderFailedSideBarContent($post);
+      } else {
+        $this->renderSideBarContent($post, $trunkrsOrder);
+      }
+    }
+
+    public function renderForNotTrunkrs($post)
+    {
+      $reannounceUrl = admin_url(sprintf(
+        'admin-ajax.php?action=tr-wc_reannounce&orderId=%s',
+        $post->get_id()
+      ));
+
+      ?>
+      <ul class="wc-tr-shipment-details">
+        <li>
+          <p>
+            <?php esc_html_e('Deze zending was niet voor Trunkrs en is daarom niet aangemeld. Klik aanmelden om de zending bij Trunkrs aan te melden.') ?>
+          </p>
+        </li>
+      </ul>
+
+      <ul class="wc-tr-shipment-actions failed">
+        <li class="action-item">
+          <a
+            href="<?php echo esc_url($reannounceUrl) ?>"
+            class="button button-primary"
+            title="<?php esc_attr_e('Hiermee wordt de zending bij Trunkrs aangemeld.', TRUNKRS_WC_Bootstrapper::DOMAIN) ?>"
+          >
+            <span class="dashicons dashicons-update-alt"></span>
+            <?php esc_html_e('Aanmelden', TRUNKRS_WC_Bootstrapper::DOMAIN) ?>
+          </a>
+        </li>
+      </ul>
+      <?php
     }
 
     public function renderFailedSideBarContent($post) {
       $reannounceUrl = admin_url(sprintf(
         'admin-ajax.php?action=tr-wc_reannounce&orderId=%s',
-        $post->ID
+        $post->get_id()
       ));
 
       ?>
@@ -75,10 +103,8 @@ if (!class_exists('TRUNKRS_WC_AdminOrderPage')) {
       <?php
     }
 
-    public function renderSideBarContent($post)
+    public function renderSideBarContent($post, $trunkrsOrder)
     {
-      $trunkrsOrder = new TRUNKRS_WC_Order($post->ID);
-
       $classes = $trunkrsOrder->isCancelled ? 'failed' : '';
 
       ?>
@@ -125,7 +151,7 @@ if (!class_exists('TRUNKRS_WC_AdminOrderPage')) {
         if (!$trunkrsOrder->isCancelled) {
           $cancelUrl = admin_url(sprintf(
             'admin-ajax.php?action=tr-wc_cancel&orderId=%s',
-            $post->ID
+            $post->get_id()
           ));
 
           $downloadUrl = admin_url(sprintf(
@@ -158,7 +184,7 @@ if (!class_exists('TRUNKRS_WC_AdminOrderPage')) {
         } else {
           $reannounceUrl = admin_url(sprintf(
             'admin-ajax.php?action=tr-wc_reannounce&orderId=%s',
-            $post->ID
+            $post->get_id()
           ));
 
           ?>

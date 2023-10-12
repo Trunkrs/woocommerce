@@ -8,7 +8,7 @@ if (!class_exists('TRUNKRS_WC_InitDB')) {
     public const INIT_QUERY = "
       CREATE TABLE IF NOT EXISTS %s (
         order_id int NOT NULL,
-        timestamp timestamp(3) NULL DEFAULT CURRENT_TIMESTAMP(3),
+        timestamp timestamp(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
         json_data text NOT NULL,
         PRIMARY KEY (order_id, timestamp)
       );

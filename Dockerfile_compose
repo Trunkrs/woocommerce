@@ -1,0 +1,16 @@
+FROM wordpress:latest
+
+# Add the WooCommerce plugin from the WordPress plugin repository
+ADD https://downloads.wordpress.org/plugin/woocommerce.zip /usr/src/wordpress/wp-content/plugins/woocommerce.zip
+
+# Add the Stripe for WooCommerce plugin from the WordPress plugin repository
+ADD https://downloads.wordpress.org/plugin/woocommerce-gateway-stripe.zip /usr/src/wordpress/wp-content/plugins/woocommerce-gateway-stripe.zip
+
+# Unzip the plugins
+RUN apt-get update \
+    && apt-get install -y unzip \
+    && unzip /usr/src/wordpress/wp-content/plugins/woocommerce.zip -d /usr/src/wordpress/wp-content/plugins/ \
+    && unzip /usr/src/wordpress/wp-content/plugins/woocommerce-gateway-stripe.zip -d /usr/src/wordpress/wp-content/plugins/ \
+    && rm /usr/src/wordpress/wp-content/plugins/woocommerce.zip \
+    && rm /usr/src/wordpress/wp-content/plugins/woocommerce-gateway-stripe.zip
+
