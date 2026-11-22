@@ -46,10 +46,13 @@ if (!class_exists('TRUNKRS_WC_AdminOrderPage')) {
     }
 
     public function renderFailedSideBarContent($post) {
-      $reannounceUrl = admin_url(sprintf(
-        'admin-ajax.php?action=tr-wc_reannounce&orderId=%s',
-        $post->ID
-      ));
+      $reannounceUrl = wp_nonce_url(
+        admin_url(sprintf(
+          'admin-ajax.php?action=tr-wc_reannounce&orderId=%s',
+          $post->ID
+        )),
+        TRUNKRS_WC_Bootstrapper::ADMIN_NONCE_ACTION
+      );
 
       ?>
       <ul class="wc-tr-shipment-details">
@@ -123,15 +126,21 @@ if (!class_exists('TRUNKRS_WC_AdminOrderPage')) {
       <ul class="wc-tr-shipment-actions <?php esc_attr_e($classes) ?>">
         <?php
         if (!$trunkrsOrder->isCancelled) {
-          $cancelUrl = admin_url(sprintf(
-            'admin-ajax.php?action=tr-wc_cancel&orderId=%s',
-            $post->ID
-          ));
+          $cancelUrl = wp_nonce_url(
+            admin_url(sprintf(
+              'admin-ajax.php?action=tr-wc_cancel&orderId=%s',
+              $post->ID
+            )),
+            TRUNKRS_WC_Bootstrapper::ADMIN_NONCE_ACTION
+          );
 
-          $downloadUrl = admin_url(sprintf(
-            'admin-ajax.php?action=tr-wc_download-label&trunkrsNr=%s',
-            $trunkrsOrder->trunkrsNr
-          ));
+          $downloadUrl = wp_nonce_url(
+            admin_url(sprintf(
+              'admin-ajax.php?action=tr-wc_download-label&trunkrsNr=%s',
+              $trunkrsOrder->trunkrsNr
+            )),
+            TRUNKRS_WC_Bootstrapper::ADMIN_NONCE_ACTION
+          );
 
           ?>
           <li class="action-item">
@@ -156,10 +165,13 @@ if (!class_exists('TRUNKRS_WC_AdminOrderPage')) {
           </li>
           <?php
         } else {
-          $reannounceUrl = admin_url(sprintf(
-            'admin-ajax.php?action=tr-wc_reannounce&orderId=%s',
-            $post->ID
-          ));
+          $reannounceUrl = wp_nonce_url(
+            admin_url(sprintf(
+              'admin-ajax.php?action=tr-wc_reannounce&orderId=%s',
+              $post->ID
+            )),
+            TRUNKRS_WC_Bootstrapper::ADMIN_NONCE_ACTION
+          );
 
           ?>
           <li class="action-item">

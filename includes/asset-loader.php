@@ -42,6 +42,9 @@ if (!class_exists('TRUNKRS_WC_AssetLoader')) {
 
       if ($isTrunkrsAdminPage) {
         $this->addScriptsForTag($assetTag, $assetPhpPath, $scriptPath);
+        wp_localize_script($assetTag, 'trunkrsWcAdmin', [
+          'nonce' => wp_create_nonce(TRUNKRS_WC_Bootstrapper::ADMIN_NONCE_ACTION),
+        ]);
       }
     }
 

@@ -34,6 +34,27 @@ export const decodeHtmlString = (htmlEncoded: string): string => {
   return txt.value
 }
 
+declare global {
+  interface Window {
+    trunkrsWcAdmin?: { nonce: string }
+  }
+}
+
+const getAdminNonce = (): string => {
+  if (window.trunkrsWcAdmin) {
+    return window.trunkrsWcAdmin.nonce
+  }
+
+  return ''
+}
+
+const createAdminRequest = (): FormData => {
+  const request = new FormData()
+  request.append('_ajax_nonce', getAdminNonce())
+
+  return request
+}
+
 export const doShippingReqisterRequest = async (
   userAccessToken: string,
   orgId: string,
@@ -64,7 +85,7 @@ export const doConfigureRequest = async (
   orgName: string,
   integrationId: string,
 ): Promise<void> => {
-  const request = new FormData()
+  const request = createAdminRequest()
   request.append('action', 'tr-wc_register-plugin')
   request.append('accessToken', accessToken)
   request.append('organizationId', orgId)
@@ -83,7 +104,7 @@ export const doConfigureRequest = async (
 export const doUpdateUseDarkRequest = async (
   isDarkLogo: boolean,
 ): Promise<void> => {
-  const request = new FormData()
+  const request = createAdminRequest()
   request.append('action', 'tr-wc_update-use-dark')
   request.append('isDarkLogo', isDarkLogo.toString())
 
@@ -99,7 +120,7 @@ export const doUpdateUseDarkRequest = async (
 export const doUpdateUseTntLinksRequest = async (
   isDarkLogo: boolean,
 ): Promise<void> => {
-  const request = new FormData()
+  const request = createAdminRequest()
   request.append('action', 'tr-wc_update-use-tnt-links')
   request.append('isEmailLinksEnabled', isDarkLogo.toString())
 
@@ -115,7 +136,7 @@ export const doUpdateUseTntLinksRequest = async (
 export const doUpdateUseTntAccountsRequest = async (
   isDarkLogo: boolean,
 ): Promise<void> => {
-  const request = new FormData()
+  const request = createAdminRequest()
   request.append('action', 'tr-wc_update-use-tnt-account')
   request.append('isAccountTrackTraceEnabled', isDarkLogo.toString())
 
@@ -131,7 +152,7 @@ export const doUpdateUseTntAccountsRequest = async (
 export const doUpdateUseAllOrdersAreTrunkrsRequest = async (
   isDarkLogo: boolean,
 ): Promise<void> => {
-  const request = new FormData()
+  const request = createAdminRequest()
   request.append('action', 'tr-wc_update-use-all-orders-are-trunkrs')
   request.append('isAllOrdersAreTrunkrsEnabled', isDarkLogo.toString())
 
@@ -147,7 +168,7 @@ export const doUpdateUseAllOrdersAreTrunkrsRequest = async (
 export const doUpdateUseBigTextRequest = async (
   isEnabled: boolean,
 ): Promise<void> => {
-  const request = new FormData()
+  const request = createAdminRequest()
   request.append('action', 'tr-wc_update-use-big-checkout-text')
   request.append('isUseBigTextEnabled', isEnabled.toString())
 
@@ -163,7 +184,7 @@ export const doUpdateUseBigTextRequest = async (
 export const doUpdateSubRenewalsEnabled = async (
   isEnabled: boolean,
 ): Promise<void> => {
-  const request = new FormData()
+  const request = createAdminRequest()
   request.append('action', 'tr-wc_update-use-sub-renewals')
   request.append('isSubRenewalsEnabled', isEnabled.toString())
 
@@ -179,7 +200,7 @@ export const doUpdateSubRenewalsEnabled = async (
 export const doUpdateOrderRulesEnabled = async (
   isEnabled: boolean,
 ): Promise<void> => {
-  const request = new FormData()
+  const request = createAdminRequest()
   request.append('action', 'tr-wc_update-use-order-rules')
   request.append('isOrderRulesEnabled', isEnabled.toString())
 
@@ -193,7 +214,7 @@ export const doUpdateOrderRulesEnabled = async (
 }
 
 export const doUpdateOrderRules = async (orderRules: string): Promise<void> => {
-  const request = new FormData()
+  const request = createAdminRequest()
   request.append('action', 'tr-wc_update-order-rules')
   request.append('orderRules', orderRules)
 
@@ -210,7 +231,7 @@ export const findAuditLogs = async (): Promise<AuditLogEntry[]> => {
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
   const { data } = await Axios.get<AuditLogEntry[]>(`${ajaxurl}`, {
-    params: { action: 'tr-wc_get-order-logs' },
+    params: { action: 'tr-wc_get-order-logs', _ajax_nonce: getAdminNonce() },
   })
 
   return data

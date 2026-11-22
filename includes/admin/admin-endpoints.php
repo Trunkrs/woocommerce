@@ -39,6 +39,8 @@ if (!class_exists('TRUNKRS_WC_AdminEndpoints')) {
 
     public function executeRegisterEndpoint()
     {
+      $this->authorize('manage_woocommerce');
+
       if (TRUNKRS_WC_Settings::isConfigured()) {
         status_header(409);
         wp_die();
@@ -64,6 +66,8 @@ if (!class_exists('TRUNKRS_WC_AdminEndpoints')) {
 
     public function executeUpdateUseDarkEndpoint()
     {
+      $this->authorize('manage_woocommerce');
+
       $useDark = sanitize_text_field($_POST['isDarkLogo']) === 'true';
 
       TRUNKRS_WC_Settings::setUseDark($useDark);
@@ -74,6 +78,8 @@ if (!class_exists('TRUNKRS_WC_AdminEndpoints')) {
 
     public function executeUpdateUseTnTLinksEndpoint()
     {
+      $this->authorize('manage_woocommerce');
+
       $value = sanitize_text_field($_POST['isEmailLinksEnabled']) === 'true';
 
       TRUNKRS_WC_Settings::setUseEmailLink($value);
@@ -84,6 +90,8 @@ if (!class_exists('TRUNKRS_WC_AdminEndpoints')) {
 
     public function executeUpdateUseTnTAccountEndpoint()
     {
+      $this->authorize('manage_woocommerce');
+
       $value = sanitize_text_field($_POST['isAccountTrackTraceEnabled']) === 'true';
 
       TRUNKRS_WC_Settings::setUseAccountActions($value);
@@ -94,6 +102,8 @@ if (!class_exists('TRUNKRS_WC_AdminEndpoints')) {
 
     public function executeUpdateUseAllOrdersAreTrunkrsEndpoint()
     {
+      $this->authorize('manage_woocommerce');
+
       $value = sanitize_text_field($_POST['isAllOrdersAreTrunkrsEnabled']) === 'true';
 
       TRUNKRS_WC_Settings::setUseAllOrdersAreTrunkrs($value);
@@ -103,6 +113,8 @@ if (!class_exists('TRUNKRS_WC_AdminEndpoints')) {
     }
 
     public function executeUpdateUseBigCheckoutText() {
+      $this->authorize('manage_woocommerce');
+
       $value = sanitize_text_field($_POST['isUseBigTextEnabled']) === 'true';
 
       TRUNKRS_WC_Settings::setIsBigCheckoutTextEnabled($value);
@@ -112,6 +124,8 @@ if (!class_exists('TRUNKRS_WC_AdminEndpoints')) {
     }
 
     public function executeUpdateUseOrderRules() {
+      $this->authorize('manage_woocommerce');
+
       $value = sanitize_text_field($_POST['isOrderRulesEnabled']) === 'true';
 
       TRUNKRS_WC_Settings::setIsRuleEngineEnabled($value);
@@ -121,6 +135,8 @@ if (!class_exists('TRUNKRS_WC_AdminEndpoints')) {
     }
 
     public function executeUpdateUseSubRenewals() {
+      $this->authorize('manage_woocommerce');
+
       $value = sanitize_text_field($_POST['isSubRenewalsEnabled']) === 'true';
 
       TRUNKRS_WC_Settings::setUseSubscriptionRenewals($value);
@@ -130,6 +146,8 @@ if (!class_exists('TRUNKRS_WC_AdminEndpoints')) {
     }
 
     public function executeUpdateOrderRuleSet() {
+      $this->authorize('manage_woocommerce');
+
       $value = sanitize_text_field($_POST['orderRules']);
 
       TRUNKRS_WC_Settings::setRules($value);
@@ -139,6 +157,8 @@ if (!class_exists('TRUNKRS_WC_AdminEndpoints')) {
     }
 
     public function executeFindAuditLogEntries() {
+      $this->authorize('edit_shop_orders');
+
       $entries = TRUNKRS_WC_AuditLog::findLatestAuditLogs();
 
       wp_send_json($entries);
@@ -146,6 +166,8 @@ if (!class_exists('TRUNKRS_WC_AdminEndpoints')) {
     }
 
     public function executeDownloadLabelEndpoint() {
+      $this->authorize('edit_shop_orders');
+
       $trunkrsNr = sanitize_text_field($_GET['trunkrsNr']);
       $labelUrl = TRUNKRS_WC_Api::getLabel($trunkrsNr);
 
@@ -154,6 +176,8 @@ if (!class_exists('TRUNKRS_WC_AdminEndpoints')) {
     }
 
     public function executeCancelEndpoint() {
+      $this->authorize('edit_shop_orders');
+
       $orderId = sanitize_text_field($_GET['orderId']);
       $order = new TRUNKRS_WC_Order($orderId);
 
@@ -167,6 +191,8 @@ if (!class_exists('TRUNKRS_WC_AdminEndpoints')) {
     }
 
     public function executeAnnounceEndpoint() {
+      $this->authorize('edit_shop_orders');
+
       $orderId = sanitize_text_field($_GET['orderId']);
       $order = new TRUNKRS_WC_Order($orderId);
 
@@ -177,6 +203,15 @@ if (!class_exists('TRUNKRS_WC_AdminEndpoints')) {
         $orderId
       )));
       exit;
+    }
+
+    private function authorize($capability)
+    {
+      $isValidNonce = check_ajax_referer(TRUNKRS_WC_Bootstrapper::ADMIN_NONCE_ACTION, false, false);
+
+      if (!$isValidNonce || !current_user_can($capability)) {
+        wp_die('', '', ['response' => 403]);
+      }
     }
   }
 }
