@@ -3,7 +3,7 @@ Contributors: fean
 Tags: delivery, packages, woocommerce, trunkrs, sameday, delivery
 Requires at least: 3.6 & WooCommerce 3.0+
 Tested up to: 5.9
-Stable tag: 1.2.11
+Stable tag: 1.2.12
 Requires PHP: 7.1
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
@@ -40,6 +40,9 @@ Reach out to your customer success manager or account manager to get started, th
 2. Easy to set-up and understand carrier service management.
 
 == Changelog ==
+
+= 1.2.12 =
+- Security hardening for admin actions
 
 = 1.2.10 =
 - Fixes an issue where orders made in the back-office were not announced to Trunkrs
